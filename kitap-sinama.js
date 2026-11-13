@@ -1,5 +1,9 @@
-// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.0
+// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.1
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
+// Sürüm 22.0 · Ana 10 (13 Kasım 2026) · Kitantik fiyata göre sıralı + sayfalar adresle
+//  - Kitantik arama adresine sort=salePrice;asc;L eklendi (iPad'de Sırala > Fiyat Artan tıklanınca oluşan adres).
+//  - Yeni kural alanı "sayfaUrl": sonraki sayfalar düğmeye tıklanmadan adresle (&page=N) okunur.
+//  - n11, Trendyol, SahafPazar teşhis dökümü kapatıldı (rapor kısalsın).
 // Sürüm 21.9 · Ana 10 (13 Kasım 2026) · Kitantik sıralama tıklama teşhisi + yükleyici
 //  - Kitantik: Sırala düğmesine basılır, açılan seçenekler rapora yazılır, fiyata göre artan olan tıklanır; yeni adres ve ilk fiyatlar yazılır.
 //  - Yükleyici (kod/yukleyici.js): iPad'e bir kez kurulur, güncel betiği GitHub'dan alır; rapor başlığında "betik:" kaynağı görünür.
@@ -55,7 +59,7 @@
 // Sürüm 21 · 1. dilim: kod üç parçaya ayrıldı (kurallar.json, motor.js, Scriptable kabuğu); davranış sürüm 20 ile aynı.
 
 const GOMULU_KURALLAR = {
-  "surum": "22.0",
+  "surum": "22.1",
   "tarih": "2026-11-13",
   "aciklama": "Kitap Fiyat site kuralları. tur: yeni|sahaf|ikinciel|karsilastirma · acik: asıl uygulamada aranır mı · durum: calisan|duzeltiliyor|aday · url içinde {q} normal, {q5} eski Türkçe kodlama (ISO-8859-9), {qa} Türkçe harfsiz · sayfaGez: sonuç birden çok sayfaysa en çok bu sayfaya kadar okunur · sure: site süre sınırı (sn) · detay: özel ürün sayfası okuyucusu · aday siteler sınamada her zaman denenir ve teşhis dökümü yazar; acik:false olanlar asıl uygulamada aranmaz · kart: siteye özel kart kuralı (CSS seçicileri: kap, ad, fiyat, link, kondisyon, satici); kap bulunamazsa genel okuyucu · teshis: true ise kart yapısı, HTML parçası ve ham kart her sınamada yazılır (teshisSecici: ham kart seçicisi) · stokSayfasi: false ise ilan sayfası açılmaz, yayındaki ilan var sayılır (kişiden satış siteleri) · kart.sehir: satıcının şehri · kondisyonKartta: false ise arama kartında kondisyon yazmadığı bilinir, rapor uyarısı yazılmaz · stokVar: (21.7) ürün sayfasında bu düzenli ifade geçerse ürün stokta sayılır (siteye özel; ör. Sahafta takip düğmesi \"Gelince Haber Ver\" her sayfada yazar)",
   "ayarlar": {
@@ -177,9 +181,9 @@ const GOMULU_KURALLAR = {
       ],
       "ana": "https://www.kitantik.com/",
       "kondisyonKartta": false,
-      "not": "Arama kartında kondisyon yok (yalnız ürün sayfasında); satıcı kartta \"İkinci El - <satıcı>\" diye yazıyor (21.6). 21.8 [KANITLI, iPad]: sayfa adresi &page=N çalışıyor (page=2 ilk sayfadan tamamen farklı 20 ilan); sıralama adresi tahmini boşa gitti. 21.9 [KANITLI, iPad]: Sırala düğmesi + \"Fiyat Artan\" tıklanınca adres şuna döndü: &sort=salePrice;asc;L (ilk fiyatlar 20 / 19,99 / 20 TL: varsayılan sıralamada en ucuz 27-50 TL çıkıyordu). 22.0: arama adresine bu sıralama yazıldı; sonraki sayfalar adresle (&page=N) okunur, en çok 3 sayfa. Tamamen sınanmadı: sıralı sayfada alakasız ucuz ilan çıkıyor mu, iPad raporuyla bakılacak. Bulut buradan engelli (Cloudflare), yalnız iPad.",
+      "not": "Arama kartında kondisyon yok (yalnız ürün sayfasında); satıcı kartta \"İkinci El - <satıcı>\" diye yazıyor (21.6). 21.8 [KANITLI, iPad]: sayfa adresi &page=N çalışıyor (page=2 ilk sayfadan tamamen farklı 20 ilan); sıralama adresi tahmini boşa gitti. 21.9 [KANITLI, iPad]: Sırala düğmesi + \"Fiyat Artan\" tıklanınca adres şuna döndü: &sort=salePrice;asc;L (ilk fiyatlar 20 / 19,99 / 20 TL: varsayılan sıralamada en ucuz 27-50 TL çıkıyordu). 22.0 [KANITLI, iPad, Kürk Mantolu Madonna]: arama adresine sıralama yazıldı, sonraki sayfalar adresle (&page=N) okunur (en çok 3 sayfa): 60 ilan, 58 ilgili, en ucuz 14,64 TL (sıralamasız okumada 27-50 TL çıkıyordu). 22.1: teşhis kapatıldı. Bulut buradan engelli (Cloudflare), yalnız iPad.",
       "sayfaGez": 3,
-      "teshis": true,
+      "teshis": false,
       "sure": 120,
       "sayfaUrl": "&page={n}"
     },
