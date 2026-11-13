@@ -1,4 +1,4 @@
-// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 21.9
+// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.0
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
 // Sürüm 21.9 · Ana 10 (13 Kasım 2026) · Kitantik sıralama tıklama teşhisi + yükleyici
 //  - Kitantik: Sırala düğmesine basılır, açılan seçenekler rapora yazılır, fiyata göre artan olan tıklanır; yeni adres ve ilk fiyatlar yazılır.
@@ -55,7 +55,7 @@
 // Sürüm 21 · 1. dilim: kod üç parçaya ayrıldı (kurallar.json, motor.js, Scriptable kabuğu); davranış sürüm 20 ile aynı.
 
 const GOMULU_KURALLAR = {
-  "surum": "21.9",
+  "surum": "22.0",
   "tarih": "2026-11-13",
   "aciklama": "Kitap Fiyat site kuralları. tur: yeni|sahaf|ikinciel|karsilastirma · acik: asıl uygulamada aranır mı · durum: calisan|duzeltiliyor|aday · url içinde {q} normal, {q5} eski Türkçe kodlama (ISO-8859-9), {qa} Türkçe harfsiz · sayfaGez: sonuç birden çok sayfaysa en çok bu sayfaya kadar okunur · sure: site süre sınırı (sn) · detay: özel ürün sayfası okuyucusu · aday siteler sınamada her zaman denenir ve teşhis dökümü yazar; acik:false olanlar asıl uygulamada aranmaz · kart: siteye özel kart kuralı (CSS seçicileri: kap, ad, fiyat, link, kondisyon, satici); kap bulunamazsa genel okuyucu · teshis: true ise kart yapısı, HTML parçası ve ham kart her sınamada yazılır (teshisSecici: ham kart seçicisi) · stokSayfasi: false ise ilan sayfası açılmaz, yayındaki ilan var sayılır (kişiden satış siteleri) · kart.sehir: satıcının şehri · kondisyonKartta: false ise arama kartında kondisyon yazmadığı bilinir, rapor uyarısı yazılmaz · stokVar: (21.7) ürün sayfasında bu düzenli ifade geçerse ürün stokta sayılır (siteye özel; ör. Sahafta takip düğmesi \"Gelince Haber Ver\" her sayfada yazar)",
   "ayarlar": {
@@ -173,15 +173,15 @@ const GOMULU_KURALLAR = {
       "acik": true,
       "durum": "calisan",
       "url": [
-        "https://www.kitantik.com/search/ps?st={q}"
+        "https://www.kitantik.com/search/ps?st={q}&sort=salePrice;asc;L"
       ],
       "ana": "https://www.kitantik.com/",
       "kondisyonKartta": false,
-      "not": "Arama kartında kondisyon yok (yalnız ürün sayfasında); satıcı kartta \"İkinci El - <satıcı>\" diye yazıyor (21.6). 21.7: en ucuz fiyat her sınamada farklı çıkıyordu (45 / 33 / 31,80 / 50; hep 20 ilan) → [TAHMİN] yalnız ilk sayfa okunuyor ve site her açılışta başka 20 ilan gösteriyor. 21.8 [KANITLI, iPad]: sayfa adresi &page=N çalışıyor (page=2 ilk sayfadan tamamen farklı 20 ilan); sıralama için 7 adres tahmini (sort, siralama, order, sirala…) boşa çıktı; Sırala düğmesi (#sort-result-btn) menüyü tıklayınca açıyor. 21.9 düğmeye tıklayıp seçenekleri ve yeni adresi okur. 21.7 üç sayfaya kadar okumayı dener ve sıralama seçeneklerini teşhis olarak yazar; fiyata göre sıralı adres bulununca url buraya yazılacak (21.8). Bulut buradan engelli (Cloudflare), yalnız iPad.",
+      "not": "Arama kartında kondisyon yok (yalnız ürün sayfasında); satıcı kartta \"İkinci El - <satıcı>\" diye yazıyor (21.6). 21.8 [KANITLI, iPad]: sayfa adresi &page=N çalışıyor (page=2 ilk sayfadan tamamen farklı 20 ilan); sıralama adresi tahmini boşa gitti. 21.9 [KANITLI, iPad]: Sırala düğmesi + \"Fiyat Artan\" tıklanınca adres şuna döndü: &sort=salePrice;asc;L (ilk fiyatlar 20 / 19,99 / 20 TL: varsayılan sıralamada en ucuz 27-50 TL çıkıyordu). 22.0: arama adresine bu sıralama yazıldı; sonraki sayfalar adresle (&page=N) okunur, en çok 3 sayfa. Tamamen sınanmadı: sıralı sayfada alakasız ucuz ilan çıkıyor mu, iPad raporuyla bakılacak. Bulut buradan engelli (Cloudflare), yalnız iPad.",
       "sayfaGez": 3,
       "teshis": true,
       "sure": 120,
-      "siralaTikla": true
+      "sayfaUrl": "&page={n}"
     },
     {
       "id": "hepsiburada",
@@ -231,7 +231,7 @@ const GOMULU_KURALLAR = {
         "https://www.trendyol.com/sr?q={q}"
       ],
       "ana": "https://www.trendyol.com/",
-      "teshis": true,
+      "teshis": false,
       "teshisSecici": "a:has(.info-wrapper), .info-wrapper .product-card-price",
       "not": "21.7: kart kuralı gerçek kart yapısından yazıldı [KANITLI, iPad 21.6 ham kartı]: a.product-card > .info-wrapper > h2.title (yayınevi + ad); fiyat .product-card-price içinde (.single-price > .price-section). Rozet şeridi (badges-wrapper: \"Çok Al Az Öde\", kupon) fiyat kutusunun dışında kalır. Vitrin şeridi (a.seller-store-product-card) okunmaz. Teşhis bir sınama daha açık kalır. Önceki: 21.5 iPad kupon tutarı 10,00 TL fiyat sanılmıştı; 21.6 bunu şüpheli sayıyordu ama 42,05 ve 106,23 TL ilanları da şüpheli kalıyordu.",
       "kart": {
@@ -306,7 +306,7 @@ const GOMULU_KURALLAR = {
         "https://www.n11.com/arama?q={q}"
       ],
       "ana": "https://www.n11.com/",
-      "teshis": true,
+      "teshis": false,
       "not": "21.7 aday (Fatih sordu, Ana 8): n11 ana sitesinde mağazaların yeni kitap ilanları. 21.8: Fatih onayıyla AÇILDI (n11 Sahaflar Çarşısı da açık kalır; aynı ilan iki yerden gelirse tekrar ayıklanacak). Kart yapısı henüz kuralda yok; teşhis bir tur daha açık kalır, ham kart rapordan alınıp kart kuralı yazılacak. Bulut buradan engelli (Cloudflare), yalnız iPad."
     },
     {
@@ -340,7 +340,8 @@ const GOMULU_KURALLAR = {
         "kondisyon": ".sp-pcard__cond",
         "satici": ".sp-pcard__vendor"
       },
-      "sayfaGez": 3
+      "sayfaGez": 3,
+      "teshis": false
     },
     {
       "id": "sahafta",
@@ -403,7 +404,7 @@ const GOMULU_KURALLAR = {
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "21.9";
+const MOTOR_SURUMU = "22.0";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -1464,6 +1465,22 @@ async function siteyiSina(k, sorgu, r) {
       const enSon = k.sayfaGez || 4;
       for (let no = 2; no <= enSon; no++) {
         if (r.iptal) return;
+        // Sürüm 22.0 · "sayfaUrl" kuralı (Kitantik: "&page={n}"): sonraki sayfa düğmeye tıklanmadan, aynı arama adresine sayfa eki konarak ayrı sekmede açılır.
+        // Neden: Kitantik'te sayfa düğmesi yok ama adres çalışıyor (21.8 iPad: page=2 ilk sayfadan tamamen farklı 20 ilan).
+        if (k.sayfaUrl && r.adres) {
+          const wvS = yeniSekme(r);
+          const yhS = await sayfaYukle(wvS, r.adres + k.sayfaUrl.replace("{n}", no), 20000);
+          const bS = await sonucBekle(wvS, sorgu, 10000, k.tur, r, k.kart);
+          if (r.iptal) return;
+          const itS = (bS.son && bS.son.items) || [];
+          const varS = new Set((son.items || []).map(u => u.href + "|" + (u.prices || [])[0]));
+          const ekS = itS.filter(u => !varS.has(u.href + "|" + (u.prices || [])[0]));
+          if (!ekS.length) { r.gezi.push("sayfa " + no + " (adresle): yeni ilan yok" + (yhS ? " · hata: " + String(yhS).slice(0, 60) : "") + (bS.son && bS.son.blocked ? " · ENGEL: " + bS.son.blocked : "")); break; }
+          son.items = (son.items || []).concat(ekS);
+          r.gezi.push("sayfa " + no + " (adresle): " + itS.length + " ürün okundu, " + ekS.length + " yeni");
+          sonucuYaz(r, son, k, sorgu);
+          continue;
+        }
         const imzaOnce = (son.items || []).length ? (son.items || []).map(u => u.href + "|" + (u.prices || [])[0]).join("§") : "";
         let g = "";
         try { g = String(await sonWv.calistir("(" + sayfayaGec.toString() + ")(" + no + ")")); } catch (e) { g = "hata: " + e; }
