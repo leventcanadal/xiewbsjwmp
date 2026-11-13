@@ -1,62 +1,6 @@
 // Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.1
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
-// Sürüm 22.0 · Ana 10 (13 Kasım 2026) · Kitantik fiyata göre sıralı + sayfalar adresle
-//  - Kitantik arama adresine sort=salePrice;asc;L eklendi (iPad'de Sırala > Fiyat Artan tıklanınca oluşan adres).
-//  - Yeni kural alanı "sayfaUrl": sonraki sayfalar düğmeye tıklanmadan adresle (&page=N) okunur.
-//  - n11, Trendyol, SahafPazar teşhis dökümü kapatıldı (rapor kısalsın).
-// Sürüm 21.9 · Ana 10 (13 Kasım 2026) · Kitantik sıralama tıklama teşhisi + yükleyici
-//  - Kitantik: Sırala düğmesine basılır, açılan seçenekler rapora yazılır, fiyata göre artan olan tıklanır; yeni adres ve ilk fiyatlar yazılır.
-//  - Yükleyici (kod/yukleyici.js): iPad'e bir kez kurulur, güncel betiği GitHub'dan alır; rapor başlığında "betik:" kaynağı görünür.
-// Sürüm 21.8 · Ana 10 (13 Kasım 2026) · Kitantik teşhisi + n11 açıldı
-//  - n11 (mağazalar) açıldı; n11 Sahaflar Çarşısı da açık. n11 teşhisi bir tur daha açık (kart kuralı için ham kart).
-//  - Kitantik: sıralama menüsü (div.item) ve sayfalama adayları rapora yazılır; yeni "adresDene" kuralıyla sayfa/sıralama adresi
-//    tahminleri tek turda denenir (ürün sayısı, ilk fiyatlar, artan sıralı mı, ilk sayfadan farklı ilan sayısı).
-// Sürüm 21.7 · Ana 9 (13 Kasım 2026) · ilk kez GERÇEK sitelerde bulutta da sınandı (okunabilen 8 sitede)
-//  - Trendyol: siteye özel kart kuralı (gerçek kart yapısından): ad ve fiyat doğru kutudan okunur; rozet şeridi
-//    ("Çok Al Az Öde", kupon) ve satıcı vitrin şeridi fiyat sanılmaz.
-//  - Sahafta: ürün sayfasındaki takip düğmesi ("Gelince Haber Ver") satıştaki ilanları "stokta yok" diye gizletiyordu.
-//    Siteye özel "stokVar" kuralı: sayfada "1 sahafta var / son 1 adet" yazıyorsa ilan stokta sayılır.
-//  - Halk Kitabevi açıldı (gerçek sitede doğrulandı: 6 ilan, 65 TL, stokta).
-//  - n11 Sahaflar Çarşısı: kartta kondisyon yazmadığı bilindiği için gereksiz uyarı kalktı.
-//  - Kitantik: üç sayfaya kadar okuma denenir; sıralama seçenekleri teşhis olarak rapora yazılır (fiyata göre sıralı
-//    adres bulunursa 21.8'de kurallar dosyasına yazılacak).
-//  - n11 ana sitesi (mağazalar) aday olarak eklendi: asıl uygulamada kapalı, sınamada denenir ve teşhis yazar.
-//  - Teşhis açık sitelerde "SIRALAMA SEÇENEKLERİ" satırı rapora eklendi.
-// Sürüm 21.6 · iPad 21.5 "Kürk Mantolu Madonna" raporuna göre düzeltmeler (13 Kasım 2026)
-//  - Fiyatın hemen ardından (aynı ya da bitişik kutuda) "kupon/indirim/kazanç" geliyorsa o sayı fiyat sayılmaz
-//    ("10 TL" + ayrı kutuda "Kupon", "Sepette 150 TL İndirim"). Kart kuralıyla okunan fiyattan da bu tutarlar silinir.
-//  - Fiyat ürün bağlantısının dışında ve ortak kap çok büyükse (4000+ harf) fiyat "şüpheli" sayılır (Trendyol 10,00 TL hatası).
-//  - "Oy ver / yorum / puan" bağlantıları ürün bağlantısı sayılmaz (Halk Kitabevi kitabı listeliyordu ama eleniyordu).
-//  - Akakçe: satıcı satırlarından biri "Stokta" diyorsa ürün stokta sayılır (yanlış "STOĞU DOĞRULANMADI" uyarısı kalktı).
-//  - Kitantik: satıcı adı "İkinci El - <satıcı>" yazımından okunur; kartta kondisyon olmadığı bilindiği için uyarı yazılmaz.
-//  - Kurallar: Letgo ve n11 Sahaflar Çarşısı açık; Trendyol teşhisi gerçek sonuç kartını alır; Akakçe teşhisi kapandı.
-// Sürüm 21.5 · iPad "Kürk Mantolu Madonna" raporuna göre düzeltmeler (13 Kasım 2026)
-//  - "10 TL Kupon" gibi etiketler fiyat sayılmaz (Trendyol'da 10,00 TL hatası).
-//  - "Ücretsiz kargo / kargo bedava" etiketi fiyatı kargo ücreti yapmaz (n11'de bütün fiyatlar şüpheli sayılıyordu).
-//  - Nadir'in boşluklu yıldızları ("★ ★ ☆ ☆ ☆ İdare Eder") kondisyon olarak okunur.
-//  - Ad başındaki rozetler ("Bugün Kargoda", "Kargo Bedava"...) addan silinir.
-//  - Letgo: kart kuralı (ad, fiyat, ŞEHİR); ilan sayfasında stok bilgisi yok, yayındaki ilan var sayılır (35 sn → kısa).
-//  - Teşhis istenen site (Trendyol, Akakçe) "çalıştı" olsa da ayrıntıda yazılır (ham kart görünsün).
-//  - Kurallar: Pazarama yeniden açık; SahafPazar (3 sayfa) ve Sahafta açık; n11 aday, hataları kayıtlı.
-// Sürüm 21.4 · iPad "Gündeste" raporuna göre düzeltmeler (13 Kasım 2026)
-//  - Siteye özel kart kuralı (kurallar.json "kart"): SahafPazar ve Sahafta'da ad, fiyat, kondisyon, satıcı doğru yerden okunur
-//    (eskiden SahafPazar'da kitap adı yerine satıcı adı okunuyordu). Kap bulunamazsa genel okuyucuya düşülür.
-//  - "Sonuç yok" yazısı daha geniş alanda ve yeni kalıplarla aranır (BKM, n11 "Aradığını bulamadık", "0 kitap bulundu").
-//  - Sayfa üst üste iki yoklamada "sonuç yok" deyip fiyatlı ürün göstermiyorsa bekleme erken biter (Kitapseç 55 sn bekliyordu).
-//  - Trendyol ve Akakçe için her sınamada teşhis dökümü ve ham kart HTML'i (bağlantının nerede durduğunu görmek için).
-//  - Sahaf ilanında kondisyon okunamazsa kısa raporda kartın yazısı gösterilir (Nadir/Kitantik gerçek yazımı için).
-//  - Rapor özeti: "süre sınırında kesildi" ile "yavaş (45 sn üstü)" ayrı sayılır.
-//  - Kurallar: sahaf.com ve Kolekton çıkarıldı (gerekçe kurallar.json "cikarilanlar"da).
-// Sürüm 21.3 · 2. ve 3. dilim (13 Kasım 2026)
-//  - Sıralı stok kontrolü: en ucuz ilandan başlayarak ürün sayfası açılır; stokta olan ilk ilana kadar, en çok 3 sayfa.
-//    Stokta olmadığı görülen ilan gizlenir. Stoğu doğrulanmamış en ucuz ilan artık "ÇALIŞTI" sayılmaz.
-//  - Kanıt kuralı: kartın içinden türetilen ad aranan adın kendisiyse (ör. sayfa başlığı) bağlantının adresi ya da başlığı
-//    aranan kelimeleri olumlu olarak taşımalı; taşımıyorsa ilan elenir (Trendyol başlık çubuğu, Pazarama örneği).
-//  - İlan alanları: tür, kondisyon, satıcı, şehir, kargo (şehir ve kargo şimdilik boş). Sahaf ilanında kondisyon ve satıcı okunmaya çalışılır.
-//  - Kısa rapor: önce çalışan siteler tek satır (kanıtıyla), sonra yalnız sorunlu, kısmen çalışan ve aday sitelerin ayrıntısı.
-//  - Kurallar (C kararı): Pazarama ve Halk Kitabevi asıl uygulamada kapalı. Yeni aday sahaf siteleri: n11 Sahaflar Çarşısı,
-//    SahafPazar, sahaf.com, Kolekton, Sahafta. Aday sitelerin kart yapısı ve HTML parçası her zaman rapora yazılır.
-// Sürüm 21 · 1. dilim: kod üç parçaya ayrıldı (kurallar.json, motor.js, Scriptable kabuğu); davranış sürüm 20 ile aynı.
+// Sürüm 22.2 · Ana 12 · yazar ayrı alan: eşleştirme yalnız kitap adıyla; yazar arama adresine eklenir (bulunamazsa yalnız ad aranır) ve kartta görülüp görülmediği raporda yazılır.
 
 const GOMULU_KURALLAR = {
   "surum": "22.1",
@@ -408,7 +352,7 @@ const GOMULU_KURALLAR = {
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "22.0";
+const MOTOR_SURUMU = "22.2";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -1196,6 +1140,16 @@ function sayfaHam() {
 
 // Kitap olmayan ilanlar (sürüm 13'teki liste) — aranan adda bu kelime yoksa elenir.
 const KITAP_DISI = (KURAL.kitapDisi || []);
+// Sürüm 22.2 · YAZAR AYRI ALAN: "sorgu" yalnız KİTAP ADIDIR (eşleştirme hep ad üzerinden yapılır); yazar yalnız arama adresine eklenir ve kartta görülüp görülmediği işaretlenir.
+// Neden: yazar adı sorguya karışınca (22.1 iPad sınaması, "Çankaya Falih Rıfkı Atay") gerçek "Çankaya" ilanları 6 sitede "ilgili 0" sayıldı,
+// yazarın başka kitapları ise "ilgili" sayılıp en ucuz diye gösterildi.
+let AKTIF_YAZAR = "";
+function yazarKartta(metin) {
+  const w = kelimeler(AKTIF_YAZAR).filter(x => x.length >= 3);
+  if (!w.length) return false;
+  const var_ = new Set(kelimeler(metin));
+  return w.every(x => var_.has(x));
+}
 function kitapDisi(baslik, sorgu) {
   const b = " " + kelimeler(baslik).join(" ");
   const q = " " + kelimeler(sorgu).join(" ");
@@ -1302,7 +1256,7 @@ function sonucuIsle(son, k, sorgu) {
     .map(u => {
       const rak = (u.prices || []).map(sayi).filter(x => x >= alt);
       return { baslik: duzelt(String(u.title || "").replace(/^((bugün|yarın) kargoda|kargo bedava|ücretsiz kargo|hızlı teslimat|başarılı satıcı|yetkili satıcı|süper|avantajlı ürün)\s*/gi, "")), fiyat: rak.length ? Math.min(...rak) : 0, href: u.href, stokYok: !!u.stokYok,
-        kart: String(u.extra || "").replace(/\s+/g, " ").trim(), ekitap: ekitapIzi(u.extra || ""),
+        kart: String(u.extra || "").replace(/\s+/g, " ").trim(), ekitap: ekitapIzi(u.extra || ""), yazarKartta: yazarKartta(u.title + " " + (u.extra || "")),
         tum: (u.prices || []).slice(0, 6).join(" ; "), ctx: String(u.ctx || ""), linksiz: !!u.linksiz,
         // Sürüm 21 · ilan alanları (arayüz bunlara göre sıralayıp süzecek). Okunamayan alan boş kalır.
         // tur: yeni | sahaf | ikinciel | karsilastirma · stok: "var" | "yok" | "bilinmiyor" | "" (denetlenmedi)
@@ -1387,7 +1341,7 @@ function yeniSonuc(k) {
     ilgililer: [], takimlar: [], kitapDisiSayisi: 0, ekitapSayisi: 0, ekitapElenen: 0, kanitsizSayisi: 0, kanitsizOrnek: [], suphelSayisi: 0, suphelOrnek: [],
     fiyatsizGizlenen: [], fiyatsizVar: [], fiyatsizBelirsiz: [],
     stokKontrol: [], ozet: null, yapi: null, dom: "", ham: "", hata: "", akakce: null, sure: 0, gezi: [], sayfaHam: "", detayRapor: [], adresDeneme: [], siralaTikla: [], siralamaMenusu: "", sayfalama: "",
-    yavas: false, iptal: false, sinir: 0 };
+    yavas: false, iptal: false, sinir: 0, aramaTuru: "", aramaDenenen: [] };
 }
 
 // Okunan sayfa verisini sonuç kaydına işler (sayfa gezisinde her yeni sayfadan sonra yeniden çağrılır).
@@ -1424,15 +1378,21 @@ async function siteyiSina(k, sorgu, r) {
   let son = {}, sonWv = null;
   try {
     // 1. yol: arama adresi
-    for (const kalip of k.url) {
-      if (r.iptal) return;
-      const wv = yeniSekme(r);
-      const adres = adresYap(kalip, sorgu);
-      const yh = await sayfaYukle(wv, adres, 20000);
-      const b = await sonucBekle(wv, sorgu, 15000, k.tur, r, k.kart);
-      if (r.iptal) return;
-      if (!r.adres || ilgiliSayisi(b.son, sorgu) > ilgiliSayisi(son, sorgu) || (!son.priceCount && b.son.priceCount)) {
-        son = b.son; sonWv = wv; r.adres = adres; r.yol = "adres"; r.hata = yh || b.hata || "";
+    // Sürüm 22.2: yazar verilmişse önce "ad + yazar" aranır (sonuçlar daralır); bu aramada kitap görünmezse yalnız "ad" aranır (Pandora gibi yazarlı aramayı reddeden siteler için).
+    const aramalar = AKTIF_YAZAR ? [{ q: sorgu + " " + AKTIF_YAZAR, tur: "ad+yazar" }, { q: sorgu, tur: "yalnız ad" }] : [{ q: sorgu, tur: "ad" }];
+    for (const ar of aramalar) {
+      r.aramaDenenen.push(ar.tur);
+      for (const kalip of k.url) {
+        if (r.iptal) return;
+        const wv = yeniSekme(r);
+        const adres = adresYap(kalip, ar.q);
+        const yh = await sayfaYukle(wv, adres, 20000);
+        const b = await sonucBekle(wv, sorgu, 15000, k.tur, r, k.kart);
+        if (r.iptal) return;
+        if (!r.adres || ilgiliSayisi(b.son, sorgu) > ilgiliSayisi(son, sorgu) || (!son.priceCount && b.son.priceCount)) {
+          son = b.son; sonWv = wv; r.adres = adres; r.yol = "adres"; r.hata = yh || b.hata || ""; r.aramaTuru = ar.tur;
+        }
+        if (ilgiliSayisi(son, sorgu)) break;
       }
       if (ilgiliSayisi(son, sorgu)) break;
     }
@@ -1730,6 +1690,7 @@ function kisaSatir(r) {
   const gizli = r.ilgililer.length - gorunenler(r).length;
   if (gizli) s += " (stokta yok, gizlenen " + gizli + ")";
   if (r.takimlar.length) s += " · takım " + r.takimlar.length;
+  if (AKTIF_YAZAR) s += " · arama: " + (r.aramaTuru || "?") + (r.aramaDenenen.length > 1 ? " (yalnız ad da denendi)" : "") + " · yazar kartta " + r.ilgililer.filter(x => x.yazarKartta).length + "/" + r.ilgililer.length;
   if (r.kanitsizSayisi) s += " · kanıtsız elenen " + r.kanitsizSayisi;
   if (ilk) s += " · en ucuz " + tl(ilk.fiyat) + " \"" + ilk.baslik.slice(0, 50) + "\"" + ilanEk(ilk);
   if (r.stokKontrol.length) s += " · stok sırası: " + stokSirasi(r);
@@ -1748,7 +1709,7 @@ function raporMetni(sorgu, sonuclar, sure, cihaz) {
   const sayac = sayacYap(sonuclar);
   const satirlar = [];
   satirlar.push("KİTAP SINAMA · sürüm " + SURUM + " · " + new Date().toLocaleString("tr-TR"));
-  satirlar.push("Arama: " + sorgu + " · toplam " + sure + " sn · " + cihaz + " · süre sınırı " + SITE_SURE_SINIRI + " sn (Nadir 120) · yavaş eşiği " + YAVAS_ESIK + " sn");
+  satirlar.push("Arama: " + sorgu + (AKTIF_YAZAR ? " · yazar: " + AKTIF_YAZAR : "") + " · toplam " + sure + " sn · " + cihaz + " · süre sınırı " + SITE_SURE_SINIRI + " sn (Nadir 120) · yavaş eşiği " + YAVAS_ESIK + " sn");
   // Sürüm 21.4: "süre sınırında kesildi" ile "yavaş (eşiği aştı ama bitti)" ayrı sayılır; eskiden özet ile site satırları çelişiyordu.
   const esikAsan = sonuclar.filter(r => !r.yavas && r.sure > YAVAS_ESIK).length;
   satirlar.push("Özet: " + sayac.yesil + " çalıştı · " + sayac.sari + " kısmen · " + sayac.kirmizi + " çalışmadı · " + sayac.yok + " sonuç yok · " + sayac.gorunmuyor + " görünmüyor · " + sayac.yavas + " süre sınırında kesildi · " + esikAsan + " yavaş (" + YAVAS_ESIK + " sn üstü, bitti)");
@@ -1767,7 +1728,7 @@ function raporMetni(sorgu, sonuclar, sure, cihaz) {
     let s = "[" + RENK_ADI[renk(r)] + "] " + r.k.ad + " (" + etiket(r.k) + ") · " + r.sure + " sn" +
       (r.yavas ? " (SÜRE SINIRINDA KESİLDİ: " + r.sinir + " sn)" : (r.sure > YAVAS_ESIK ? " (yavaş)" : "")) +
       " · yol: " + (r.yol || "-") +
-      " · fiyat " + r.fiyatSayisi + " · ürün " + r.urunSayisi + " · ilgili " + r.ilgililer.length;
+      " · fiyat " + r.fiyatSayisi + " · ürün " + r.urunSayisi + " · ilgili " + r.ilgililer.length + (AKTIF_YAZAR ? " · arama: " + (r.aramaTuru || "?") + (r.aramaDenenen.length > 1 ? " (yalnız ad da denendi)" : "") + " · yazar kartta " + r.ilgililer.filter(x => x.yazarKartta).length : "");
     if (r.sonucYazisi) s += " · sayfa yazıyor: \"" + r.sonucYazisi + "\"";
     if (r.takimlar.length) s += " · takım " + r.takimlar.length;
     if (r.kanitsizSayisi) s += " · kanıtsız elenen " + r.kanitsizSayisi;
@@ -1898,6 +1859,7 @@ ${kartlar}
 // ---------------------------------------------------------------
 async function siteleriSina(sorgu, secenek) {
   secenek = secenek || {};
+  AKTIF_YAZAR = String(secenek.yazar || "").trim();
   const siteler = secenek.siteler || KURAL.siteler || [];
   const ayniAnda = secenek.ayniAnda || AYAR.ayniAnda || 4;
   return sirayla(siteler, ayniAnda, async k => {
@@ -1953,13 +1915,15 @@ async function calis() {
   giris.title = "Site sınaması";
   giris.message = "Denenecek kitabın adı. " + kural.siteler.length + " site denenecek; 4–8 dakika sürebilir. Bu sırada Scriptable açık kalsın, ekran kapanmasın.";
   giris.addTextField("Kitap adı", VARSAYILAN_KITAP);
+  giris.addTextField("Yazar (isteğe bağlı, boş bırakılabilir)", "");
   giris.addAction("Başlat");
   giris.addCancelAction("Vazgeç");
   if (await giris.presentAlert() === -1) return;
   const sorgu = giris.textFieldValue(0).trim() || VARSAYILAN_KITAP;
+  const yazar = giris.textFieldValue(1).trim();
 
   const bas = Date.now();
-  const sonuclar = await motor.siteleriSina(sorgu);
+  const sonuclar = await motor.siteleriSina(sorgu, { yazar });
   const sure = Math.round((Date.now() - bas) / 1000);
 
   let cihaz = "";
