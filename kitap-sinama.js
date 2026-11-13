@@ -1,6 +1,6 @@
 // Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.1
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
-// Sürüm 22.2 · Ana 12 · yazar ayrı alan: eşleştirme yalnız kitap adıyla; yazar arama adresine eklenir (bulunamazsa yalnız ad aranır) ve kartta görülüp görülmediği raporda yazılır.
+// Sürüm 22.3 · Ana 12 · liste modu: Kitap Yükleyici'de 'Liste modu (panodaki listeyi çalıştır)'; satır = Kitap adı | Yazar; kısa rapor kitap-liste-raporu.txt. (22.2: yazar ayrı alan.)
 
 const GOMULU_KURALLAR = {
   "surum": "22.1",
@@ -352,7 +352,7 @@ const GOMULU_KURALLAR = {
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "22.2";
+const MOTOR_SURUMU = "22.3";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -1590,6 +1590,30 @@ function stokSirasi(r) {
 }
 
 // Süre sınırıyla çalıştırır. Sınır dolarsa site "yavaş" sayılır; o ana kadar doldurulan kayıt (kopyası) döner, arkadaki iş "iptal" bayrağıyla durdurulur.
+// Sürüm 22.3 · LİSTE MODU için kısa rapor: bir kitap = bir blok. En ucuz 5 görünür (stokta olduğu bilinen) ilan, ilan veren/vermeyen site sayısı, takım özeti.
+// "ilan yok" nedeni de yazılır (açıklanmamış eksik sıfır ilkesi: boş sitenin durumu görünür kalsın).
+function kompaktRapor(sorgu, yazar, sonuclar, sure) {
+  const tum = [];
+  for (const r of sonuclar) for (const x of gorunenler(r)) tum.push({ site: r.k.ad, x });
+  tum.sort((a, b) => a.x.fiyat - b.x.fiyat);
+  const takimlar = [];
+  for (const r of sonuclar) for (const x of (r.takimlar || [])) takimlar.push({ site: r.k.ad, x });
+  takimlar.sort((a, b) => a.x.fiyat - b.x.fiyat);
+  const ilanli = sonuclar.filter(r => gorunenler(r).length);
+  const ilansiz = sonuclar.filter(r => !gorunenler(r).length);
+  const satir = [];
+  satir.push("▶ " + sorgu + (yazar ? " | " + yazar : "") + " · " + sure + " sn · ilanı olan site " + ilanli.length + "/" + sonuclar.length + " · görünür ilan " + tum.length);
+  tum.slice(0, 5).forEach(t => {
+    let e = "   " + tl(t.x.fiyat) + " · " + t.site + " · \"" + t.x.baslik.slice(0, 55) + "\"" + (t.x.yazarKartta ? " [yazar kartta]" : "") + (t.x.stok === "var" ? "" : " [stok doğrulanmadı]");
+    if (t.x.kondisyon) e += " · " + t.x.kondisyon;
+    if (t.x.satici) e += " · " + t.x.satici;
+    satir.push(e);
+  });
+  if (takimlar.length) satir.push("   takım/set: " + takimlar.length + " ilan, en ucuz " + tl(takimlar[0].x.fiyat) + " (" + takimlar[0].site + ")");
+  if (ilansiz.length) satir.push("   ilan yok: " + ilansiz.map(r => r.k.ad + " (" + RENK_ADI[renk(r)] + (r.aramaDenenen.length > 1 ? ", yalnız ad da denendi" : "") + ")").join(", "));
+  return satir.join("\n");
+}
+
 async function siteSinirli(k, sorgu) {
   const r = yeniSonuc(k);
   const sinir = k.sure || SITE_SURE_SINIRI;
@@ -1869,7 +1893,7 @@ async function siteleriSina(sorgu, secenek) {
   });
 }
 
-return { SURUM, siteleriSina, raporMetni, raporSayfasi, renk, RENK_ADI, sayacYap };
+return { SURUM, siteleriSina, kompaktRapor, raporMetni, raporSayfasi, renk, RENK_ADI, sayacYap };
 }
 if (typeof module !== "undefined" && module) module.exports = MotorKur;
 
@@ -1917,8 +1941,11 @@ async function calis() {
   giris.addTextField("Kitap adı", VARSAYILAN_KITAP);
   giris.addTextField("Yazar (isteğe bağlı, boş bırakılabilir)", "");
   giris.addAction("Başlat");
+  giris.addAction("Liste modu (panodaki listeyi çalıştır)");
   giris.addCancelAction("Vazgeç");
-  if (await giris.presentAlert() === -1) return;
+  const secim = await giris.presentAlert();
+  if (secim === -1) return;
+  if (secim === 1) { await listeCalis(motor, kural, kaynak); return; }
   const sorgu = giris.textFieldValue(0).trim() || VARSAYILAN_KITAP;
   const yazar = giris.textFieldValue(1).trim();
 
@@ -1945,8 +1972,8 @@ async function calis() {
 
 // Raporu Dosyalar uygulamasından görülebilen bir dosyaya yazar (pano güvenilir olmadığı için).
 // Önce iCloud Drive › Scriptable, olmazsa iPad'imde › Scriptable. Her sınamada aynı dosyanın üzerine yazar.
-function raporuKaydet(metin) {
-  const ad = "kitap-sinama-raporu.txt";
+function raporuKaydet(metin, dosyaAdi) {
+  const ad = dosyaAdi || "kitap-sinama-raporu.txt";
   try {
     const fm = FileManager.iCloud();
     fm.writeString(fm.joinPath(fm.documentsDirectory(), ad), metin);
@@ -1958,6 +1985,56 @@ function raporuKaydet(metin) {
       return "iPad'imde › Scriptable › " + ad;
     } catch (e2) { return ""; }
   }
+}
+
+// Sürüm 22.3 · LİSTE MODU. Panodaki listeyi okur: her satır "Kitap adı | Yazar" (yazar boş olabilir; baştaki "1." numarası atılır; # ile başlayan satır atlanır).
+// Kitaplar sırayla çalışır; her kitaptan sonra rapor dosyası güncellenir (yarıda kesilirse o ana kadarki sonuç kalır). Bitince tüm rapor panoya kopyalanır.
+async function listeCalis(motor, kural, kaynak) {
+  let pano = "";
+  try { pano = Pasteboard.paste() || ""; } catch (e) { }
+  const isler = String(pano).split(/\r?\n/).map(s => s.trim().replace(/^\d+[.)]\s+/, "")).filter(s => s && s[0] !== "#")
+    .map(s => { const p = s.split("|"); return { ad: (p[0] || "").trim(), yazar: (p[1] || "").trim() }; }).filter(x => x.ad);
+  if (!isler.length) {
+    const u = new Alert(); u.title = "Panoda liste yok";
+    u.message = "Önce listeyi kopyala (her satır: Kitap adı | Yazar), sonra yeniden çalıştır.";
+    u.addAction("Tamam"); await u.presentAlert(); return;
+  }
+  const onay = new Alert();
+  onay.title = isler.length + " kitap bulundu";
+  onay.message = "İlk üçü: " + isler.slice(0, 3).map(x => x.ad).join(", ") + ". Tahmini süre " + Math.ceil(isler.length * 1.2) + " dakika. Scriptable açık kalsın, ekran kapanmasın.";
+  onay.addAction("Başlat"); onay.addCancelAction("Vazgeç");
+  if (await onay.presentAlert() === -1) return;
+
+  let cihaz = "";
+  try { cihaz = Device.model() + " " + Device.systemName() + " " + Device.systemVersion(); } catch (e) { }
+  cihaz += " · kurallar: " + kaynak + " (sürüm " + (kural.surum || "?") + ")";
+  if (typeof YUKLEYICI_KAYNAK !== "undefined") cihaz += " · betik: " + YUKLEYICI_KAYNAK;
+  const bas = Date.now();
+  const bloklar = [];
+  let yer = "";
+  for (let i = 0; i < isler.length; i++) {
+    const k = isler[i];
+    const b0 = Date.now();
+    let blok;
+    try {
+      const sonuclar = await motor.siteleriSina(k.ad, { yazar: k.yazar });
+      blok = (i + 1) + "/" + isler.length + " " + motor.kompaktRapor(k.ad, k.yazar, sonuclar, Math.round((Date.now() - b0) / 1000));
+    } catch (e) {
+      blok = (i + 1) + "/" + isler.length + " ▶ " + k.ad + (k.yazar ? " | " + k.yazar : "") + " · HATA: " + e;
+    }
+    bloklar.push(blok);
+    const baslik = "KİTAP LİSTE SINAMASI · sürüm " + motor.SURUM + " · " + new Date().toLocaleString("tr-TR") + " · " + cihaz + "\n" +
+      "Tamamlanan: " + bloklar.length + "/" + isler.length + " · geçen " + Math.round((Date.now() - bas) / 1000) + " sn\n";
+    yer = raporuKaydet(baslik + "\n" + bloklar.join("\n\n") + "\n", "kitap-liste-raporu.txt") || yer;
+    if (i < isler.length - 1) await TARAYICI.bekle(4000);
+  }
+  const tam = "KİTAP LİSTE SINAMASI · sürüm " + motor.SURUM + " · " + new Date().toLocaleString("tr-TR") + " · " + cihaz + "\n" +
+    "Bitti sayılmaz; yalnız bu liste çalıştı: " + isler.length + " kitap · toplam " + Math.round((Date.now() - bas) / 1000) + " sn\n\n" + bloklar.join("\n\n") + "\n";
+  try { Pasteboard.copy(tam); } catch (e) { }
+  const sayfa = new WebView();
+  const kacisla = t => t.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  await sayfa.loadHTML("<meta name='viewport' content='width=device-width,initial-scale=1'><body style='font:15px -apple-system;background:#111;color:#eee;padding:16px'><p><b>Liste sınaması çalıştı</b> · rapor panoya kopyalandı" + (yer ? " · dosya: " + kacisla(yer) : "") + "</p><pre style='white-space:pre-wrap'>" + kacisla(tam) + "</pre></body>");
+  await sayfa.present(true);
 }
 
 await calis();
