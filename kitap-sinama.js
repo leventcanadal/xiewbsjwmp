@@ -1,6 +1,6 @@
 // Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.1
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
-// Sürüm 22.3 · Ana 12 · liste modu: Kitap Yükleyici'de 'Liste modu (panodaki listeyi çalıştır)'; satır = Kitap adı | Yazar; kısa rapor kitap-liste-raporu.txt. (22.2: yazar ayrı alan.)
+// Sürüm 22.4 · Ana 13 · uyum derecesi [A]/[B]/[C] (yazar kanıtı + tam başlık), ilgisiz kalem süzgeci (dergi/bülten sayısı, inceleme, sadece kapak; elenenler raporda), kısmi cilt/uyarlama işareti, siteler arası fiyat denetimi. Liste raporu önce kanıt puanına, sonra fiyata göre sıralar. (22.3: liste modu; 22.2: yazar ayrı alan.)
 
 const GOMULU_KURALLAR = {
   "surum": "22.1",
@@ -352,7 +352,7 @@ const GOMULU_KURALLAR = {
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "22.3";
+const MOTOR_SURUMU = "22.4";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -1156,6 +1156,84 @@ function kitapDisi(baslik, sorgu) {
   return KITAP_DISI.some(k => b.includes(" " + k) && !q.includes(" " + k));
 }
 
+// ---------------------------------------------------------------
+// Sürüm 22.4 · UYUM (kanıt derecesi) ve İLGİSİZ KALEM SÜZGECİ
+// Neden: 22.3 liste sınaması + Google ölçümü (14 Kasım): ilk 5 ilanda dergi sayısı, inceleme kitabı, "sadece kapak", başka "Gece"/"Ankara"
+// kitapları vardı; başlıkta aranan sözcük geçince "ilgili" sayılıyor ve yalnız fiyata göre sıralanıyordu.
+// DERECE: A = başlık aranan adla örtüşüyor (yayınevi/baskı notu/dizi eki sayılmaz) ve yazar kanıtı var
+//         "-" = yazar girilmedi (derece verilmez, sıra eskisi gibi fiyata göre)
+//         B = başlık örtüşüyor ama yazar kartta okunamadı (BKM, Hepsiburada, Sahafta, SahafPazar, n11 Sahaflar…): "yazar doğrulanmadı"
+//         C = başlık "kitap adı + fazlası" (başka kitap, derleme, inceleme ya da uyarlama olabilir)
+// PUAN (küçük iyi): A0 B1 C2 · +1 kısmi cilt/kısım · +1 uyarlama izi · +5 fiyatı şüpheli. Sıra: puan, sonra fiyat.
+// Puanla HİÇBİR ilan gizlenmez. Yalnız "ilgisiz kalem" (dergi/bülten sayısı, inceleme, sadece kapak) elenir; sayısı ve nedeni rapora yazılır.
+const YAYINEVI_SON = new Set(["yayinlari", "yayinlar", "yayinevi", "yayincilik", "yayinciligi", "yayini", "basimevi", "kitabevi"]);
+const DIZI_BASI = new Set(["butun", "tum", "toplu"]);
+const DIZI_SONU = new Set(["eserleri", "eserler", "eser", "yapitlari", "yapitlar"]);
+const BASKI_NOTU = new Set(["roman", "kitap", "baski", "baskisi", "ciltli", "ciltsiz", "karton", "cep", "boy", "aciklama", "aciklamayi", "okuyunuz", "okuyun", "bkz",
+  "sararmalar", "var", "yok", "ikinci", "el", "yeni", "sifir", "ozgun", "metin", "gunumuz", "turkcesiyle", "turkcesi", "yapi", "kredi", "bankasi", "kultur"]);
+const ILGISIZ_KALIPLAR = [
+  ["dergi/bülten sayısı", / sayi [0-9]+ | sayisi | bulten | bulteni | yilligi | (ocak|subat|mart|nisan|mayis|haziran|temmuz|agustos|eylul|ekim|kasim|aralik) (19|20)[0-9]{2} /],
+  ["inceleme/üzerine", / uzerine | uzerinde | hakkinda | inceleme | incelemesi | incelemeler | sempozyum | sempozyumu | sorusturma | elestiri /],
+  ["sadece kapak", / (sadece|yalniz|yalnizca) (on |arka )?kapak /]
+];
+const UYARLAMA_KALIBI = / (ilkogretim|ogrenci|ogrenciler|ogrencileri|ilkokul|ortaokul|lise|secmeler|ozet|ozeti|kisaltilmis|uyarlama|uyarlayan) | (gencler|cocuklar|cocuk|okullar) icin | temel eser /;
+
+// Kitap adıyla ilgisiz kalem mi? Dönüş: neden ("" ise ilgisiz değil). Aranan adda aynı kalıp varsa (ör. kitap adında "sayı") elenmez.
+function ilgisizNeden(baslik, sorgu) {
+  const s = " " + kelimeler(baslik).join(" ") + " ";
+  const q = " " + kelimeler(sorgu).join(" ") + " ";
+  for (const [ad, re] of ILGISIZ_KALIPLAR) if (re.test(s) && !re.test(q)) return ad;
+  // "Yazar'ın Kitap'ı" kalıbı (ör. "Yaşar Kemal'in … İnce Memed'indeki temalar"): yazar adının iyelik hâli inceleme demektir.
+  const yz = kelimeler(AKTIF_YAZAR).filter(x => x.length >= 3);
+  if (yz.length) {
+    const re = new RegExp(" " + yz[yz.length - 1] + " (in|nin|un|nun) ");
+    if (re.test(s) && !re.test(q)) return "inceleme/üzerine";
+  }
+  return "";
+}
+
+// Başlığın aranan kitap adıyla örtüşme derecesi. yazarVar: yazar kartta (ya da başlıkta) görüldü mü.
+function uyumBul(baslik, sorgu, yazarVar) {
+  const q = kelimeler(sorgu);
+  const qSet = new Set(q);
+  const yzr = new Set(kelimeler(AKTIF_YAZAR));
+  const tok = kelimeler(baslik);
+  const tset = new Set(tok);
+  const out = [];
+  for (let i = 0; i < tok.length; i++) {
+    const t = tok[i];
+    if (DIZI_BASI.has(t) && DIZI_SONU.has(tok[i + 1]) && !qSet.has(t)) { i++; if (/^\d{1,2}$/.test(tok[i + 1] || "")) i++; continue; } // "Bütün Eserleri 1" dizi eki
+    if (YAYINEVI_SON.has(t)) { // "Everest Yayınları", "Evrensel İletişim Yayınları": yayınevi sözcüğüyle birlikte önündeki en çok 2 sözcük (aranan ad/yazar/sayı değilse) atılır
+      for (let n = 0; n < 2; n++) { const on = out[out.length - 1]; if (on === undefined || qSet.has(on) || yzr.has(on) || /^\d+$/.test(on)) break; out.pop(); }
+      continue;
+    }
+    if ((t === "baski" || t === "baskisi") && /^\d{1,2}$/.test(out[out.length - 1] || "")) { out.pop(); continue; } // "1. Baskı"
+    out.push(t);
+  }
+  const fazla = out.filter(t => !qSet.has(t) && !yzr.has(t) && !BASKI_NOTU.has(t));
+  const eksik = q.filter(t => t.length >= 3 && !tset.has(t)).length;
+  const kanitli = !!AKTIF_YAZAR && !!yazarVar;
+  const izin = (q.length >= 4 ? 2 : q.length === 3 ? 1 : 0) + (kanitli ? 1 : 0);
+  const tam = eksik === 0 && fazla.length <= izin;
+  // Yazar girilmemişse yazar kanıtı aranamaz ve başlıktaki fazla sözcük yazar adı olabilir: derece "-" (sıralamayı etkilemez; 22.1/22.3 davranışı korunur).
+  const derece = !AKTIF_YAZAR ? "-" : tam ? (kanitli ? "A" : "B") : "C";
+  // Kısmi cilt/kısım: tek sayı ("İnce Memed 2"), roman rakamı ("Çankaya V"), "cilt/kısım" sözü ya da "3. Kısım". "2 Cilt", "99 sayfa", "+ 7 yaş" kısmi değildir.
+  const sadeBaslik = sade(baslik);
+  let kismi = /\d{1,2}\s*\.\s*(cilt|cild|kisim|bolum|cuz)\b/.test(sadeBaslik);
+  fazla.forEach((t, i) => {
+    const sonra = fazla[i + 1], once = fazla[i - 1];
+    if (/^\d{1,2}$/.test(t)) { if (!/^(sayfa|yas|adet|kitap|cilt|cild)$/.test(sonra || "")) kismi = true; }
+    else if (/^(cilt|cild)$/.test(t)) { if (!/^\d{1,2}$/.test(once || "") || once === "1") kismi = true; }
+    else if (/^(kisim|bolum|cuz|ii|iii|iv|v|vi|vii|viii|ix)$/.test(t)) kismi = true;
+  });
+  const s = " " + tok.join(" ") + " ";
+  const qs = " " + q.join(" ") + " ";
+  const uyarlama = UYARLAMA_KALIBI.test(s) && !UYARLAMA_KALIBI.test(qs);
+  // eksik: aranan adın bir sözcüğü başlıkta yok (yazım hatası olabilir ya da başka kitap); elenmez, en alta iner.
+  const puan = (derece === "A" || derece === "-" ? 0 : derece === "B" ? 1 : 2) + (kismi ? 1 : 0) + (uyarlama ? 1 : 0) + (eksik ? 1 : 0);
+  return { derece, kismi, uyarlama, adEksik: eksik > 0, puan };
+}
+
 // Takım / set / çok ciltli ürün mü? ("3 Kitap Set", "Takım", "5 Cilt") — tek kitap sayılmaz, ayrı gösterilir.
 function takimMi(baslik) {
   const s = " " + kelimeler(baslik).join(" ") + " ";
@@ -1251,8 +1329,16 @@ function sonucuIsle(son, k, sorgu) {
   const kitapDisiSayisi = eslesen.filter(u => kitapDisi(u.title, sorgu)).length;
   const ekitapElenen = eslesen.filter(u => u.ekitap && !kitapDisi(u.title, sorgu)).length;
   const alt = k.tur === "sahaf" ? 0.5 : 5; // sahafta çok ucuz ilan olabilir
-  const hazir = eslesen
-    .filter(u => !kitapDisi(u.title, sorgu) && !u.ekitap)
+  // Sürüm 22.4: ilgisiz kalemler (dergi/bülten sayısı, inceleme, sadece kapak) ayrılır; sayısı ve nedeni rapora yazılır (gizli eleme yok).
+  const ilgisizler = [];
+  const adaylar = eslesen.filter(u => !kitapDisi(u.title, sorgu) && !u.ekitap).filter(u => {
+    const n = ilgisizNeden(u.title, sorgu);
+    if (n) { ilgisizler.push({ u, n }); return false; }
+    return true;
+  });
+  const ilgisizOzet = {};
+  ilgisizler.forEach(x => { ilgisizOzet[x.n] = (ilgisizOzet[x.n] || 0) + 1; });
+  const hazir = adaylar
     .map(u => {
       const rak = (u.prices || []).map(sayi).filter(x => x >= alt);
       return { baslik: duzelt(String(u.title || "").replace(/^((bugün|yarın) kargoda|kargo bedava|ücretsiz kargo|hızlı teslimat|başarılı satıcı|yetkili satıcı|süper|avantajlı ürün)\s*/gi, "")), fiyat: rak.length ? Math.min(...rak) : 0, href: u.href, stokYok: !!u.stokYok,
@@ -1264,11 +1350,15 @@ function sonucuIsle(son, k, sorgu) {
         stok: u.stokYok ? "yok" : "", stokNeden: u.stokYok ? "arama kartında" : "" };
     })
     .filter(x => x.fiyat > 0)
-    .sort((a, b) => a.fiyat - b.fiyat);
+    .map(x => Object.assign(x, uyumBul(x.baslik, sorgu, x.yazarKartta)))
+    .sort((a, b) => a.puan - b.puan || a.fiyat - b.fiyat);
   return {
     ilgililer: hazir.filter(x => !takimMi(x.baslik)),
     takimlar: hazir.filter(x => takimMi(x.baslik)),
     kitapDisiSayisi, ekitapElenen, benzerElenen,
+    ilgisizSayisi: ilgisizler.length,
+    ilgisizOzet: Object.keys(ilgisizOzet).map(n => n + " " + ilgisizOzet[n]).join(", "),
+    ilgisizOrnek: ilgisizler.slice(0, 2).map(x => duzelt(x.u.title).slice(0, 45) + " (" + x.n + ")"),
     kanitsizSayisi: kanitsiz.length,
     suphelSayisi: supheli.length,
     suphelOrnek: supheli.slice(0, 2).map(u => duzelt(u.title).slice(0, 40) + " → fiyatlar " + (u.prices || []).slice(0, 4).join(" ; ") + " · önceki karakterler: " + String(u.ctx || "")),
@@ -1338,7 +1428,7 @@ async function akakceDetay(href, r) {
 function yeniSonuc(k) {
   return { k, yol: "", kutu: "", adres: "", sonUrl: "", baslik: "", engel: "", fiyatSayisi: 0, urunSayisi: 0,
     sonucYazisi: "", sonucSayisi: -1, sonucYok: false, benzer: false, benzerElenen: 0, okunanlar: [],
-    ilgililer: [], takimlar: [], kitapDisiSayisi: 0, ekitapSayisi: 0, ekitapElenen: 0, kanitsizSayisi: 0, kanitsizOrnek: [], suphelSayisi: 0, suphelOrnek: [],
+    ilgililer: [], takimlar: [], ilgisizSayisi: 0, ilgisizOzet: "", ilgisizOrnek: [], kitapDisiSayisi: 0, ekitapSayisi: 0, ekitapElenen: 0, kanitsizSayisi: 0, kanitsizOrnek: [], suphelSayisi: 0, suphelOrnek: [],
     fiyatsizGizlenen: [], fiyatsizVar: [], fiyatsizBelirsiz: [],
     stokKontrol: [], ozet: null, yapi: null, dom: "", ham: "", hata: "", akakce: null, sure: 0, gezi: [], sayfaHam: "", detayRapor: [], adresDeneme: [], siralaTikla: [], siralamaMenusu: "", sayfalama: "",
     yavas: false, iptal: false, sinir: 0, aramaTuru: "", aramaDenenen: [] };
@@ -1362,6 +1452,9 @@ function sonucuYaz(r, son, k, sorgu) {
   r.ilgililer = sy.ilgililer;
   r.takimlar = sy.takimlar;
   r.kitapDisiSayisi = sy.kitapDisiSayisi;
+  r.ilgisizSayisi = sy.ilgisizSayisi;
+  r.ilgisizOzet = sy.ilgisizOzet;
+  r.ilgisizOrnek = sy.ilgisizOrnek;
   r.ekitapElenen = sy.ekitapElenen;
   r.benzerElenen = sy.benzerElenen;
   r.kanitsizSayisi = sy.kanitsizSayisi;
@@ -1589,13 +1682,31 @@ function stokSirasi(r) {
   return (r.stokKontrol || []).map(x => tl(x.fiyat) + " " + x.durum + " (" + x.neden + ")").join(" → ");
 }
 
+// Sürüm 22.4 · FİYAT DENETİMİ (siteler arası): yeni kitap satan bir sitenin en iyi eşleşmeli ilanı, diğer en az 2 yeni kitap sitesinin
+// aynı kitaptaki en ucuz A/B ilanlarının ortancasının YARISINDAN düşükse "fiyat şüpheli" işaretlenir (+5 puan, ilan gizlenmez; okunan fiyatlar rapora yazılır).
+// Neden: Hepsiburada 12,90 TL (Everest baskı; öteki sitelerde ~230 TL), BKM üç ayrı kitapta tam 100,00 TL. Sebep henüz kanıtlanmadı (kupon/taksit/etiket okuması olabilir).
+function fiyatDenetle(sonuclar) {
+  const yeniler = sonuclar.filter(r => r && r.k && r.k.tur === "yeni");
+  const enIyi = r => (r.ilgililer || []).filter(x => !x.stokYok && x.puan <= 1).map(x => x.fiyat).sort((a, b) => a - b)[0];
+  yeniler.forEach(r => {
+    const digerleri = yeniler.filter(o => o !== r).map(enIyi).filter(v => v > 0).sort((a, b) => a - b);
+    if (digerleri.length < 2) return;
+    const orta = digerleri.length % 2 ? digerleri[(digerleri.length - 1) / 2] : (digerleri[digerleri.length / 2 - 1] + digerleri[digerleri.length / 2]) / 2;
+    (r.ilgililer || []).forEach(x => {
+      if (x.puan <= 1 && x.fiyat < orta * 0.5) { x.supheliFiyat = orta; x.puan += 5; }
+    });
+    r.ilgililer.sort((a, b) => a.puan - b.puan || a.fiyat - b.fiyat);
+  });
+}
+
 // Süre sınırıyla çalıştırır. Sınır dolarsa site "yavaş" sayılır; o ana kadar doldurulan kayıt (kopyası) döner, arkadaki iş "iptal" bayrağıyla durdurulur.
 // Sürüm 22.3 · LİSTE MODU için kısa rapor: bir kitap = bir blok. En ucuz 5 görünür (stokta olduğu bilinen) ilan, ilan veren/vermeyen site sayısı, takım özeti.
 // "ilan yok" nedeni de yazılır (açıklanmamış eksik sıfır ilkesi: boş sitenin durumu görünür kalsın).
 function kompaktRapor(sorgu, yazar, sonuclar, sure) {
   const tum = [];
   for (const r of sonuclar) for (const x of gorunenler(r)) tum.push({ site: r.k.ad, x });
-  tum.sort((a, b) => a.x.fiyat - b.x.fiyat);
+  // Sürüm 22.4: önce kanıt puanı, sonra fiyat (22.3'te yalnız fiyat).
+  tum.sort((a, b) => a.x.puan - b.x.puan || a.x.fiyat - b.x.fiyat);
   const takimlar = [];
   for (const r of sonuclar) for (const x of (r.takimlar || [])) takimlar.push({ site: r.k.ad, x });
   takimlar.sort((a, b) => a.x.fiyat - b.x.fiyat);
@@ -1603,13 +1714,33 @@ function kompaktRapor(sorgu, yazar, sonuclar, sure) {
   const ilansiz = sonuclar.filter(r => !gorunenler(r).length);
   const satir = [];
   satir.push("▶ " + sorgu + (yazar ? " | " + yazar : "") + " · " + sure + " sn · ilanı olan site " + ilanli.length + "/" + sonuclar.length + " · görünür ilan " + tum.length);
-  tum.slice(0, 5).forEach(t => {
-    let e = "   " + tl(t.x.fiyat) + " · " + t.site + " · \"" + t.x.baslik.slice(0, 55) + "\"" + (t.x.yazarKartta ? " [yazar kartta]" : "") + (t.x.stok === "var" ? "" : " [stok doğrulanmadı]");
-    if (t.x.kondisyon) e += " · " + t.x.kondisyon;
-    if (t.x.satici) e += " · " + t.x.satici;
+  const gosterilen = tum.slice(0, 5);
+  gosterilen.forEach(t => {
+    const x = t.x;
+    let e = "   " + tl(x.fiyat) + " · " + t.site + " · \"" + x.baslik.slice(0, 55) + "\"" + (x.derece === "-" ? "" : " [" + x.derece + "]") + (x.kismi ? " [kısmi cilt]" : "") + (x.uyarlama ? " [uyarlama]" : "") + (x.adEksik ? " [ad eksik]" : "") + (x.stok === "var" ? "" : " [stok doğrulanmadı]");
+    if (x.supheliFiyat) e += " [FİYAT ŞÜPHELİ: öteki yeni kitap sitelerinin ortancası " + tl(x.supheliFiyat) + "; okunan fiyatlar: " + (x.tum || "-") + "]";
+    if (x.kondisyon) e += " · " + x.kondisyon;
+    if (x.satici) e += " · " + x.satici;
     satir.push(e);
   });
+  // Daha ucuz ama düşük puanlı (kanıtı zayıf) ilanlar: Google karşılaştırmasında görünür kalsın, ama üstte durmasın.
+  if (gosterilen.length) {
+    const alt = Math.min.apply(null, gosterilen.map(t => t.x.fiyat));
+    const ucuzlar = tum.slice(5).filter(t => t.x.fiyat < alt).sort((a, b) => a.x.fiyat - b.x.fiyat);
+    if (ucuzlar.length) {
+      const u = ucuzlar[0];
+      satir.push("   daha ucuz ama kanıtı zayıf: " + ucuzlar.length + " ilan, en ucuzu " + tl(u.x.fiyat) + " (" + u.site + ", \"" + u.x.baslik.slice(0, 40) + "\"" + (u.x.derece === "-" ? "" : " [" + u.x.derece + "]") + (u.x.kismi ? " [kısmi cilt]" : "") + (u.x.uyarlama ? " [uyarlama]" : "") + (u.x.adEksik ? " [ad eksik]" : "") + ")");
+    }
+  }
   if (takimlar.length) satir.push("   takım/set: " + takimlar.length + " ilan, en ucuz " + tl(takimlar[0].x.fiyat) + " (" + takimlar[0].site + ")");
+  const ilgisizToplam = sonuclar.reduce((n, r) => n + (r.ilgisizSayisi || 0), 0);
+  if (ilgisizToplam) {
+    const say = {};
+    sonuclar.forEach(r => String(r.ilgisizOzet || "").split(", ").filter(Boolean).forEach(p => { const m = p.match(/^(.*) (\d+)$/); if (m) say[m[1]] = (say[m[1]] || 0) + Number(m[2]); }));
+    const ornek = [];
+    sonuclar.forEach(r => (r.ilgisizOrnek || []).forEach(o => { if (ornek.length < 2) ornek.push(r.k.ad + ": " + o); }));
+    satir.push("   ilgisiz kalem elenen: " + ilgisizToplam + " (" + Object.keys(say).map(n => n + " " + say[n]).join(", ") + ") · örnek: " + ornek.join(" | "));
+  }
   if (ilansiz.length) satir.push("   ilan yok: " + ilansiz.map(r => r.k.ad + " (" + RENK_ADI[renk(r)] + (r.aramaDenenen.length > 1 ? ", yalnız ad da denendi" : "") + ")").join(", "));
   return satir.join("\n");
 }
@@ -1716,6 +1847,7 @@ function kisaSatir(r) {
   if (r.takimlar.length) s += " · takım " + r.takimlar.length;
   if (AKTIF_YAZAR) s += " · arama: " + (r.aramaTuru || "?") + (r.aramaDenenen.length > 1 ? " (yalnız ad da denendi)" : "") + " · yazar kartta " + r.ilgililer.filter(x => x.yazarKartta).length + "/" + r.ilgililer.length;
   if (r.kanitsizSayisi) s += " · kanıtsız elenen " + r.kanitsizSayisi;
+  if (r.ilgisizSayisi) s += " · ilgisiz kalem elenen " + r.ilgisizSayisi + " (" + r.ilgisizOzet + ")";
   if (ilk) s += " · en ucuz " + tl(ilk.fiyat) + " \"" + ilk.baslik.slice(0, 50) + "\"" + ilanEk(ilk);
   if (r.stokKontrol.length) s += " · stok sırası: " + stokSirasi(r);
   if (r.akakce) s += " · Akakçe ürün sayfası " + (r.akakce.satir || []).length + " satıcı satırı";
@@ -1759,6 +1891,7 @@ function raporMetni(sorgu, sonuclar, sure, cihaz) {
     if (r.suphelSayisi) s += " · fiyatı şüpheli " + r.suphelSayisi;
     if (r.benzerElenen) s += " · \"benzer arama\" modunda elenen " + r.benzerElenen;
     if (r.kitapDisiSayisi) s += " · kitap dışı elenen " + r.kitapDisiSayisi;
+    if (r.ilgisizSayisi) s += " · ilgisiz kalem elenen " + r.ilgisizSayisi + " (" + r.ilgisizOzet + ")";
     if (r.ekitapElenen) s += " · e-kitap elenen " + r.ekitapElenen;
     if (r.ekitapSayisi) s += " · e-kitap izi " + r.ekitapSayisi;
     const gizli = r.ilgililer.length - gorunenler(r).length;
@@ -1886,14 +2019,17 @@ async function siteleriSina(sorgu, secenek) {
   AKTIF_YAZAR = String(secenek.yazar || "").trim();
   const siteler = secenek.siteler || KURAL.siteler || [];
   const ayniAnda = secenek.ayniAnda || AYAR.ayniAnda || 4;
-  return sirayla(siteler, ayniAnda, async k => {
+  const sonuclar = await sirayla(siteler, ayniAnda, async k => {
     const r = await siteSinirli(k, sorgu);
     if (secenek.bildir) { try { secenek.bildir(r); } catch (e) { } }
     return r;
   });
+  try { fiyatDenetle(sonuclar); } catch (e) { }
+  return sonuclar;
 }
 
-return { SURUM, siteleriSina, kompaktRapor, raporMetni, raporSayfasi, renk, RENK_ADI, sayacYap };
+return { SURUM, siteleriSina, kompaktRapor, raporMetni, raporSayfasi, renk, RENK_ADI, sayacYap,
+  _sinama: { sonucuIsle, uyumBul, ilgisizNeden, fiyatDenetle, yazarAyarla: y => { AKTIF_YAZAR = String(y || "").trim(); } } };
 }
 if (typeof module !== "undefined" && module) module.exports = MotorKur;
 
