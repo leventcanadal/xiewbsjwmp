@@ -1,6 +1,6 @@
 // Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.1
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
-// Sürüm 22.6 · Ana 14 · BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.))
+// Sürüm 22.7 · Ana 14 · BKM yazar alanı okunur, girilen yazarla uyuşmuyorsa [başka yazar: …] (3 puan, elenmez), ilk 5'te yazar kanıtı yoksa UYARI, "kanıtı zayıf" için en ucuz 3 ilan + kart metni. (22.6: BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.)))
 
 const GOMULU_KURALLAR = {
   "surum": "22.1",
@@ -83,7 +83,8 @@ const GOMULU_KURALLAR = {
       "kart": {
         "kap": "div.product-item",
         "ad": "a.product-title",
-        "fiyat": ".current-price"
+        "fiyat": ".current-price",
+        "yazar": ".model-title"
       }
     },
     {
@@ -359,7 +360,7 @@ const GOMULU_KURALLAR = {
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "22.6";
+const MOTOR_SURUMU = "22.7";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -559,7 +560,7 @@ function aramaSayfasiniOku(sorgu, tur, kartKural) {
         var kKucuk = kYazi.toLocaleLowerCase('tr');
         var kStokYok = false;
         for (var ky2 = 0; ky2 < yokListesi.length; ky2++) { if (kKucuk.indexOf(yokListesi[ky2]) >= 0) { kStokYok = true; break; } }
-        var kdEl = kartSec(kp, kartKural.kondisyon), stEl = kartSec(kp, kartKural.satici), seEl = kartSec(kp, kartKural.sehir);
+        var kdEl = kartSec(kp, kartKural.kondisyon), stEl = kartSec(kp, kartKural.satici), seEl = kartSec(kp, kartKural.sehir), yzEl = kartSec(kp, kartKural.yazar);
         var kKond = kdEl ? temiz(kdEl.textContent.replace(/[★☆✩✪⭐]/g, '')).toLocaleLowerCase('tr') : '';
         var kSat = stEl ? temiz(stEl.textContent) : '';
         var kHref = kl2 ? kl2.href : location.href;
@@ -568,7 +569,7 @@ function aramaSayfasiniOku(sorgu, tur, kartKural) {
         seen[kAnahtar] = 1;
         out.items.push({ title: kad.slice(0, 140), prices: kfiy, href: kHref, extra: kYazi.slice(0, 200), stokYok: kStokYok,
           ekitap: /e-kitap|e-book|ebook|kindle|sesli kitap|audible/.test(kKucuk), kanit: true, turetildi: false, linksiz: !kl2,
-          supheli: false, ctx: '', kondisyon: kKond.slice(0, 30), satici: kSat.slice(0, 60), sehir: seEl ? temiz(seEl.textContent).slice(0, 60) : '' });
+          supheli: false, ctx: '', kondisyon: kKond.slice(0, 30), satici: kSat.slice(0, 60), sehir: seEl ? temiz(seEl.textContent).slice(0, 60) : '', yazarAlani: yzEl ? temiz(yzEl.textContent).slice(0, 80) : '' });
       }
     }
     var els = body.querySelectorAll('span,div,p,strong,b,ins,em,small,td,li,a');
@@ -1432,11 +1433,14 @@ function sonucuIsle(son, k, sorgu) {
         tum: (u.prices || []).slice(0, 6).join(" ; "), ctx: String(u.ctx || ""), linksiz: !!u.linksiz,
         // Sürüm 21 · ilan alanları (arayüz bunlara göre sıralayıp süzecek). Okunamayan alan boş kalır.
         // tur: yeni | sahaf | ikinciel | karsilastirma · stok: "var" | "yok" | "bilinmiyor" | "" (denetlenmedi)
-        tur: k.tur || "", kondisyon: String(u.kondisyon || ""), satici: String(u.satici || ""), sehir: String(u.sehir || ""), kargo: "",
+        tur: k.tur || "", yazarAlani: String(u.yazarAlani || ""), kondisyon: String(u.kondisyon || ""), satici: String(u.satici || ""), sehir: String(u.sehir || ""), kargo: "",
         stok: u.stokYok ? "yok" : "", stokNeden: u.stokYok ? "arama kartında" : "" };
     })
     .filter(x => x.fiyat > 0)
     .map(x => Object.assign(x, uyumBul(x.baslik, sorgu, x.yazarKartta)))
+    // 22.7: kartın AYRI yazar alanı okunduysa ve girilen yazarla uyuşmuyorsa ilan elenmez; 3 puan düşer, raporda [başka yazar: …] yazar
+    // (BKM'de "Şeyh Bedreddin Destanı" Nâzım Hikmet yerine Zeki Büyüktanır'ın kitabıydı). Yazar girilmediyse çalışmaz.
+    .map(x => { if (AKTIF_YAZAR && x.yazarAlani && !yazarKartta(x.yazarAlani)) { x.baskaYazar = x.yazarAlani; x.puan += 3; } return x; })
     .sort((a, b) => a.puan - b.puan || a.fiyat - b.fiyat);
   return {
     ilgililer: hazir.filter(x => !takimMi(x.baslik)),
@@ -1805,10 +1809,10 @@ function kompaktRapor(sorgu, yazar, sonuclar, sure) {
   const ilansiz = sonuclar.filter(r => !gorunenler(r).length);
   const satir = [];
   satir.push("▶ " + sorgu + (yazar ? " | " + yazar : "") + " · " + sure + " sn · ilanı olan site " + ilanli.length + "/" + sonuclar.length + " · görünür ilan " + tum.length);
-  const isaretler = x => (x.derece === "-" ? "" : " [" + x.derece + "]") + (x.kismi ? " [kısmi cilt]" : "") + (x.uyarlama ? " [uyarlama]" : "") + (x.adEksik ? " [ad eksik]" : "") + (x.tarihli ? " [tarihli]" : "") + (x.baskaDil ? " [başka dil]" : "") + (x.sesUrunu ? " [CD/ses]" : "");
+  const isaretler = x => (x.derece === "-" ? "" : " [" + x.derece + "]") + (x.kismi ? " [kısmi cilt]" : "") + (x.uyarlama ? " [uyarlama]" : "") + (x.adEksik ? " [ad eksik]" : "") + (x.tarihli ? " [tarihli]" : "") + (x.baskaDil ? " [başka dil]" : "") + (x.sesUrunu ? " [CD/ses]" : "") + (x.baskaYazar ? " [başka yazar: " + x.baskaYazar.slice(0, 30) + "]" : "");
   // Ham fiyat tanısı: derecesi A olmayan ilanda ve "daha ucuz ama zayıf" ilanında okunan bütün fiyatlar + fiyattan önceki karakterler yazılır
   // (BKM 100,00 TL, Hepsiburada 12,90 TL, n11 Sahaflar 26,45 TL gibi açıklanmamış fiyatların nedeni raporla anlaşılsın).
-  const hamFiyat = x => " · okunan fiyatlar: " + (x.tum || "-") + " · fiyattan önceki 60 karakter: " + String(x.ctx || "-").replace(/\s+/g, " ").slice(-110);
+  const hamFiyat = x => " · okunan fiyatlar: " + (x.tum || "-") + (x.kart ? " · kart: " + String(x.kart).slice(0, 110) : "") + " · fiyattan önceki 60 karakter: " + String(x.ctx || "-").replace(/\s+/g, " ").slice(-110);
   const gosterilen = tum.slice(0, 5);
   gosterilen.forEach(t => {
     const x = t.x;
@@ -1819,13 +1823,15 @@ function kompaktRapor(sorgu, yazar, sonuclar, sure) {
     if (x.satici) e += " · " + x.satici;
     satir.push(e);
   });
+  // 22.7: ilk 5 ilanın hiçbirinde yazar kanıtı yoksa (yazar girildiyse) uyarı: aynı adlı başka yazarın kitabı olabilir.
+  if (yazar && gosterilen.length && !gosterilen.some(t => t.x.derece === "A")) satir.push("   UYARI: ilk " + gosterilen.length + " ilanın hiçbirinde yazar kanıtı yok; aynı adlı başka yazarın kitabı olabilir.");
   // Daha ucuz ama düşük puanlı (kanıtı zayıf) ilanlar: Google karşılaştırmasında görünür kalsın, ama üstte durmasın.
   if (gosterilen.length) {
     const alt = Math.min.apply(null, gosterilen.map(t => t.x.fiyat));
     const ucuzlar = tum.slice(5).filter(t => t.x.fiyat < alt).sort((a, b) => a.x.fiyat - b.x.fiyat);
     if (ucuzlar.length) {
-      const u = ucuzlar[0];
-      satir.push("   daha ucuz ama kanıtı zayıf: " + ucuzlar.length + " ilan, en ucuzu " + tl(u.x.fiyat) + " (" + u.site + ", \"" + u.x.baslik.slice(0, 40) + "\"" + isaretler(u.x) + ")" + hamFiyat(u.x));
+      satir.push("   daha ucuz ama kanıtı zayıf: " + ucuzlar.length + " ilan; en ucuz " + Math.min(3, ucuzlar.length) + ":");
+      ucuzlar.slice(0, 3).forEach(u => satir.push("      " + tl(u.x.fiyat) + " · " + u.site + " · \"" + u.x.baslik.slice(0, 40) + "\"" + isaretler(u.x) + hamFiyat(u.x)));
     }
   }
   if (takimlar.length) satir.push("   takım/set: " + takimlar.length + " ilan, en ucuz " + tl(takimlar[0].x.fiyat) + " (" + takimlar[0].site + ")");
