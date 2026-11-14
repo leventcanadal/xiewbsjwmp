@@ -1,6 +1,6 @@
 // Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.1
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
-// Sürüm 22.11 · Ana 14 · Yazar girilmediğinde ilan satırlarına kart metni de yazılır (otomatik yazar bulma için hangi sitede yazar nasıl görünüyor incelemesi); başka davranış değişmedi. (Sürüm 22.10 · Ana 14 · Hepsiburada kartında en küçük sayı en büyüğün %15'inden azsa (indirim/kampanya tutarı fiyat sanılıyordu) ilan elenmez, [kart içi fiyat şüpheli] işareti + 5 puan; kart metnindeki <img> etiketi temizlenir. (Sürüm 22.9 · Ana 14 · Bağımsız denetim düzeltmesi: [başka yazar] işareti yalnız yüksek güvenle (≥2 kişi-adı sözcüğü, yayınevi/rozet/Kolektif atılır, girilen yazarın hiçbir sözcüğü bitişik yazımda ya da yazım farkıyla bile yoksa); baş harf, Mc/De, Edip/Edib sorunları giderildi; bitişik yazarlı BKM kartı A olur; [CD/ses] yalnız başlık sonunda/+ ile/sesli kitap. (Sürüm 22.8 · Ana 14 · BKM ve Pandora kartında yazar metni yedeği ([başka yazar] iPad'de de çalışsın), "kanıtı zayıf" listesinde [ad eksik] ilanlar gösterilmez. (22.7: BKM yazar alanı okunur, girilen yazarla uyuşmuyorsa [başka yazar: …] (3 puan, elenmez), ilk 5'te yazar kanıtı yoksa UYARI, "kanıtı zayıf" için en ucuz 3 ilan + kart metni. (22.6: BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.)))))))
+// Sürüm 22.12 · Ana 14 · Yazarsız aramada yazar adayları: Nadir/Kitantik/yazar alanından yazar okunur, ilan satırına [yazar: …] yazılır, başlığı aynen uyan ilanlardan oylanıp raporda "YAZAR ADAYLARI" (+ "YAZAR SEÇİMİ GEREK") satırı çıkar; yazar ASLA tahminle uygulanmaz. Aranan addan ÖNCE gelen ve hiçbir yazar adayı/yayınevi ile açıklanmayan sözcüğü olan ilan [C] olur (+2, elenmez). Site başına bir örnek kart yazılır. (Sürüm 22.11 · Ana 14 · Yazar girilmediğinde ilan satırlarına kart metni de yazılır (otomatik yazar bulma için hangi sitede yazar nasıl görünüyor incelemesi); başka davranış değişmedi. (Sürüm 22.10 · Ana 14 · Hepsiburada kartında en küçük sayı en büyüğün %15'inden azsa (indirim/kampanya tutarı fiyat sanılıyordu) ilan elenmez, [kart içi fiyat şüpheli] işareti + 5 puan; kart metnindeki <img> etiketi temizlenir. (Sürüm 22.9 · Ana 14 · Bağımsız denetim düzeltmesi: [başka yazar] işareti yalnız yüksek güvenle (≥2 kişi-adı sözcüğü, yayınevi/rozet/Kolektif atılır, girilen yazarın hiçbir sözcüğü bitişik yazımda ya da yazım farkıyla bile yoksa); baş harf, Mc/De, Edip/Edib sorunları giderildi; bitişik yazarlı BKM kartı A olur; [CD/ses] yalnız başlık sonunda/+ ile/sesli kitap. (Sürüm 22.8 · Ana 14 · BKM ve Pandora kartında yazar metni yedeği ([başka yazar] iPad'de de çalışsın), "kanıtı zayıf" listesinde [ad eksik] ilanlar gösterilmez. (22.7: BKM yazar alanı okunur, girilen yazarla uyuşmuyorsa [başka yazar: …] (3 puan, elenmez), ilk 5'te yazar kanıtı yoksa UYARI, "kanıtı zayıf" için en ucuz 3 ilan + kart metni. (22.6: BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.))))))))
 
 const GOMULU_KURALLAR = {
   "surum": "22.1",
@@ -362,7 +362,7 @@ const GOMULU_KURALLAR = {
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "22.11";
+const MOTOR_SURUMU = "22.12";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -1392,7 +1392,7 @@ function uyumBul(baslik, sorgu, yazarVar) {
   // dil: başlıkta başka dil adı ("Almanca", "Rusça") var; elenmez, 2 puan düşer, raporda [başka dil] yazar.
   const tarihli = TARIHLI_KALIBI.test(s) && !TARIHLI_KALIBI.test(qs);
   const puan = (derece === "A" || derece === "-" ? 0 : derece === "B" ? 1 : 2) + (kismi ? 1 : 0) + (uyarlama ? 1 : 0) + (eksik ? 1 : 0) + (tarihli ? 1 : 0) + (dil ? 2 : 0) + (ses ? 2 : 0);
-  return { derece, kismi, uyarlama, adEksik: eksik > 0, tarihli, baskaDil: dil, sesUrunu: ses, puan };
+  return { derece, kismi, uyarlama, adEksik: eksik > 0, tarihli, baskaDil: dil, sesUrunu: ses, puan, tamBaslik: tam, fazlaSoz: fazla.slice(0, 8), fazlaOnce: (() => { const iq = out.findIndex(t => qSet.has(t)); return iq > 0 ? out.slice(0, iq).filter(t => fazla.includes(t)).slice(0, 8) : []; })() };
 }
 
 // Takım / set / çok ciltli ürün mü? ("3 Kitap Set", "Takım", "5 Cilt") — tek kitap sayılmaz, ayrı gösterilir.
@@ -1888,7 +1888,12 @@ function kompaktRapor(sorgu, yazar, sonuclar, sure) {
   const ilansiz = sonuclar.filter(r => !gorunenler(r).length);
   const satir = [];
   satir.push("▶ " + sorgu + (yazar ? " | " + yazar : "") + " · " + sure + " sn · ilanı olan site " + ilanli.length + "/" + sonuclar.length + " · görünür ilan " + tum.length);
-  const isaretler = x => (x.derece === "-" ? "" : " [" + x.derece + "]") + (x.kismi ? " [kısmi cilt]" : "") + (x.uyarlama ? " [uyarlama]" : "") + (x.adEksik ? " [ad eksik]" : "") + (x.tarihli ? " [tarihli]" : "") + (x.baskaDil ? " [başka dil]" : "") + (x.sesUrunu ? " [CD/ses]" : "") + (x.baskaYazar ? " [başka yazar: " + x.baskaYazar.slice(0, 30) + "]" : "") + (x.kartIciSuphe ? " [kart içi fiyat şüpheli: aynı kartta " + tl(x.kartIciSuphe) + " da var]" : "");
+  if (!yazar && sonuclar.yazarOyu && sonuclar.yazarOyu.length) {
+    const ky = sonuclar.yazarOyu;
+    satir.push("   YAZAR ADAYLARI (başlığı aynen uyan ilanlardan; tahmindir, uygulanmadı): " + ky.slice(0, 4).map(c => c.ad + " " + c.oy + " ilan/" + c.siteler.length + " site").join(" · ")
+      + (ky.length > 1 && ky[1].oy >= 2 ? " → YAZAR SEÇİMİ GEREK: aynı adla birden çok yazar var, yazarı girersen sonuç kesinleşir" : ky.length > 1 ? " → başka bir yazar da olabilir (" + ky[1].ad + "); yazarı girersen sonuç kesinleşir" : ""));
+  }
+  const isaretler = x => (x.derece === "-" ? "" : " [" + x.derece + "]") + (x.kismi ? " [kısmi cilt]" : "") + (x.uyarlama ? " [uyarlama]" : "") + (x.adEksik ? " [ad eksik]" : "") + (x.tarihli ? " [tarihli]" : "") + (x.baskaDil ? " [başka dil]" : "") + (x.sesUrunu ? " [CD/ses]" : "") + (x.baskaYazar ? " [başka yazar: " + x.baskaYazar.slice(0, 30) + "]" : "") + (x.kartIciSuphe ? " [kart içi fiyat şüpheli: aynı kartta " + tl(x.kartIciSuphe) + " da var]" : "") + (!yazar && x.yazarAday ? " [yazar: " + x.yazarAday.slice(0, 28) + "]" : "");
   // Ham fiyat tanısı: derecesi A olmayan ilanda ve "daha ucuz ama zayıf" ilanında okunan bütün fiyatlar + fiyattan önceki karakterler yazılır
   // (BKM 100,00 TL, Hepsiburada 12,90 TL, n11 Sahaflar 26,45 TL gibi açıklanmamış fiyatların nedeni raporla anlaşılsın).
   const hamFiyat = x => " · okunan fiyatlar: " + (x.tum || "-") + (x.kart ? " · kart: " + String(x.kart).slice(0, 110) : "") + " · fiyattan önceki 60 karakter: " + String(x.ctx || "-").replace(/\s+/g, " ").slice(-110);
@@ -1927,6 +1932,12 @@ function kompaktRapor(sorgu, yazar, sonuclar, sure) {
     ornek.forEach(o => satir.push("      elenen örnek · " + o));
   }
   if (ilansiz.length) satir.push("   ilan yok: " + ilansiz.map(r => r.k.ad + " (" + ilansizAd(r) + (r.aramaDenenen.length > 1 ? ", yalnız ad da denendi" : "") + ")").join(", "));
+  // 22.12: yazarsız aramada her sitenin bir örnek kartı (yazarın hangi sitede nasıl göründüğünü incelemek için)
+  if (!yazar) {
+    const ornek = [];
+    for (const r of sonuclar) { const x = (r.ilgililer || [])[0]; if (x && x.kart) ornek.push("      " + r.k.ad + ": " + String(x.kart).slice(0, 150)); }
+    if (ornek.length) { satir.push("   örnek kartlar (site başına 1):"); ornek.forEach(e => satir.push(e)); }
+  }
   return satir.join("\n");
 }
 
@@ -2207,6 +2218,105 @@ ${kartlar}
 // Dışarıya açılan kapı: bütün siteleri (ya da secenek.siteler'i) sınar.
 // secenek.bildir(r): her site bitince çağrılır (asıl uygulamada sonuçları geldikçe göstermek için).
 // ---------------------------------------------------------------
+// ---------------------------------------------------------------
+// 22.12 · YAZARSIZ ARAMADA YAZAR ADAYLARI (Fatih onayı, 14 Kasım). 22.11 iPad raporu: yazar boşken ilk 5 ilan çoğu kitapta yanlış kitaplarla doluydu
+// ("Aşka Tutunamayanlar", "Yemin Adak Kefaret", "Cumhuriyet Kitap"; Şeyh Bedreddin'de 5/5 Zeki Büyüktanır).
+// İLKE: yazar ASLA tahminle uygulanmaz (ilanlar o yazara göre cezalandırılmaz). Yalnız (a) ilan satırına kartta okunan yazar yazılır, (b) başlığı AYNEN uyan ilanlardan yazar adayları oylanır ve raporlanır,
+// (c) başlıkta fazladan sözcüğü olan ve bu sözcükleri hiçbir yazar adayı açıklamayan ilan ("Aşka Tutunamayanlar") [C] olur (+2 puan, elenmez).
+// Yazar kaynağı: Nadir Kitap (başlıktan sonra, ★ öncesi), Kitantik (başlıktan sonra, ilk virgül öncesi), ayrı yazar alanı okunan siteler (BKM). Öteki sitelerde yazar okunmaz.
+// ---------------------------------------------------------------
+const ADAY_DURUMLAR = ["yeni gibi", "yeni", "çok iyi", "iyi", "orta", "zayıf"];
+// Yazar yerine yayınevi/dizi/etiket gelen kartlar ("Yapı Kredi", "Can Çocuk", "Anonim Halk Eseri") yazar sayılmaz.
+const ADAY_YAYIN = new Set(["kredi", "bankasi", "kultur", "kulturu", "cocuk", "anonim", "eseri", "eserleri", "klasikleri", "klasikler", "dizisi", "serisi", "metinleri", "yayincilik", "yayinciligi", "matbaasi", "basimevi", "kitapligi", "kutuphanesi", "dergisi", "gazetesi", "universitesi", "bakanligi", "baskisi", "yazar", "ceviri", "cevirmen", "hazirlayan", "ilk", "baski", "imzali", "ciltli", "ciltsiz"]);
+function yazarAdayiKartta(siteId, baslik, kart, yazarAlani) {
+  const temizle = ham => {
+    let a = String(ham || "").replace(/\s+/g, " ").trim().replace(/[|:;]+$/, "").trim();
+    for (let n = 0; n < 2; n++) { const low = a.toLocaleLowerCase("tr"); const d = ADAY_DURUMLAR.find(x => low.endsWith(" " + x)); if (d) a = a.slice(0, a.length - d.length).trim(); }
+    a = a.replace(/\(\s*yazar\s*\)/i, "").trim();
+    const tk = a.split(" ").filter(Boolean);
+    if (tk.length < 2 || tk.length > 5) return "";
+    for (let j = 0; j < tk.length; j++) {
+      const t = tk[j];
+      if (!/\p{L}/u.test(t) || /\d/.test(t)) return "";
+      const n = sade(t);
+      if (!/^\p{Lu}/u.test(t) && !(j > 0 && /^(de|da|di|von|van|der|den|du|la|le|el|al|bin|ibn)$/.test(n))) return "";
+      if (YAYINEVI_SON.has(n) || ADAY_ATILAN.has(n) || ADAY_YAYIN.has(n) || /^(sepete|ekle|stok|adedi|kargo|ikinci|el|sahaf|kitabevi|yayinlari|yayinevi)$/.test(n)) return "";
+    }
+    return tk.join(" ");
+  };
+  if (yazarAlani) return temizle(yazarAlani);
+  if (siteId !== "nadir" && siteId !== "kitantik") return "";
+  const duz = x => String(x || "").slice(0, 400).normalize("NFC").replace(/\s+/g, " ").trim();
+  const t = duz(kart), b = duz(baslik).toLocaleLowerCase("tr");
+  if (b.length < 3) return "";
+  const i = t.toLocaleLowerCase("tr").indexOf(b);
+  if (i < 0 || i > 8) return "";
+  let rest = t.slice(i + b.length);
+  const f = rest.search(siteId === "nadir" ? /[★☆]|\d[\d.]*(?:,\d+)?\s*(?:TL|₺)/ : /,|\d[\d.]*(?:,\d+)?\s*(?:TL|₺)/);
+  if (f >= 0) rest = rest.slice(0, f);
+  return temizle(rest);
+}
+function yakinSozcuk(x, y) { return x === y || (x.length >= 5 && y.length >= 5 && birFark2(x, y)); }
+function ayniYazar(a, b) { // a, b: yazarAdlari() dizileri
+  const A = a.filter(x => x.length >= 2), B = b.filter(x => x.length >= 2);
+  if (!A.length || !B.length) return false;
+  const ortak = A.filter(x => B.some(y => yakinSozcuk(x, y))).length;
+  if (ortak < Math.min(2, A.length, B.length)) return false;
+  if (ortak >= 2) return true;
+  // yalnız soyad ortak: baş harfli biçim ("O. Pamuk") öteki tarafın bir adının baş harfiyle uyuşmalı
+  const bas = (X, Y) => X.filter(x => x.length === 1).some(h => Y.some(y => y.length > 1 && y[0] === h));
+  return bas(a, b) || bas(b, a);
+}
+// Oylama: yalnız başlığı aynen uyan (tamBaslik) ilanlar oy verir. Dönüş: [{ ad, oy, siteler: [...], tokenlar: [...] }] (çok oydan aza).
+function yazarOyla(sonuclar) {
+  const kumeler = [];
+  for (const r of (sonuclar || [])) {
+    if (!r) continue;
+    for (const x of (r.ilgililer || [])) {
+      if (!x) continue;
+      const ad = yazarAdayiKartta(r.k && r.k.id, x.baslik, x.kart, x.yazarAlani);
+      if (ad) x.yazarAday = ad;
+      if (!ad || !x.tamBaslik) continue;
+      const tk = yazarAdlari(ad);
+      let km = kumeler.find(c => ayniYazar(c.tk, tk));
+      if (!km) { km = { tk, formlar: new Map(), oy: 0, siteler: new Set(), tokenlar: new Set() }; kumeler.push(km); }
+      km.oy++; km.siteler.add(r.k && r.k.id); tk.forEach(w => km.tokenlar.add(w));
+      const f = km.formlar.get(sade(ad)) || { sayi: 0, ornek: ad };
+      f.sayi++; if (ad !== ad.toLocaleUpperCase("tr") && f.ornek === f.ornek.toLocaleUpperCase("tr")) f.ornek = ad;
+      km.formlar.set(sade(ad), f);
+    }
+  }
+  return kumeler.map(c => { const fs = [...c.formlar.values()].sort((p, q) => q.sayi - p.sayi || q.ornek.length - p.ornek.length); return { ad: fs[0].ornek, oy: c.oy, siteler: [...c.siteler], tokenlar: [...c.tokenlar], tk: c.tk }; }).sort((p, q) => q.oy - p.oy);
+}
+// Yaygın yayınevi adı sözcükleri: başlığa yayınevi karışmışsa ("… Oğuz Atay İLETİŞİM YA") fazla sözcük sayılmaz (yalnız ceza vermemek yönünde).
+const YAYINEVI_ADLARI = new Set(["iletisim", "can", "everest", "dogan", "remzi", "inkilap", "metis", "timas", "oglak", "ithaki", "jaguar", "epsilon", "destek", "sia", "cem", "ozgur", "atlas",
+  "varlik", "ayrinti", "hayy", "notos", "nobel", "pegasus", "april", "artemis", "yky", "ya", "yay", "yayin", "yayinl", "yayinla", "yayinlar", "ketebe", "dergah", "tudem", "kabalci"]);
+function yazarsizDegerlendir(sonuclar) {
+  if (AKTIF_YAZAR) return;
+  const km = yazarOyla(sonuclar);
+  try { sonuclar.yazarOyu = km; } catch (e) { }
+  if (!km.length || !(km[0].oy >= 3 || (km[0].oy >= 2 && km[0].siteler.length >= 2))) return;
+  // 22.12 (bağımsız denetim sonrası): [C] YALNIZ iki durumda verilir (gerçek baskıyı haksız cezalandırmamak için):
+  //  (a) aranan addan ÖNCE gelen ve hiçbir yazar adayı/yayınevi adıyla (yazım toleransıyla) açıklanmayan sözcük var ("Aşka Tutunamayanlar", "Yemin Adak Kefaret", "Türk Hukukunda Suç ve Ceza");
+  //  (b) ilanın kendi kart yazarı okunmuş ve ≥2 oylu yazar adaylarının hiçbiriyle uyuşmuyor.
+  // Alt başlık, baskı notu, seri adı, çevirmen (aranan addan SONRA gelen fazla sözcükler) ceza almaz. Yazar adayı kümesi 1 oylu olsa da sözcükleri "açıklanmış" sayılır.
+  const aciklanan = new Set();
+  km.forEach(c => c.tokenlar.forEach(w => aciklanan.add(w)));
+  const aciklamis = w => w.length <= 2 || YAYINEVI_ADLARI.has(w) || aciklanan.has(w) || (w.length >= 4 && [...aciklanan].some(t => t.length >= 4 && birFark(w, t))) || (w.length >= 6 && [...aciklanan].some(t => t.length >= 6 && birFark2(w, t)));
+  const guclu = km.filter(c => c.oy >= 2);
+  for (const r of sonuclar) {
+    if (!r) continue;
+    for (const x of (r.ilgililer || []).concat(r.takimlar || [])) {
+      if (!x || x.derece !== "-" || x.tamBaslik) continue;
+      const once = (x.fazlaOnce || []).filter(w => !aciklamis(w));
+      let c = once.length > 0;
+      if (!c && x.yazarAday && guclu.length) { const tk = yazarAdlari(x.yazarAday); c = !guclu.some(g => ayniYazar(g.tk, tk)) && !tk.every(w => aciklanan.has(w)); }
+      if (c && typeof x.puan === "number") { x.derece = "C"; x.puan += 2; x.yazarsizC = true; }
+    }
+    if (r.ilgililer) r.ilgililer.sort((a, b) => a.puan - b.puan || a.fiyat - b.fiyat);
+  }
+}
+
 async function siteleriSina(sorgu, secenek) {
   secenek = secenek || {};
   AKTIF_YAZAR = String(secenek.yazar || "").trim();
@@ -2217,12 +2327,13 @@ async function siteleriSina(sorgu, secenek) {
     if (secenek.bildir) { try { secenek.bildir(r); } catch (e) { } }
     return r;
   });
+  try { yazarsizDegerlendir(sonuclar); } catch (e) { }
   try { fiyatDenetle(sonuclar); } catch (e) { }
   return sonuclar;
 }
 
 return { SURUM, siteleriSina, kompaktRapor, raporMetni, raporSayfasi, renk, RENK_ADI, sayacYap,
-  _sinama: { yazarMetniBul, baskaYazarKarari, sesUrunuMu, sonucuIsle, uyumBul, ilgisizNeden, ilgisizAyrinti, fiyatDenetle, yazarAyarla: y => { AKTIF_YAZAR = String(y || "").trim(); } } };
+  _sinama: { yazarsizDegerlendir, yazarOyla, yazarAdayiKartta, yazarMetniBul, baskaYazarKarari, sesUrunuMu, sonucuIsle, uyumBul, ilgisizNeden, ilgisizAyrinti, fiyatDenetle, yazarAyarla: y => { AKTIF_YAZAR = String(y || "").trim(); } } };
 }
 if (typeof module !== "undefined" && module) module.exports = MotorKur;
 
