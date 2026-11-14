@@ -1,6 +1,6 @@
 // Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.1
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
-// Sürüm 22.7 · Ana 14 · BKM yazar alanı okunur, girilen yazarla uyuşmuyorsa [başka yazar: …] (3 puan, elenmez), ilk 5'te yazar kanıtı yoksa UYARI, "kanıtı zayıf" için en ucuz 3 ilan + kart metni. (22.6: BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.)))
+// Sürüm 22.8 · Ana 14 · BKM ve Pandora kartında yazar metni yedeği ([başka yazar] iPad'de de çalışsın), "kanıtı zayıf" listesinde [ad eksik] ilanlar gösterilmez. (22.7: BKM yazar alanı okunur, girilen yazarla uyuşmuyorsa [başka yazar: …] (3 puan, elenmez), ilk 5'te yazar kanıtı yoksa UYARI, "kanıtı zayıf" için en ucuz 3 ilan + kart metni. (22.6: BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.))))
 
 const GOMULU_KURALLAR = {
   "surum": "22.1",
@@ -79,6 +79,7 @@ const GOMULU_KURALLAR = {
         "https://www.bkmkitap.com/arama?q={q}"
       ],
       "ana": "https://www.bkmkitap.com/",
+      "yazarKartMetni": true,
       "not": "21.7 bulut: sayfa boş görünüyor çünkü yardımcı dosyaları bkmcdn03.witcdn.net adresinden geliyor ve bulut izin listesinde yok; motor hatası değil (iPad çalışıyor). 22.6 (14.11.2026): *.witcdn.net izin listesine eklendi, bulutta okunuyor. iPad raporunda 3 kitapta tam 100,00 TL çıkmıştı (okunan fiyatlar 100;200;300;400;500;500, önünde \"0 - \"): kart kuralı olmadan genel okuyucu büyük bir kabı okuyordu; bulutta aynı hata üretilemedi. Kart kuralı gerçek sayfadan: kart div.product-item, ad a.product-title, güncel fiyat .current-price (üstü çizili eski fiyat .product-price-not-discounted okunmaz).",
       "kart": {
         "kap": "div.product-item",
@@ -206,6 +207,7 @@ const GOMULU_KURALLAR = {
         "https://www.pandora.com.tr/Arama?type=9&kitapadi={q}"
       ],
       "ana": "https://www.pandora.com.tr/",
+      "yazarKartMetni": true,
       "not": "21.7 bulut: başsız tarayıcıyı Cloudflare engelliyor (\"Attention Required\"); sonuçlar sayfa açıldıktan sonra JavaScript ile yükleniyor (Next.js). Yalnız iPad teşhisi."
     },
     {
@@ -360,7 +362,7 @@ const GOMULU_KURALLAR = {
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "22.7";
+const MOTOR_SURUMU = "22.8";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -1169,6 +1171,21 @@ function yazarKartta(metin) {
   if (w.length >= 3 && tutan >= w.length - 1) return true;
   return false;
 }
+// 22.8: kartın AYRI yazar alanı yoksa (iPad'de BKM'nin .model-title sınıfı bulunamadı) ama kart metni yazarı başlığın hemen ardından yazıyorsa
+// (BKM: "Şeyh Bedreddin DestanıZeki Büyüktanır260,00 TL…", Pandora: "…DestanıZeki BüyüktanırCan (…)260,00 TL"), başlık ile ilk fiyat arası metin yazar adayıdır.
+// Yalnız kurallar.json'da "yazarKartMetni": true olan sitelerde kullanılır (kartında yazar yazmayan sitede yanlış işaret çıkmasın).
+function yazarMetniBul(baslik, kart) {
+  const t = String(kart || "").replace(/\s+/g, " ").trim();
+  const b = String(baslik || "").replace(/\s+/g, " ").trim().toLocaleLowerCase("tr");
+  if (b.length < 3) return "";
+  const i = t.toLocaleLowerCase("tr").indexOf(b);
+  if (i < 0 || i > 40) return "";
+  let rest = t.slice(i + b.length);
+  const f = rest.search(/\d[\d.]*(?:,\d+)?\s*(?:TL|₺)/i);
+  if (f >= 0) rest = rest.slice(0, f);
+  rest = rest.replace(/([a-zçğıöşü])([A-ZÇĞİÖŞÜ])/g, "$1 $2").replace(/%|sepete ekle|stokta|tükendi/gi, " ").replace(/\s+/g, " ").trim();
+  return rest.length >= 5 && /[a-zçğıöşü]{3}/i.test(rest) ? rest : "";
+}
 function kitapDisi(baslik, sorgu) {
   const b = " " + kelimeler(baslik).join(" ");
   const q = " " + kelimeler(sorgu).join(" ");
@@ -1440,7 +1457,9 @@ function sonucuIsle(son, k, sorgu) {
     .map(x => Object.assign(x, uyumBul(x.baslik, sorgu, x.yazarKartta)))
     // 22.7: kartın AYRI yazar alanı okunduysa ve girilen yazarla uyuşmuyorsa ilan elenmez; 3 puan düşer, raporda [başka yazar: …] yazar
     // (BKM'de "Şeyh Bedreddin Destanı" Nâzım Hikmet yerine Zeki Büyüktanır'ın kitabıydı). Yazar girilmediyse çalışmaz.
-    .map(x => { if (AKTIF_YAZAR && x.yazarAlani && !yazarKartta(x.yazarAlani)) { x.baskaYazar = x.yazarAlani; x.puan += 3; } return x; })
+    .map(x => { if (AKTIF_YAZAR && x.yazarAlani && !yazarKartta(x.yazarAlani)) { x.baskaYazar = x.yazarAlani; x.puan += 3; }
+      else if (AKTIF_YAZAR && !x.yazarAlani && k.yazarKartMetni) { const g = yazarMetniBul(x.baslik, x.kart); if (g && !yazarKartta(g)) { x.baskaYazar = g.slice(0, 40); x.puan += 3; } }
+      return x; })
     .sort((a, b) => a.puan - b.puan || a.fiyat - b.fiyat);
   return {
     ilgililer: hazir.filter(x => !takimMi(x.baslik)),
@@ -1830,8 +1849,11 @@ function kompaktRapor(sorgu, yazar, sonuclar, sure) {
     const alt = Math.min.apply(null, gosterilen.map(t => t.x.fiyat));
     const ucuzlar = tum.slice(5).filter(t => t.x.fiyat < alt).sort((a, b) => a.x.fiyat - b.x.fiyat);
     if (ucuzlar.length) {
-      satir.push("   daha ucuz ama kanıtı zayıf: " + ucuzlar.length + " ilan; en ucuz " + Math.min(3, ucuzlar.length) + ":");
-      ucuzlar.slice(0, 3).forEach(u => satir.push("      " + tl(u.x.fiyat) + " · " + u.site + " · \"" + u.x.baslik.slice(0, 40) + "\"" + isaretler(u.x) + hamFiyat(u.x)));
+      const gorulen = new Set();
+      const iyi = ucuzlar.filter(t => { if (t.x.adEksik) return false; const a = t.site + "|" + t.x.baslik + "|" + t.x.fiyat; if (gorulen.has(a)) return false; gorulen.add(a); return true; });
+      const adEksikSay = ucuzlar.filter(t => t.x.adEksik).length;
+      satir.push("   daha ucuz ama kanıtı zayıf: " + ucuzlar.length + " ilan" + (adEksikSay ? " (" + adEksikSay + " tanesi [ad eksik]: büyük olasılıkla başka kitap, aşağıda yok)" : "") + (iyi.length ? "; en ucuz " + Math.min(3, iyi.length) + ":" : ""));
+      iyi.slice(0, 3).forEach(u => satir.push("      " + tl(u.x.fiyat) + " · " + u.site + " · \"" + u.x.baslik.slice(0, 40) + "\"" + isaretler(u.x) + hamFiyat(u.x)));
     }
   }
   if (takimlar.length) satir.push("   takım/set: " + takimlar.length + " ilan, en ucuz " + tl(takimlar[0].x.fiyat) + " (" + takimlar[0].site + ")");
@@ -2140,7 +2162,7 @@ async function siteleriSina(sorgu, secenek) {
 }
 
 return { SURUM, siteleriSina, kompaktRapor, raporMetni, raporSayfasi, renk, RENK_ADI, sayacYap,
-  _sinama: { sonucuIsle, uyumBul, ilgisizNeden, ilgisizAyrinti, fiyatDenetle, yazarAyarla: y => { AKTIF_YAZAR = String(y || "").trim(); } } };
+  _sinama: { yazarMetniBul, sonucuIsle, uyumBul, ilgisizNeden, ilgisizAyrinti, fiyatDenetle, yazarAyarla: y => { AKTIF_YAZAR = String(y || "").trim(); } } };
 }
 if (typeof module !== "undefined" && module) module.exports = MotorKur;
 
