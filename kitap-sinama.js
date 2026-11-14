@@ -1,6 +1,6 @@
 // Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.1
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
-// Sürüm 22.5 · Ana 13 · 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.)
+// Sürüm 22.6 · Ana 14 · BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.))
 
 const GOMULU_KURALLAR = {
   "surum": "22.1",
@@ -79,7 +79,12 @@ const GOMULU_KURALLAR = {
         "https://www.bkmkitap.com/arama?q={q}"
       ],
       "ana": "https://www.bkmkitap.com/",
-      "not": "21.7 bulut: sayfa boş görünüyor çünkü yardımcı dosyaları bkmcdn03.witcdn.net adresinden geliyor ve bulut izin listesinde yok; motor hatası değil (iPad çalışıyor)."
+      "not": "21.7 bulut: sayfa boş görünüyor çünkü yardımcı dosyaları bkmcdn03.witcdn.net adresinden geliyor ve bulut izin listesinde yok; motor hatası değil (iPad çalışıyor). 22.6 (14.11.2026): *.witcdn.net izin listesine eklendi, bulutta okunuyor. iPad raporunda 3 kitapta tam 100,00 TL çıkmıştı (okunan fiyatlar 100;200;300;400;500;500, önünde \"0 - \"): kart kuralı olmadan genel okuyucu büyük bir kabı okuyordu; bulutta aynı hata üretilemedi. Kart kuralı gerçek sayfadan: kart div.product-item, ad a.product-title, güncel fiyat .current-price (üstü çizili eski fiyat .product-price-not-discounted okunmaz).",
+      "kart": {
+        "kap": "div.product-item",
+        "ad": "a.product-title",
+        "fiyat": ".current-price"
+      }
     },
     {
       "id": "dr",
@@ -354,7 +359,7 @@ const GOMULU_KURALLAR = {
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "22.5";
+const MOTOR_SURUMU = "22.6";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -650,7 +655,7 @@ function aramaSayfasiniOku(sorgu, tur, kartKural) {
           kf.push(mm[0]);
         }
         // Teşhis: kartta ilk fiyatın önündeki 6 karakter ve kodları (gizli/benzer karakter var mı?)
-        if (ilkIdx >= 0) { var onceki6 = kartYazi.slice(Math.max(0, ilkIdx - 6), ilkIdx); ctx = onceki6 + ' [' + Array.prototype.map.call(onceki6, function (ch) { return ch.charCodeAt(0).toString(16); }).join(' ') + ']'; }
+        if (ilkIdx >= 0) { var onceki6 = kartYazi.slice(Math.max(0, ilkIdx - 60), ilkIdx); ctx = onceki6 + ' [' + Array.prototype.map.call(onceki6.slice(-6), function (ch) { return ch.charCodeAt(0).toString(16); }).join(' ') + ']'; }
         if (kf.length) fiyatlar = kf;
         // Karttaki bütün fiyatlar e-kitap/sesli kitap sayıldıysa bu ürün basılı kitap değildir
         else if (/e-kitap|e-book|ebook|kindle|dijital|sesli kitap|audible/.test(kl)) ekitap = true;
@@ -1203,6 +1208,8 @@ const ILGISIZ_KALIPLAR = [
 const SADECE_KAPAK_DURUM = new Set(["yipranmis", "yirtik", "yirtilmis", "hafif", "lekeli", "leke", "solmus", "kirik", "ezik", "hasarli", "sararmis", "kosesi", "kenari", "cizik", "bozuk", "eski", "temiz", "sorunlu", "kopuk", "kalin"]);
 const TARIHLI_KALIBI = new RegExp(" (" + AYLAR + ") (19|20)[0-9]{2} ");
 const UYARLAMA_KALIBI = /(^| )(ilkogretim|ogrenci|ogrenciler|ogrencileri|ilkokul|ortaokul|lise|secmeler|ozet|ozeti|kisaltilmis|uyarlama|uyarlayan|cizgi|resimli|basitlestirilmis|sadelestirilmis|genclik|cocuk|cocuklar|gencler|kolay okuma|ogretmen|calisma kitabi)( |$)|(^| )(gencler|cocuklar|cocuk|okullar) icin | temel eser /;
+// 22.6: ses/görüntü ürünü (Kitantik "…Destanı Cd" 460 TL kitap sanılmıştı). Elenmez; 2 puan düşer, raporda [CD/ses] yazar. Aranan adda varsa sayılmaz.
+const SES_KALIBI = / (cd|dvd|vcd|mp3|plak|kaset|vinil|sesli kitap|audiobook)( |$)/;
 const DIL_KALIBI = / (almanca|ingilizce|fransizca|rusca|arapca|ispanyolca|italyanca|bulgarca|yunanca|farsca|felemenkce|japonca|cince|portekizce|macarca|romence|sirpca|latince)( |$)/;
 const ORDINAL = new Set(["birinci", "ikinci", "ucuncu", "dorduncu", "besinci", "altinci", "yedinci", "sekizinci", "dokuzuncu", "onuncu"]);
 
@@ -1304,12 +1311,13 @@ function uyumBul(baslik, sorgu, yazarVar) {
   const qs = " " + q.join(" ") + " ";
   const uyarlama = UYARLAMA_KALIBI.test(s) && !UYARLAMA_KALIBI.test(qs);
   const dil = DIL_KALIBI.test(s) && !DIL_KALIBI.test(qs);
+  const ses = SES_KALIBI.test(s) && !SES_KALIBI.test(qs);
   // eksik: aranan adın bir sözcüğü başlıkta yok (yazım hatası olabilir ya da başka kitap); elenmez, en alta iner.
   // tarihli: başlıkta tek "ay yıl" var (baskı tarihi ya da dergi); elenmez, 1 puan düşer, raporda [tarihli] yazar.
   // dil: başlıkta başka dil adı ("Almanca", "Rusça") var; elenmez, 2 puan düşer, raporda [başka dil] yazar.
   const tarihli = TARIHLI_KALIBI.test(s) && !TARIHLI_KALIBI.test(qs);
-  const puan = (derece === "A" || derece === "-" ? 0 : derece === "B" ? 1 : 2) + (kismi ? 1 : 0) + (uyarlama ? 1 : 0) + (eksik ? 1 : 0) + (tarihli ? 1 : 0) + (dil ? 2 : 0);
-  return { derece, kismi, uyarlama, adEksik: eksik > 0, tarihli, baskaDil: dil, puan };
+  const puan = (derece === "A" || derece === "-" ? 0 : derece === "B" ? 1 : 2) + (kismi ? 1 : 0) + (uyarlama ? 1 : 0) + (eksik ? 1 : 0) + (tarihli ? 1 : 0) + (dil ? 2 : 0) + (ses ? 2 : 0);
+  return { derece, kismi, uyarlama, adEksik: eksik > 0, tarihli, baskaDil: dil, sesUrunu: ses, puan };
 }
 
 // Takım / set / çok ciltli ürün mü? ("3 Kitap Set", "Takım", "5 Cilt") — tek kitap sayılmaz, ayrı gösterilir.
@@ -1797,10 +1805,10 @@ function kompaktRapor(sorgu, yazar, sonuclar, sure) {
   const ilansiz = sonuclar.filter(r => !gorunenler(r).length);
   const satir = [];
   satir.push("▶ " + sorgu + (yazar ? " | " + yazar : "") + " · " + sure + " sn · ilanı olan site " + ilanli.length + "/" + sonuclar.length + " · görünür ilan " + tum.length);
-  const isaretler = x => (x.derece === "-" ? "" : " [" + x.derece + "]") + (x.kismi ? " [kısmi cilt]" : "") + (x.uyarlama ? " [uyarlama]" : "") + (x.adEksik ? " [ad eksik]" : "") + (x.tarihli ? " [tarihli]" : "") + (x.baskaDil ? " [başka dil]" : "");
+  const isaretler = x => (x.derece === "-" ? "" : " [" + x.derece + "]") + (x.kismi ? " [kısmi cilt]" : "") + (x.uyarlama ? " [uyarlama]" : "") + (x.adEksik ? " [ad eksik]" : "") + (x.tarihli ? " [tarihli]" : "") + (x.baskaDil ? " [başka dil]" : "") + (x.sesUrunu ? " [CD/ses]" : "");
   // Ham fiyat tanısı: derecesi A olmayan ilanda ve "daha ucuz ama zayıf" ilanında okunan bütün fiyatlar + fiyattan önceki karakterler yazılır
   // (BKM 100,00 TL, Hepsiburada 12,90 TL, n11 Sahaflar 26,45 TL gibi açıklanmamış fiyatların nedeni raporla anlaşılsın).
-  const hamFiyat = x => " · okunan fiyatlar: " + (x.tum || "-") + " · fiyattan önceki karakterler: " + String(x.ctx || "-").replace(/\s+/g, " ").slice(-70);
+  const hamFiyat = x => " · okunan fiyatlar: " + (x.tum || "-") + " · fiyattan önceki 60 karakter: " + String(x.ctx || "-").replace(/\s+/g, " ").slice(-110);
   const gosterilen = tum.slice(0, 5);
   gosterilen.forEach(t => {
     const x = t.x;
@@ -1830,7 +1838,7 @@ function kompaktRapor(sorgu, yazar, sonuclar, sure) {
     satir.push("   ilgisiz kalem elenen: " + ilgisizToplam + " (" + Object.keys(say).map(n => n + " " + say[n]).join(", ") + ")");
     ornek.forEach(o => satir.push("      elenen örnek · " + o));
   }
-  if (ilansiz.length) satir.push("   ilan yok: " + ilansiz.map(r => r.k.ad + " (" + RENK_ADI[renk(r)] + (r.aramaDenenen.length > 1 ? ", yalnız ad da denendi" : "") + ")").join(", "));
+  if (ilansiz.length) satir.push("   ilan yok: " + ilansiz.map(r => r.k.ad + " (" + ilansizAd(r) + (r.aramaDenenen.length > 1 ? ", yalnız ad da denendi" : "") + ")").join(", "));
   return satir.join("\n");
 }
 
@@ -1876,6 +1884,14 @@ function renk(r) {
   return "gorunmuyor";
 }
 
+// 22.6: kompakt raporda "GÖRÜNMÜYOR" yerine nedeni yazılır (uzun rapor ve sayaçlar RENK_ADI ile aynı kalır).
+function ilansizAd(r) {
+  const c = renk(r);
+  if (c !== "gorunmuyor") return RENK_ADI[c];
+  if ((r.fiyatsizGizlenen || []).length || (r.ilgililer || []).length) return "kitap var ama stokta yok, gizlendi";
+  if (r.urunSayisi > 0) return "KİTAP YOK: sayfa açıldı, " + r.urunSayisi + " ürün okundu, hiçbiri bu kitap değil";
+  return RENK_ADI[c];
+}
 const RENK_ADI = { yesil: "ÇALIŞTI", sari: "KISMEN", kirmizi: "ÇALIŞMADI", yok: "SONUÇ YOK", gorunmuyor: "GÖRÜNMÜYOR", yavas: "YAVAŞ" };
 const DURUM_ADI = { calisan: "çalışan", duzeltiliyor: "düzeltiliyor", aday: "aday" };
 function etiket(k) { return DURUM_ADI[k.durum] + (k.acik ? "" : " · KAPALI"); }
