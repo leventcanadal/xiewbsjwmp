@@ -1,9 +1,9 @@
-// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.23
+// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.24
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
-// Sürüm 22.23 · Ana 17 · Letgo'nun asıl nedeni bulundu (iPad 22.22 teşhisi): yazarlı aramada motor önce 'ad + yazar' sayfasını tutuyordu; Letgo bu sayfada '6 ilan bulundu' deyip kart göstermedi, daha geniş 'yalnız ad' sayfası ise '0 ilan bulundu' dedi ama dikkate alınmadı. Artık tutulan sayfada hiç ürün yoksa ve 'yalnız ad' sayfası kendisi 'sonuç yok' diyorsa SONUÇ YOK yazılır (bütün siteler; okunan ürün varsa etiket değişmez; 0 ürün tek başına 'yok' sayılmaz). Derece, puan, sıralama, eleme aynı. (Sürüm 22.22 · Ana 17 · Letgo teşhisi ve olası düzeltme: Letgo'da ürün yoksa ve 'yok' yazısı da yoksa sayfa sonuna kaydırılır, 3 sn sonra yeniden okunur (boş sonuç iletisi ancak görünür olunca çiziliyor olabilir); yazı çıkarsa SONUÇ YOK. Liste raporunda Letgo ÇALIŞMADI ise 'TEŞHİS (22.22)' satırları: tarayıcı genişliği ve kimliği (UA), sayfa kodunda (HTML) 'yok' izleri, sayfanın görünen metninin tamamı. Neden: Fatih'in Safari ekranı (masaüstü görünüm) 'aramanızda 0 ilan bulundu' ve 'İlan bulunamadı' gösteriyor; motorun sayfası 'Uygulamada Aç' ile başlıyor (telefon görünümü olabilir) ve 2603 harflik metinde bu yazılar yok. Derece, puan, sıralama, eleme aynı. (Sürüm 22.21 · Ana 17 · Letgo'da ilan olmayan kitap ÇALIŞMADI yerine SONUÇ YOK çıkar: sayfa hiç ürün vermediyse ve sitenin kendi "sonuç bulunamadı" yazısı ilk 15.000 harfte değil de sayfanın devamında geçiyorsa (kurallar.json "yokTumMetin", yalnız Letgo). Ürün yoksa ve yazı da yoksa ÇALIŞMADI kalır (0 ürün tek başına "yok" sayılmaz). Liste raporunda ÇALIŞMADI satırına sayfanın tamamındaki 'yok' yazısı ve ipuçları da yazılır (teşhis). Derece, puan, sıralama ve eleme aynı. (Sürüm 22.20 · Ana 16 · Rapordaki 'ilan yok' satırında ÇALIŞMADI olan sitenin nedeni artık kısa yazılır (ENGEL, sayfada görünen ilk metin, hata, yol, ürün sayısı). Letgo Şeyh Bedreddin Destanı'nda iki iPad raporunda nedensiz ÇALIŞMADI çıkmıştı; bulutta Letgo bot korumasına (Access Denied) takıldığı için neden ancak iPad'de görülebilir. Yalnız rapor metni; derece, puan, sıralama ve eleme aynı. (Sürüm 22.19 · Ana 16 · (1) 'EK YAZAR ADAYLARI' satırında ana listede karşılığı olan adayın yazımı kullanılır ("Ian Mcewan" yerine "Ian McEwan"). (2) 'Yazar adayı başına en ucuz ilan' bölümü ilk 10 adayla sınırlıydı; 10'un dışında kalan ama EK listede en az 2 siteyle desteklenen aday da artık en ucuz ilan satırı alır (22.18 iPad raporunda Ian McEwan 12. sıradaydı ve 80 TL'lik ilanı görünmedi). Yalnız rapor metni değişti; derece, puan, sıralama ve eleme aynı. (Sürüm 22.18 · Ana 16 · Yazarsız aramada Hepsiburada/Kitapseç/Trendyol/n11/Akakçe başlığındaki "Başlık - Yazar" deseni (örnek: "Yapı Kredi Yayınları Kefaret - Ian McEwan", ayraçsız Kitapseç: "Kefaret Ian McEwan Yapı Kredi Yayınları") rapora "EK YAZAR ADAYLARI (yalnız bilgi)" satırı olarak yazılır. Bu oylar AYRI alanda tutulur; derece, puan, sıralama, eleme ve "YAZAR SEÇİMİ GEREK" kararı değişmedi. Sayı, dizi adı, yayınevi ve baskı sözcüğü taşıyan parçalar aday sayılmaz. (Sürüm 22.17 · Ana 15 · Yazarsız aramada 'yazar adayı başına en ucuz ilan' bölümü artık 1 oylu adayları da kapsar (Ian McEwan gibi); yazar sanılan seri adı 'Solomon Creed' adayın yanında '(seri adı olabilir)' etiketi alır (aday silinmez, gerçek yazar tahmin edilmez). Sıralama ve elemeler değişmedi. (Sürüm 22.16 · Ana 15 · '+N aday daha' notunun yanına kalan yazar adaylarının adları ve oyları yazılır (22.15 iPad raporunda McEwan görünen 10 adayın içinde değildi; gizli 4 adayın içinde olup olmadığı bilinemiyordu). Sıralama ve elemeler değişmedi. (Sürüm 22.15 · Ana 15 · Yazarsız aramada yazar adayı satırı 6 yerine en çok 10 aday gösterir; fazlası "+N aday daha" notuyla bildirilir (adaya göre en ucuz ilan satırlarında da aynı). Sıralama ve elemeler değişmedi. (Sürüm 22.14 · Ana 14 · Yazarsız aramada aynı adla birden çok yazar varsa her yazar adayının en ucuz ilanı ayrı satırda (en çok 6 aday); gizlenen [ad eksik] ilanların başlıkları denetim satırı olarak; Hepsiburada kartı raporda 200 karaktere kadar; 'haber sayfası' kitap dışı. Sıralama ve elemeler değişmedi (yazarlı akış 22.11 ile aynı). (Sürüm 22.13 · Ana 14 · iPad 22.12 raporundan: Nadir/Kitantik'te 'Film Kartı/Sinema Kartı' kitap dışı elenir; Hepsiburada'da 'üzeri/kupon/indirim/kazanç/puan' sayıları fiyat sayılmaz (450 TL üzeri eşiği fiyat sanılıyordu); kart metnindeki yarım HTML etiketi de temizlenir; aynı yazarın farklı yazımları (H. R. Lenormand, Ian Mc Ewan) tek adayda birleşir; BKM ve Amazon kartından da yazar adayı oylanır. Yazarlı akış 22.11 ile aynı (48 akış, fark 0). (Sürüm 22.12 · Ana 14 · Yazarsız aramada yazar adayları: Nadir/Kitantik/yazar alanından yazar okunur, ilan satırına [yazar: …] yazılır, başlığı aynen uyan ilanlardan oylanıp raporda "YAZAR ADAYLARI" (+ "YAZAR SEÇİMİ GEREK") satırı çıkar; yazar ASLA tahminle uygulanmaz. Aranan addan ÖNCE gelen ve hiçbir yazar adayı/yayınevi ile açıklanmayan sözcüğü olan ilan [C] olur (+2, elenmez). Site başına bir örnek kart yazılır. (Sürüm 22.11 · Ana 14 · Yazar girilmediğinde ilan satırlarına kart metni de yazılır (otomatik yazar bulma için hangi sitede yazar nasıl görünüyor incelemesi); başka davranış değişmedi. (Sürüm 22.10 · Ana 14 · Hepsiburada kartında en küçük sayı en büyüğün %15'inden azsa (indirim/kampanya tutarı fiyat sanılıyordu) ilan elenmez, [kart içi fiyat şüpheli] işareti + 5 puan; kart metnindeki <img> etiketi temizlenir. (Sürüm 22.9 · Ana 14 · Bağımsız denetim düzeltmesi: [başka yazar] işareti yalnız yüksek güvenle (≥2 kişi-adı sözcüğü, yayınevi/rozet/Kolektif atılır, girilen yazarın hiçbir sözcüğü bitişik yazımda ya da yazım farkıyla bile yoksa); baş harf, Mc/De, Edip/Edib sorunları giderildi; bitişik yazarlı BKM kartı A olur; [CD/ses] yalnız başlık sonunda/+ ile/sesli kitap. (Sürüm 22.8 · Ana 14 · BKM ve Pandora kartında yazar metni yedeği ([başka yazar] iPad'de de çalışsın), "kanıtı zayıf" listesinde [ad eksik] ilanlar gösterilmez. (22.7: BKM yazar alanı okunur, girilen yazarla uyuşmuyorsa [başka yazar: …] (3 puan, elenmez), ilk 5'te yazar kanıtı yoksa UYARI, "kanıtı zayıf" için en ucuz 3 ilan + kart metni. (22.6: BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.)))))))))))))))))
+// Sürüm 22.24 · Ana 18 · İnternet kesintisi site sorunundan ayrılır ve site düzeni değişikliği işaretlenir (yalnız rapor bilgisi). (1) Çalışmayan ya da süre sınırında kesilen sitede motor bağlantıyı yoklar (iki bağımsız adres: Google generate_204 ve Apple hotspot-detect); ikisi de açılmıyorsa ya da sayfa hatası 'cihaz çevrimdışı' diyorsa site [BAĞLANTI] alır ve raporun başına 'BAĞLANTI SORUNU' satırı yazılır; arama başında da bir yoklama yapılır. (2) Sayfa 'cihaz çevrimdışı' hatasıyla hiç açılmadıysa 15 sn bekleme atlanır (internetsiz arama ~100 sn yerine ~10 sn). (3) Sayfa açıldı, site sonuç olduğunu yazıyor ya da sayfada fiyat var ama hiç ilan ayrılamadıysa [YAPI?] işareti: site düzeni değişmiş olabilir (tek arama kanıt değildir). Renk/etiket, sayaç, derece, puan, sıralama, eleme aynı. (Sürüm 22.23 · Ana 17 · Letgo'nun asıl nedeni bulundu (iPad 22.22 teşhisi): yazarlı aramada motor önce 'ad + yazar' sayfasını tutuyordu; Letgo bu sayfada '6 ilan bulundu' deyip kart göstermedi, daha geniş 'yalnız ad' sayfası ise '0 ilan bulundu' dedi ama dikkate alınmadı. Artık tutulan sayfada hiç ürün yoksa ve 'yalnız ad' sayfası kendisi 'sonuç yok' diyorsa SONUÇ YOK yazılır (bütün siteler; okunan ürün varsa etiket değişmez; 0 ürün tek başına 'yok' sayılmaz). Derece, puan, sıralama, eleme aynı. (Sürüm 22.22 · Ana 17 · Letgo teşhisi ve olası düzeltme: Letgo'da ürün yoksa ve 'yok' yazısı da yoksa sayfa sonuna kaydırılır, 3 sn sonra yeniden okunur (boş sonuç iletisi ancak görünür olunca çiziliyor olabilir); yazı çıkarsa SONUÇ YOK. Liste raporunda Letgo ÇALIŞMADI ise 'TEŞHİS (22.22)' satırları: tarayıcı genişliği ve kimliği (UA), sayfa kodunda (HTML) 'yok' izleri, sayfanın görünen metninin tamamı. Neden: Fatih'in Safari ekranı (masaüstü görünüm) 'aramanızda 0 ilan bulundu' ve 'İlan bulunamadı' gösteriyor; motorun sayfası 'Uygulamada Aç' ile başlıyor (telefon görünümü olabilir) ve 2603 harflik metinde bu yazılar yok. Derece, puan, sıralama, eleme aynı. (Sürüm 22.21 · Ana 17 · Letgo'da ilan olmayan kitap ÇALIŞMADI yerine SONUÇ YOK çıkar: sayfa hiç ürün vermediyse ve sitenin kendi "sonuç bulunamadı" yazısı ilk 15.000 harfte değil de sayfanın devamında geçiyorsa (kurallar.json "yokTumMetin", yalnız Letgo). Ürün yoksa ve yazı da yoksa ÇALIŞMADI kalır (0 ürün tek başına "yok" sayılmaz). Liste raporunda ÇALIŞMADI satırına sayfanın tamamındaki 'yok' yazısı ve ipuçları da yazılır (teşhis). Derece, puan, sıralama ve eleme aynı. (Sürüm 22.20 · Ana 16 · Rapordaki 'ilan yok' satırında ÇALIŞMADI olan sitenin nedeni artık kısa yazılır (ENGEL, sayfada görünen ilk metin, hata, yol, ürün sayısı). Letgo Şeyh Bedreddin Destanı'nda iki iPad raporunda nedensiz ÇALIŞMADI çıkmıştı; bulutta Letgo bot korumasına (Access Denied) takıldığı için neden ancak iPad'de görülebilir. Yalnız rapor metni; derece, puan, sıralama ve eleme aynı. (Sürüm 22.19 · Ana 16 · (1) 'EK YAZAR ADAYLARI' satırında ana listede karşılığı olan adayın yazımı kullanılır ("Ian Mcewan" yerine "Ian McEwan"). (2) 'Yazar adayı başına en ucuz ilan' bölümü ilk 10 adayla sınırlıydı; 10'un dışında kalan ama EK listede en az 2 siteyle desteklenen aday da artık en ucuz ilan satırı alır (22.18 iPad raporunda Ian McEwan 12. sıradaydı ve 80 TL'lik ilanı görünmedi). Yalnız rapor metni değişti; derece, puan, sıralama ve eleme aynı. (Sürüm 22.18 · Ana 16 · Yazarsız aramada Hepsiburada/Kitapseç/Trendyol/n11/Akakçe başlığındaki "Başlık - Yazar" deseni (örnek: "Yapı Kredi Yayınları Kefaret - Ian McEwan", ayraçsız Kitapseç: "Kefaret Ian McEwan Yapı Kredi Yayınları") rapora "EK YAZAR ADAYLARI (yalnız bilgi)" satırı olarak yazılır. Bu oylar AYRI alanda tutulur; derece, puan, sıralama, eleme ve "YAZAR SEÇİMİ GEREK" kararı değişmedi. Sayı, dizi adı, yayınevi ve baskı sözcüğü taşıyan parçalar aday sayılmaz. (Sürüm 22.17 · Ana 15 · Yazarsız aramada 'yazar adayı başına en ucuz ilan' bölümü artık 1 oylu adayları da kapsar (Ian McEwan gibi); yazar sanılan seri adı 'Solomon Creed' adayın yanında '(seri adı olabilir)' etiketi alır (aday silinmez, gerçek yazar tahmin edilmez). Sıralama ve elemeler değişmedi. (Sürüm 22.16 · Ana 15 · '+N aday daha' notunun yanına kalan yazar adaylarının adları ve oyları yazılır (22.15 iPad raporunda McEwan görünen 10 adayın içinde değildi; gizli 4 adayın içinde olup olmadığı bilinemiyordu). Sıralama ve elemeler değişmedi. (Sürüm 22.15 · Ana 15 · Yazarsız aramada yazar adayı satırı 6 yerine en çok 10 aday gösterir; fazlası "+N aday daha" notuyla bildirilir (adaya göre en ucuz ilan satırlarında da aynı). Sıralama ve elemeler değişmedi. (Sürüm 22.14 · Ana 14 · Yazarsız aramada aynı adla birden çok yazar varsa her yazar adayının en ucuz ilanı ayrı satırda (en çok 6 aday); gizlenen [ad eksik] ilanların başlıkları denetim satırı olarak; Hepsiburada kartı raporda 200 karaktere kadar; 'haber sayfası' kitap dışı. Sıralama ve elemeler değişmedi (yazarlı akış 22.11 ile aynı). (Sürüm 22.13 · Ana 14 · iPad 22.12 raporundan: Nadir/Kitantik'te 'Film Kartı/Sinema Kartı' kitap dışı elenir; Hepsiburada'da 'üzeri/kupon/indirim/kazanç/puan' sayıları fiyat sayılmaz (450 TL üzeri eşiği fiyat sanılıyordu); kart metnindeki yarım HTML etiketi de temizlenir; aynı yazarın farklı yazımları (H. R. Lenormand, Ian Mc Ewan) tek adayda birleşir; BKM ve Amazon kartından da yazar adayı oylanır. Yazarlı akış 22.11 ile aynı (48 akış, fark 0). (Sürüm 22.12 · Ana 14 · Yazarsız aramada yazar adayları: Nadir/Kitantik/yazar alanından yazar okunur, ilan satırına [yazar: …] yazılır, başlığı aynen uyan ilanlardan oylanıp raporda "YAZAR ADAYLARI" (+ "YAZAR SEÇİMİ GEREK") satırı çıkar; yazar ASLA tahminle uygulanmaz. Aranan addan ÖNCE gelen ve hiçbir yazar adayı/yayınevi ile açıklanmayan sözcüğü olan ilan [C] olur (+2, elenmez). Site başına bir örnek kart yazılır. (Sürüm 22.11 · Ana 14 · Yazar girilmediğinde ilan satırlarına kart metni de yazılır (otomatik yazar bulma için hangi sitede yazar nasıl görünüyor incelemesi); başka davranış değişmedi. (Sürüm 22.10 · Ana 14 · Hepsiburada kartında en küçük sayı en büyüğün %15'inden azsa (indirim/kampanya tutarı fiyat sanılıyordu) ilan elenmez, [kart içi fiyat şüpheli] işareti + 5 puan; kart metnindeki <img> etiketi temizlenir. (Sürüm 22.9 · Ana 14 · Bağımsız denetim düzeltmesi: [başka yazar] işareti yalnız yüksek güvenle (≥2 kişi-adı sözcüğü, yayınevi/rozet/Kolektif atılır, girilen yazarın hiçbir sözcüğü bitişik yazımda ya da yazım farkıyla bile yoksa); baş harf, Mc/De, Edip/Edib sorunları giderildi; bitişik yazarlı BKM kartı A olur; [CD/ses] yalnız başlık sonunda/+ ile/sesli kitap. (Sürüm 22.8 · Ana 14 · BKM ve Pandora kartında yazar metni yedeği ([başka yazar] iPad'de de çalışsın), "kanıtı zayıf" listesinde [ad eksik] ilanlar gösterilmez. (22.7: BKM yazar alanı okunur, girilen yazarla uyuşmuyorsa [başka yazar: …] (3 puan, elenmez), ilk 5'te yazar kanıtı yoksa UYARI, "kanıtı zayıf" için en ucuz 3 ilan + kart metni. (22.6: BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.))))))))))))))))))
 
 const GOMULU_KURALLAR = {
-  "surum": "22.23",
+  "surum": "22.24",
   "tarih": "2026-11-13",
   "aciklama": "Kitap Fiyat site kuralları. tur: yeni|sahaf|ikinciel|karsilastirma · acik: asıl uygulamada aranır mı · durum: calisan|duzeltiliyor|aday · url içinde {q} normal, {q5} eski Türkçe kodlama (ISO-8859-9), {qa} Türkçe harfsiz · sayfaGez: sonuç birden çok sayfaysa en çok bu sayfaya kadar okunur · sure: site süre sınırı (sn) · detay: özel ürün sayfası okuyucusu · aday siteler sınamada her zaman denenir ve teşhis dökümü yazar; acik:false olanlar asıl uygulamada aranmaz · kart: siteye özel kart kuralı (CSS seçicileri: kap, ad, fiyat, link, kondisyon, satici); kap bulunamazsa genel okuyucu · teshis: true ise kart yapısı, HTML parçası ve ham kart her sınamada yazılır (teshisSecici: ham kart seçicisi) · stokSayfasi: false ise ilan sayfası açılmaz, yayındaki ilan var sayılır (kişiden satış siteleri) · kart.sehir: satıcının şehri · kondisyonKartta: false ise arama kartında kondisyon yazmadığı bilinir, rapor uyarısı yazılmaz · stokVar: (21.7) ürün sayfasında bu düzenli ifade geçerse ürün stokta sayılır (siteye özel; ör. Sahafta takip düğmesi \"Gelince Haber Ver\" her sayfada yazar)",
   "ayarlar": {
@@ -360,13 +360,18 @@ const GOMULU_KURALLAR = {
 //                          (JSON'a çevrilebilir düz nesne/metin/sayı) döndürür. Sayfa değişirken hata verebilir.
 //     kapat()            : Sekmeyi kapatır, belleği boşaltır. Kapalı sekmeye sonra çağrı gelmez.
 //   T.bekle(ms)   → Promise; ms milisaniye sonra çözülür.
+//   T.baglanti()  → (İSTEĞE BAĞLI, 22.24) Promise<{ durum, ms, ayrinti }>. Cihazın internete çıkıp çıkamadığını yoklar:
+//                   iki bağımsız küçük adres (https://www.google.com/generate_204 → 204 beklenir; https://captive.apple.com/hotspot-detect.html
+//                   → içinde "Success" beklenir). Biri beklendiği gibi yanıtlarsa "var"; ikisi de hata verirse "yok"; yanıt gelip
+//                   beklenen gibi değilse "portal" (Wi-Fi giriş sayfası vb.). ms: yoklamanın süresi. Android'de ConnectivityManager
+//                   (NET_CAPABILITY_VALIDATED) bilgisi "ayrinti"ye eklenebilir. Yoksa motor yalnız sayfa hata kodlarına bakar.
 //   Sayfaların cihazın KENDİ internetiyle, gerçek bir tarayıcı motoruyla (iPad: WKWebView, Android: Chrome WebView)
 //   açılması şarttır; siteler sunucudan gelen istekleri engelliyor.
 //
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "22.23";
+const MOTOR_SURUMU = "22.24";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -1672,7 +1677,9 @@ async function siteyiSina(k, sorgu, r) {
         const wv = yeniSekme(r);
         const adres = adresYap(kalip, ar.q);
         const yh = await sayfaYukle(wv, adres, 20000);
-        const b = await sonucBekle(wv, sorgu, 15000, k.tur, r, k.kart);
+        // 22.24: sayfa "cihaz çevrimdışı" hatasıyla açılmadıysa 15 sn beklemek sonuç vermez (sayfa hiç yüklenmedi); bekleme atlanır.
+        // Yalnız bu hata türünde; başka her durumda bekleme eskisi gibi.
+        const b = (yh && AG_COVRIMDISI.test(String(yh))) ? { son: {}, hata: "" } : await sonucBekle(wv, sorgu, 15000, k.tur, r, k.kart);
         if (r.iptal) return;
         // 22.23: GENİŞ aramada (yalnız ad) sayfanın kendisi "sonuç yok" diyorsa not edilir (aşağıda yalnız hiç ürün okunamadıysa kullanılır).
         if (ar.tur === "yalnız ad" && b.son && b.son.sonucYok && !b.son.blocked && !(b.son.items || []).length) r.genisYok = { tur: ar.tur, adres: adres };
@@ -1939,6 +1946,7 @@ function kompaktRapor(sorgu, yazar, sonuclar, sure) {
   // 22.17: yazar sanılan ama aslında seri adı olabilen adaylar etiketlenir (gerçek yazar tahmin edilmez; aday silinmez).
   const aday = c => c.ad + (ADAY_SERI.has(sade(c.ad).trim()) ? " (seri adı olabilir)" : "");
   satir.push("▶ " + sorgu + (yazar ? " | " + yazar : "") + " · " + sure + " sn · ilanı olan site " + ilanli.length + "/" + sonuclar.length + " · görünür ilan " + tum.length);
+  baglantiSatirlari(sonuclar, "   ").forEach(x => satir.push(x)); // 22.24
   if (!yazar && sonuclar.yazarOyu && sonuclar.yazarOyu.length) {
     const ky = sonuclar.yazarOyu;
     // 22.15: en çok 10 aday gösterilir (22.14'te 6); fazlası "+N aday daha" notuyla bildirilir.
@@ -2004,7 +2012,7 @@ function kompaktRapor(sorgu, yazar, sonuclar, sure) {
     satir.push("   ilgisiz kalem elenen: " + ilgisizToplam + " (" + Object.keys(say).map(n => n + " " + say[n]).join(", ") + ")");
     ornek.forEach(o => satir.push("      elenen örnek · " + o));
   }
-  if (ilansiz.length) satir.push("   ilan yok: " + ilansiz.map(r => r.k.ad + " (" + ilansizAd(r) + (r.aramaDenenen.length > 1 ? ", yalnız ad da denendi" : "") + calismadiNeden(r) + ")").join(", "));
+  if (ilansiz.length) satir.push("   ilan yok: " + ilansiz.map(r => r.k.ad + " (" + ilansizAd(r) + altDurumNotu(r) + (r.aramaDenenen.length > 1 ? ", yalnız ad da denendi" : "") + calismadiNeden(r) + ")").join(", "));
   // 22.22 teşhis bloğu: yalnız "yokTumMetin" sitesi (Letgo) ÇALIŞMADI ya da sayfanın devamından SONUÇ YOK olduysa.
   ilansiz.filter(r => r.k.yokTumMetin && r.ozet && r.ozet.tamMetin != null && (renk(r) === "kirmizi" || r.yokTumMetin)).forEach(r => {
     const o = r.ozet;
@@ -2022,6 +2030,86 @@ function kompaktRapor(sorgu, yazar, sonuclar, sure) {
   return satir.join("\n");
 }
 
+// ---------------------------------------------------------------
+// 22.24 · BAĞLANTI YOKLAMASI ve YAPI? İŞARETİ (yalnız rapor bilgisi; renk(), sayaç, eleme, derece, puan ve sıralama bunları KULLANMAZ)
+// Amaç: internet kesikken siteler "çalışmadı" sayılmasın ("yok" ile "bilmiyoruz" karışmasın); site düzeni değişmiş olabilecek
+// durum "kitap yok"tan ayrı görünsün. İlke: "internet yok" demek de kanıt ister; tek kanıt yetmez.
+// Kanıt 1: tarayıcı sözleşmesindeki İSTEĞE BAĞLI T.baglanti() → Promise<{ durum: "var"|"yok"|"portal"|"bilinmiyor", ms, ayrinti }>.
+//          Kabuk iki bağımsız küçük adresi dener (Google generate_204, Apple hotspot-detect). Kabukta yoksa bu kanıt atlanır.
+// Kanıt 2: sayfa açılış hatasının metni. Yalnız "cihaz çevrimdışı" anlamına gelen kodlar BAĞLANTI sayılır
+//          (iOS NSURLErrorDomain -1009/-1020, Android net::ERR_INTERNET_DISCONNECTED/ERR_NETWORK_CHANGED/ERR_ADDRESS_UNREACHABLE).
+//          Ad çözülememe ya da bağlantı reddi gibi hatalar tek bir sitenin kendi sorunu da olabilir: yalnız yoklama "yok" derse BAĞLANTI.
+// Yoklama yalnız ÇALIŞMADI ya da YAVAŞ olan sitede, site bittikten SONRA yapılır (önceki bir yoklama kesintiden önceye ait olabilir;
+// yalnız son 8 sn içinde başlamış yoklama ortak kullanılır).
+// ---------------------------------------------------------------
+const AG_COVRIMDISI = /NSURLErrorDomain[^\d-]*-10(09|20)\b|\(-10(09|20)\)|code[ =:]*-10(09|20)\b|ERR_INTERNET_DISCONNECTED|ERR_NETWORK_CHANGED|ERR_ADDRESS_UNREACHABLE|appears to be offline|çevrimdışı görünüyor/i;
+const AG_HATASI = /NSURLErrorDomain|ERR_NAME_NOT_RESOLVED|ERR_NAME_RESOLUTION_FAILED|ERR_CONNECTION_(TIMED_OUT|RESET|REFUSED|CLOSED|FAILED|ABORTED)|ERR_TIMED_OUT|ERR_PROXY|server with the specified hostname could not be found|could not connect to the server|network connection was lost|request timed out/i;
+let yoklamaSon = null;
+function baglantiYokla() {
+  if (!T || typeof T.baglanti !== "function") return Promise.resolve(null);
+  const simdi = Date.now();
+  if (yoklamaSon && simdi - yoklamaSon.zaman < 8000) return yoklamaSon.sonuc;
+  const sonuc = Promise.race([
+    Promise.resolve().then(() => T.baglanti()).then(x => x || { durum: "bilinmiyor", ayrinti: "boş yanıt" }).catch(e => ({ durum: "bilinmiyor", ayrinti: "yoklama hatası: " + String(e).slice(0, 80) })),
+    bekle(15000).then(() => ({ durum: "bilinmiyor", ayrinti: "yoklama 15 sn içinde bitmedi" }))]);
+  yoklamaSon = { zaman: simdi, sonuc };
+  return sonuc;
+}
+// Site kaydına BAĞLANTI bilgisini yazar. r.baglanti: yoklama sonucu; r.baglantiSorunu: neden metni (boşsa bağlantı sorunu yok).
+async function baglantiDenetle(r) {
+  const rk = renk(r);
+  if (rk !== "kirmizi" && rk !== "yavas") return;
+  const hata = String(r.hata || "");
+  const covrimdisi = (hata.match(AG_COVRIMDISI) || [])[0] || "";
+  const agHatasi = covrimdisi || (hata.match(AG_HATASI) || [])[0] || "";
+  if (agHatasi) r.agHatasi = agHatasi;
+  let y = null;
+  try { y = await baglantiYokla(); } catch (e) { }
+  if (y) r.baglanti = { durum: String(y.durum || "bilinmiyor"), ms: (typeof y.ms === "number" ? y.ms : null), ayrinti: String(y.ayrinti || "").slice(0, 160) };
+  if (y && (y.durum === "yok" || y.durum === "portal")) r.baglantiSorunu = (y.durum === "yok" ? "internet yok (yoklama: iki adres de açılmadı)" : "internete çıkılamıyor (yoklama: giriş sayfası ya da beklenmeyen yanıt)") + (covrimdisi ? "; sayfa hatası da çevrimdışı diyor" : "");
+  else if (covrimdisi) r.baglantiSorunu = "sayfa açılırken cihaz çevrimdışıydı (" + covrimdisi + ")" + (y && y.durum === "var" ? "; sonraki yoklamada internet geri gelmişti" : "");
+  if (!r.baglantiSorunu && rk === "yavas" && r.baglanti && r.baglanti.durum === "var" && r.baglanti.ms > 4000) r.baglantiYavas = true;
+}
+// YAPI? : sayfa açıldı, engel ve bağlantı sorunu yok, site sonuç olduğunu söylüyor ya da sayfada fiyat var, ama motor hiç ilan ayıramadı.
+// Site düzeni değişmiş olabilir (kanıt değil, işaret). Tek bir aramada görülmesi değişiklik kanıtı sayılmaz; tekrarı izlenir.
+function yapiSuphesi(r) {
+  if (!r || renk(r) !== "kirmizi" || r.engel || r.baglantiSorunu || r.yavas || r.urunSayisi) return "";
+  if (r.sonucSayisi > 0) return "site " + r.sonucSayisi + " sonuç olduğunu yazıyor ama ilan ayrılamadı";
+  if (r.fiyatSayisi > 0) return "sayfada " + r.fiyatSayisi + " fiyat var ama ilan ayrılamadı";
+  return "";
+}
+// Arayüz ve rapor için alt durum (teknik etiketler ve renk() değişmez): "BAĞLANTI" · "ENGEL" · "YAPI?" · ""
+function altDurum(r) {
+  if (!r) return "";
+  if (r.baglantiSorunu) return "BAĞLANTI";
+  const rk = renk(r);
+  if ((rk === "kirmizi" || rk === "yavas") && r.engel) return "ENGEL";
+  if (yapiSuphesi(r)) return "YAPI?";
+  return "";
+}
+function altDurumNotu(r) {
+  const a = altDurum(r);
+  if (a === "BAĞLANTI") return " [BAĞLANTI: " + r.baglantiSorunu + "]";
+  if (a === "YAPI?") return " [YAPI?: " + yapiSuphesi(r) + "; site düzeni değişmiş olabilir]";
+  if (r && r.baglantiYavas) return " [bağlantı yavaş: yoklama " + r.baglanti.ms + " ms]";
+  return "";
+}
+// Bir aramanın bağlantı özeti (arayüz için): { sorunlu: [site adları], yapi: [site adları], basta: arama başındaki yoklama }
+function baglantiOzeti(sonuclar) {
+  const s = sonuclar || [];
+  return { sorunlu: s.filter(r => r && r.baglantiSorunu).map(r => r.k.ad), yapi: s.filter(r => altDurum(r) === "YAPI?").map(r => r.k.ad),
+    yavas: s.filter(r => r && r.baglantiYavas).map(r => r.k.ad), basta: (s.baglantiBasta || null) };
+}
+function baglantiSatirlari(sonuclar, girinti) {
+  const o = baglantiOzeti(sonuclar), g = girinti || "", out = [];
+  const b = o.basta;
+  if (o.sorunlu.length) out.push(g + "BAĞLANTI SORUNU (22.24): " + o.sorunlu.length + "/" + sonuclar.length + " siteye internet sorunu yüzünden bakılamadı: " + o.sorunlu.join(", ") + (b ? " · arama başındaki yoklama: " + b.durum + (b.ms != null ? " (" + b.ms + " ms)" : "") + (b.ayrinti ? " · " + b.ayrinti : "") : " · yoklama yok (kabuk desteklemiyor)"));
+  else if (b && b.durum !== "var") out.push(g + "BAĞLANTI (22.24): arama başındaki yoklama \"" + b.durum + "\" dedi" + (b.ayrinti ? " · " + b.ayrinti : "") + "; sitelerde bağlantı sorunu görülmedi");
+  if (o.yavas.length) out.push(g + "BAĞLANTI YAVAŞ (22.24): süre sınırında kesilen sitelerde yoklama 4 sn'den uzun sürdü: " + o.yavas.join(", "));
+  if (o.yapi.length) out.push(g + "YAPI? (22.24): site düzeni değişmiş olabilir (tek arama kanıt değildir): " + sonuclar.filter(r => altDurum(r) === "YAPI?").map(r => r.k.ad + " (" + yapiSuphesi(r) + ")").join(", "));
+  return out;
+}
+
 async function siteSinirli(k, sorgu) {
   const r = yeniSonuc(k);
   const sinir = k.sure || SITE_SURE_SINIRI;
@@ -2033,10 +2121,12 @@ async function siteSinirli(k, sorgu) {
     sekmeleriKapat(r);
     const kopya = JSON.parse(JSON.stringify(r));
     kopya.yavas = true; kopya.sinir = sinir; kopya.sure = sinir;
+    try { await baglantiDenetle(kopya); } catch (e) { }
     return kopya;
   }
   r.sure = Math.round((Date.now() - bas) / 1000);
   sekmeleriKapat(r);
+  try { await baglantiDenetle(r); } catch (e) { }
   return r;
 }
 
@@ -2174,6 +2264,8 @@ function raporMetni(sorgu, sonuclar, sure, cihaz) {
   const esikAsan = sonuclar.filter(r => !r.yavas && r.sure > YAVAS_ESIK).length;
   satirlar.push("Özet: " + sayac.yesil + " çalıştı · " + sayac.sari + " kısmen · " + sayac.kirmizi + " çalışmadı · " + sayac.yok + " sonuç yok · " + sayac.gorunmuyor + " görünmüyor · " + sayac.yavas + " süre sınırında kesildi · " + esikAsan + " yavaş (" + YAVAS_ESIK + " sn üstü, bitti)");
   satirlar.push("Süreler: " + sonuclar.map(r => r.k.ad + " " + r.sure + (r.yavas ? " (KESİLDİ)" : "")).join(" · "));
+  baglantiSatirlari(sonuclar, "").forEach(x => satirlar.push(x)); // 22.24
+  if (sonuclar.baglantiBasta) satirlar.push("Bağlantı yoklaması (arama başında): " + sonuclar.baglantiBasta.durum + (sonuclar.baglantiBasta.ms != null ? " · " + sonuclar.baglantiBasta.ms + " ms" : "") + (sonuclar.baglantiBasta.ayrinti ? " · " + sonuclar.baglantiBasta.ayrinti : ""));
   const iyiMi = r => renk(r) === "yesil" && r.k.durum !== "aday" && !r.k.teshis;
   const iyi = sonuclar.filter(iyiMi), sorunlu = sonuclar.filter(r => !iyiMi(r));
   satirlar.push("");
@@ -2204,6 +2296,8 @@ function raporMetni(sorgu, sonuclar, sure, cihaz) {
     if (r.stokKontrol.length) s += " · stok sırası: " + stokSirasi(r);
     if (r.engel) s += " · ENGEL: " + r.engel;
     if (r.hata) s += " · hata: " + String(r.hata).slice(0, 120);
+    s += altDurumNotu(r); // 22.24
+    if (r.baglanti) s += " · yoklama: " + r.baglanti.durum + (r.baglanti.ms != null ? " " + r.baglanti.ms + " ms" : "") + (r.baglanti.ayrinti ? " (" + r.baglanti.ayrinti + ")" : "");
     if (r.kutu) s += " · kutu: " + r.kutu;
     satirlar.push(s);
     if (ilk && ilk.kart) satirlar.push("   en ucuzun kartı: " + ilk.kart.slice(0, r.k.tur === "sahaf" ? 250 : 150));
@@ -2277,6 +2371,7 @@ function raporSayfasi(sorgu, sonuclar, sure, dosyaYeri) {
     if (r.akakce) satir.push("Akakçe ürün sayfası: " + kacis(r.akakce.saticiYazisi || "satıcı sayısı okunamadı") + " · " + (r.akakce.satir || []).length + " satıcı satırı okundu");
     if (r.engel) satir.push("<span class=\"kir\">Robot doğrulaması: " + kacis(r.engel) + "</span>");
     if (r.hata) satir.push("<span class=\"kir\">Hata: " + kacis(String(r.hata).slice(0, 120)) + "</span>");
+    if (altDurumNotu(r)) satir.push("<span class=\"kir\">" + kacis(altDurumNotu(r).trim()) + "</span>"); // 22.24
     if (r.ozet) satir.push("Sayfada görünen: " + kacis((r.ozet.title || "") + " — " + String(r.ozet.metin || "").slice(0, 140)));
     return '<a class="k ' + rk + '" href="' + kacis(r.sonUrl || r.adres) + '"><div class="ust"><span class="ad">' + kacis(r.k.ad) +
       '</span><span class="rozet ' + rk + '">' + RENK_ADI[rk] + "</span></div>" +
@@ -2488,18 +2583,21 @@ async function siteleriSina(sorgu, secenek) {
   const siteler = secenek.siteler || KURAL.siteler || [];
   const ayniAnda = secenek.ayniAnda || AYAR.ayniAnda || 4;
   EK_SORGU = sorgu;
+  yoklamaSon = null; // 22.24: önceki aramanın yoklaması bu aramaya taşınmaz
+  const ilkYoklama = baglantiYokla(); // 22.24: sitelerle aynı anda başlar, aramayı geciktirmez
   const sonuclar = await sirayla(siteler, ayniAnda, async k => {
     const r = await siteSinirli(k, sorgu);
     if (secenek.bildir) { try { secenek.bildir(r); } catch (e) { } }
     return r;
   });
   try { sonuclar.sorgu = sorgu; } catch (e) { }
+  try { const y = await ilkYoklama; if (y) sonuclar.baglantiBasta = { durum: String(y.durum || "bilinmiyor"), ms: (typeof y.ms === "number" ? y.ms : null), ayrinti: String(y.ayrinti || "").slice(0, 160) }; } catch (e) { }
   try { yazarsizDegerlendir(sonuclar); } catch (e) { }
   try { fiyatDenetle(sonuclar); } catch (e) { }
   return sonuclar;
 }
 
-return { SURUM, siteleriSina, kompaktRapor, raporMetni, raporSayfasi, renk, RENK_ADI, sayacYap,
+return { SURUM, siteleriSina, kompaktRapor, raporMetni, raporSayfasi, renk, RENK_ADI, sayacYap, altDurum, baglantiOzeti, yapiSuphesi,
   _sinama: { yazarsizDegerlendir, yazarOyla, yazarEkAdayi, yazarOyuEkHesapla,  yazarAdayiKartta, yazarMetniBul, baskaYazarKarari, sesUrunuMu, sonucuIsle, uyumBul, ilgisizNeden, ilgisizAyrinti, fiyatDenetle, yazarAyarla: y => { AKTIF_YAZAR = String(y || "").trim(); } } };
 }
 if (typeof module !== "undefined" && module) module.exports = MotorKur;
@@ -2523,7 +2621,26 @@ const TARAYICI = {
       kapat() { } // Scriptable'da görünmez sekmeyi kapatmaya gerek yok
     };
   },
-  bekle: ms => new Promise(r => Timer.schedule(ms, false, r))
+  bekle: ms => new Promise(r => Timer.schedule(ms, false, r)),
+  // 22.24 · bağlantı yoklaması (sözleşme: motorun başındaki açıklama). İki bağımsız adres aynı anda, her biri en çok 8 sn.
+  // Adresin sonuna zaman eklenir: önbellekteki eski yanıt "internet var" sanılmasın.
+  async baglanti() {
+    const bas = Date.now();
+    const dene = async (adres, uygun) => {
+      try {
+        const q = new Request(adres + "?t=" + Date.now());
+        q.timeoutInterval = 8;
+        const metin = await q.loadString();
+        const kod = q.response ? q.response.statusCode : 0;
+        return uygun(kod, String(metin || "")) ? { s: "var", n: "kod " + kod } : { s: "portal", n: "kod " + kod + ", beklenmeyen yanıt" };
+      } catch (e) { return { s: "yok", n: String(e).slice(0, 70) }; }
+    };
+    const [g, a] = await Promise.all([
+      dene("https://www.google.com/generate_204", k => k === 204),
+      dene("https://captive.apple.com/hotspot-detect.html", (k, t) => k === 200 && /Success/i.test(t))]);
+    const durum = (g.s === "var" || a.s === "var") ? "var" : (g.s === "portal" || a.s === "portal") ? "portal" : "yok";
+    return { durum, ms: Date.now() - bas, ayrinti: "Google: " + g.s + " (" + g.n + ") · Apple: " + a.s + " (" + a.n + ")" };
+  }
 };
 
 async function kurallariYukle() {
