@@ -1,9 +1,9 @@
-// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.14
+// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.21
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
-// Sürüm 22.20 · Ana 16 · Rapordaki 'ilan yok' satırında ÇALIŞMADI olan sitenin nedeni artık kısa yazılır (ENGEL, sayfada görünen ilk metin, hata, yol, ürün sayısı). Letgo Şeyh Bedreddin Destanı'nda iki iPad raporunda nedensiz ÇALIŞMADI çıkmıştı; bulutta Letgo bot korumasına (Access Denied) takıldığı için neden ancak iPad'de görülebilir. Yalnız rapor metni; derece, puan, sıralama ve eleme aynı. (Sürüm 22.19 · Ana 16 · (1) 'EK YAZAR ADAYLARI' satırında ana listede karşılığı olan adayın yazımı kullanılır ("Ian Mcewan" yerine "Ian McEwan"). (2) 'Yazar adayı başına en ucuz ilan' bölümü ilk 10 adayla sınırlıydı; 10'un dışında kalan ama EK listede en az 2 siteyle desteklenen aday da artık en ucuz ilan satırı alır (22.18 iPad raporunda Ian McEwan 12. sıradaydı ve 80 TL'lik ilanı görünmedi). Yalnız rapor metni değişti; derece, puan, sıralama ve eleme aynı. (Sürüm 22.18 · Ana 16 · Yazarsız aramada Hepsiburada/Kitapseç/Trendyol/n11/Akakçe başlığındaki "Başlık - Yazar" deseni (örnek: "Yapı Kredi Yayınları Kefaret - Ian McEwan", ayraçsız Kitapseç: "Kefaret Ian McEwan Yapı Kredi Yayınları") rapora "EK YAZAR ADAYLARI (yalnız bilgi)" satırı olarak yazılır. Bu oylar AYRI alanda tutulur; derece, puan, sıralama, eleme ve "YAZAR SEÇİMİ GEREK" kararı değişmedi. Sayı, dizi adı, yayınevi ve baskı sözcüğü taşıyan parçalar aday sayılmaz. (Sürüm 22.17 · Ana 15 · Yazarsız aramada 'yazar adayı başına en ucuz ilan' bölümü artık 1 oylu adayları da kapsar (Ian McEwan gibi); yazar sanılan seri adı 'Solomon Creed' adayın yanında '(seri adı olabilir)' etiketi alır (aday silinmez, gerçek yazar tahmin edilmez). Sıralama ve elemeler değişmedi. (Sürüm 22.16 · Ana 15 · '+N aday daha' notunun yanına kalan yazar adaylarının adları ve oyları yazılır (22.15 iPad raporunda McEwan görünen 10 adayın içinde değildi; gizli 4 adayın içinde olup olmadığı bilinemiyordu). Sıralama ve elemeler değişmedi. (Sürüm 22.15 · Ana 15 · Yazarsız aramada yazar adayı satırı 6 yerine en çok 10 aday gösterir; fazlası "+N aday daha" notuyla bildirilir (adaya göre en ucuz ilan satırlarında da aynı). Sıralama ve elemeler değişmedi. (Sürüm 22.14 · Ana 14 · Yazarsız aramada aynı adla birden çok yazar varsa her yazar adayının en ucuz ilanı ayrı satırda (en çok 6 aday); gizlenen [ad eksik] ilanların başlıkları denetim satırı olarak; Hepsiburada kartı raporda 200 karaktere kadar; 'haber sayfası' kitap dışı. Sıralama ve elemeler değişmedi (yazarlı akış 22.11 ile aynı). (Sürüm 22.13 · Ana 14 · iPad 22.12 raporundan: Nadir/Kitantik'te 'Film Kartı/Sinema Kartı' kitap dışı elenir; Hepsiburada'da 'üzeri/kupon/indirim/kazanç/puan' sayıları fiyat sayılmaz (450 TL üzeri eşiği fiyat sanılıyordu); kart metnindeki yarım HTML etiketi de temizlenir; aynı yazarın farklı yazımları (H. R. Lenormand, Ian Mc Ewan) tek adayda birleşir; BKM ve Amazon kartından da yazar adayı oylanır. Yazarlı akış 22.11 ile aynı (48 akış, fark 0). (Sürüm 22.12 · Ana 14 · Yazarsız aramada yazar adayları: Nadir/Kitantik/yazar alanından yazar okunur, ilan satırına [yazar: …] yazılır, başlığı aynen uyan ilanlardan oylanıp raporda "YAZAR ADAYLARI" (+ "YAZAR SEÇİMİ GEREK") satırı çıkar; yazar ASLA tahminle uygulanmaz. Aranan addan ÖNCE gelen ve hiçbir yazar adayı/yayınevi ile açıklanmayan sözcüğü olan ilan [C] olur (+2, elenmez). Site başına bir örnek kart yazılır. (Sürüm 22.11 · Ana 14 · Yazar girilmediğinde ilan satırlarına kart metni de yazılır (otomatik yazar bulma için hangi sitede yazar nasıl görünüyor incelemesi); başka davranış değişmedi. (Sürüm 22.10 · Ana 14 · Hepsiburada kartında en küçük sayı en büyüğün %15'inden azsa (indirim/kampanya tutarı fiyat sanılıyordu) ilan elenmez, [kart içi fiyat şüpheli] işareti + 5 puan; kart metnindeki <img> etiketi temizlenir. (Sürüm 22.9 · Ana 14 · Bağımsız denetim düzeltmesi: [başka yazar] işareti yalnız yüksek güvenle (≥2 kişi-adı sözcüğü, yayınevi/rozet/Kolektif atılır, girilen yazarın hiçbir sözcüğü bitişik yazımda ya da yazım farkıyla bile yoksa); baş harf, Mc/De, Edip/Edib sorunları giderildi; bitişik yazarlı BKM kartı A olur; [CD/ses] yalnız başlık sonunda/+ ile/sesli kitap. (Sürüm 22.8 · Ana 14 · BKM ve Pandora kartında yazar metni yedeği ([başka yazar] iPad'de de çalışsın), "kanıtı zayıf" listesinde [ad eksik] ilanlar gösterilmez. (22.7: BKM yazar alanı okunur, girilen yazarla uyuşmuyorsa [başka yazar: …] (3 puan, elenmez), ilk 5'te yazar kanıtı yoksa UYARI, "kanıtı zayıf" için en ucuz 3 ilan + kart metni. (22.6: BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.))))))))))))))
+// Sürüm 22.21 · Ana 17 · Letgo'da ilan olmayan kitap ÇALIŞMADI yerine SONUÇ YOK çıkar: sayfa hiç ürün vermediyse ve sitenin kendi "sonuç bulunamadı" yazısı ilk 15.000 harfte değil de sayfanın devamında geçiyorsa (kurallar.json "yokTumMetin", yalnız Letgo). Ürün yoksa ve yazı da yoksa ÇALIŞMADI kalır (0 ürün tek başına "yok" sayılmaz). Liste raporunda ÇALIŞMADI satırına sayfanın tamamındaki 'yok' yazısı ve ipuçları da yazılır (teşhis). Derece, puan, sıralama ve eleme aynı. (Sürüm 22.20 · Ana 16 · Rapordaki 'ilan yok' satırında ÇALIŞMADI olan sitenin nedeni artık kısa yazılır (ENGEL, sayfada görünen ilk metin, hata, yol, ürün sayısı). Letgo Şeyh Bedreddin Destanı'nda iki iPad raporunda nedensiz ÇALIŞMADI çıkmıştı; bulutta Letgo bot korumasına (Access Denied) takıldığı için neden ancak iPad'de görülebilir. Yalnız rapor metni; derece, puan, sıralama ve eleme aynı. (Sürüm 22.19 · Ana 16 · (1) 'EK YAZAR ADAYLARI' satırında ana listede karşılığı olan adayın yazımı kullanılır ("Ian Mcewan" yerine "Ian McEwan"). (2) 'Yazar adayı başına en ucuz ilan' bölümü ilk 10 adayla sınırlıydı; 10'un dışında kalan ama EK listede en az 2 siteyle desteklenen aday da artık en ucuz ilan satırı alır (22.18 iPad raporunda Ian McEwan 12. sıradaydı ve 80 TL'lik ilanı görünmedi). Yalnız rapor metni değişti; derece, puan, sıralama ve eleme aynı. (Sürüm 22.18 · Ana 16 · Yazarsız aramada Hepsiburada/Kitapseç/Trendyol/n11/Akakçe başlığındaki "Başlık - Yazar" deseni (örnek: "Yapı Kredi Yayınları Kefaret - Ian McEwan", ayraçsız Kitapseç: "Kefaret Ian McEwan Yapı Kredi Yayınları") rapora "EK YAZAR ADAYLARI (yalnız bilgi)" satırı olarak yazılır. Bu oylar AYRI alanda tutulur; derece, puan, sıralama, eleme ve "YAZAR SEÇİMİ GEREK" kararı değişmedi. Sayı, dizi adı, yayınevi ve baskı sözcüğü taşıyan parçalar aday sayılmaz. (Sürüm 22.17 · Ana 15 · Yazarsız aramada 'yazar adayı başına en ucuz ilan' bölümü artık 1 oylu adayları da kapsar (Ian McEwan gibi); yazar sanılan seri adı 'Solomon Creed' adayın yanında '(seri adı olabilir)' etiketi alır (aday silinmez, gerçek yazar tahmin edilmez). Sıralama ve elemeler değişmedi. (Sürüm 22.16 · Ana 15 · '+N aday daha' notunun yanına kalan yazar adaylarının adları ve oyları yazılır (22.15 iPad raporunda McEwan görünen 10 adayın içinde değildi; gizli 4 adayın içinde olup olmadığı bilinemiyordu). Sıralama ve elemeler değişmedi. (Sürüm 22.15 · Ana 15 · Yazarsız aramada yazar adayı satırı 6 yerine en çok 10 aday gösterir; fazlası "+N aday daha" notuyla bildirilir (adaya göre en ucuz ilan satırlarında da aynı). Sıralama ve elemeler değişmedi. (Sürüm 22.14 · Ana 14 · Yazarsız aramada aynı adla birden çok yazar varsa her yazar adayının en ucuz ilanı ayrı satırda (en çok 6 aday); gizlenen [ad eksik] ilanların başlıkları denetim satırı olarak; Hepsiburada kartı raporda 200 karaktere kadar; 'haber sayfası' kitap dışı. Sıralama ve elemeler değişmedi (yazarlı akış 22.11 ile aynı). (Sürüm 22.13 · Ana 14 · iPad 22.12 raporundan: Nadir/Kitantik'te 'Film Kartı/Sinema Kartı' kitap dışı elenir; Hepsiburada'da 'üzeri/kupon/indirim/kazanç/puan' sayıları fiyat sayılmaz (450 TL üzeri eşiği fiyat sanılıyordu); kart metnindeki yarım HTML etiketi de temizlenir; aynı yazarın farklı yazımları (H. R. Lenormand, Ian Mc Ewan) tek adayda birleşir; BKM ve Amazon kartından da yazar adayı oylanır. Yazarlı akış 22.11 ile aynı (48 akış, fark 0). (Sürüm 22.12 · Ana 14 · Yazarsız aramada yazar adayları: Nadir/Kitantik/yazar alanından yazar okunur, ilan satırına [yazar: …] yazılır, başlığı aynen uyan ilanlardan oylanıp raporda "YAZAR ADAYLARI" (+ "YAZAR SEÇİMİ GEREK") satırı çıkar; yazar ASLA tahminle uygulanmaz. Aranan addan ÖNCE gelen ve hiçbir yazar adayı/yayınevi ile açıklanmayan sözcüğü olan ilan [C] olur (+2, elenmez). Site başına bir örnek kart yazılır. (Sürüm 22.11 · Ana 14 · Yazar girilmediğinde ilan satırlarına kart metni de yazılır (otomatik yazar bulma için hangi sitede yazar nasıl görünüyor incelemesi); başka davranış değişmedi. (Sürüm 22.10 · Ana 14 · Hepsiburada kartında en küçük sayı en büyüğün %15'inden azsa (indirim/kampanya tutarı fiyat sanılıyordu) ilan elenmez, [kart içi fiyat şüpheli] işareti + 5 puan; kart metnindeki <img> etiketi temizlenir. (Sürüm 22.9 · Ana 14 · Bağımsız denetim düzeltmesi: [başka yazar] işareti yalnız yüksek güvenle (≥2 kişi-adı sözcüğü, yayınevi/rozet/Kolektif atılır, girilen yazarın hiçbir sözcüğü bitişik yazımda ya da yazım farkıyla bile yoksa); baş harf, Mc/De, Edip/Edib sorunları giderildi; bitişik yazarlı BKM kartı A olur; [CD/ses] yalnız başlık sonunda/+ ile/sesli kitap. (Sürüm 22.8 · Ana 14 · BKM ve Pandora kartında yazar metni yedeği ([başka yazar] iPad'de de çalışsın), "kanıtı zayıf" listesinde [ad eksik] ilanlar gösterilmez. (22.7: BKM yazar alanı okunur, girilen yazarla uyuşmuyorsa [başka yazar: …] (3 puan, elenmez), ilk 5'te yazar kanıtı yoksa UYARI, "kanıtı zayıf" için en ucuz 3 ilan + kart metni. (22.6: BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.)))))))))))))))
 
 const GOMULU_KURALLAR = {
-  "surum": "22.14",
+  "surum": "22.21",
   "tarih": "2026-11-13",
   "aciklama": "Kitap Fiyat site kuralları. tur: yeni|sahaf|ikinciel|karsilastirma · acik: asıl uygulamada aranır mı · durum: calisan|duzeltiliyor|aday · url içinde {q} normal, {q5} eski Türkçe kodlama (ISO-8859-9), {qa} Türkçe harfsiz · sayfaGez: sonuç birden çok sayfaysa en çok bu sayfaya kadar okunur · sure: site süre sınırı (sn) · detay: özel ürün sayfası okuyucusu · aday siteler sınamada her zaman denenir ve teşhis dökümü yazar; acik:false olanlar asıl uygulamada aranmaz · kart: siteye özel kart kuralı (CSS seçicileri: kap, ad, fiyat, link, kondisyon, satici); kap bulunamazsa genel okuyucu · teshis: true ise kart yapısı, HTML parçası ve ham kart her sınamada yazılır (teshisSecici: ham kart seçicisi) · stokSayfasi: false ise ilan sayfası açılmaz, yayındaki ilan var sayılır (kişiden satış siteleri) · kart.sehir: satıcının şehri · kondisyonKartta: false ise arama kartında kondisyon yazmadığı bilinir, rapor uyarısı yazılmaz · stokVar: (21.7) ürün sayfasında bu düzenli ifade geçerse ürün stokta sayılır (siteye özel; ör. Sahafta takip düğmesi \"Gelince Haber Ver\" her sayfada yazar)",
   "ayarlar": {
@@ -248,6 +248,7 @@ const GOMULU_KURALLAR = {
       ],
       "ana": "https://www.letgo.com/",
       "stokSayfasi": false,
+      "yokTumMetin": true,
       "kart": {
         "kap": ".search-result-wrapper .grid > div.relative",
         "ad": "a[href*='/item/'] .sr-only",
@@ -255,7 +256,7 @@ const GOMULU_KURALLAR = {
         "fiyat": "p",
         "sehir": ".text-secondary-600 span"
       },
-      "not": "Kişiden ikinci el ilan. 21.5 iPad (Kürk Mantolu Madonna): 24 kart, 24 ilgili, şehir okundu, 5 sn. Fatih'in kararıyla açıldı (21.6). Bilinenler: ilan sayfasında stok bilgisi yok (yayındaki ilan var sayılır; satılmış ilan listede kalıyor mu bilinmiyor); kargo/elden kartta yazmıyor; adında iki kitap adı geçen ilan takım sayılmıyor. Arayüzde 'kişiden ilan · şehir' etiketiyle ayrı gösterilecek."
+      "not": "Kişiden ikinci el ilan. 21.5 iPad (Kürk Mantolu Madonna): 24 kart, 24 ilgili, şehir okundu, 5 sn. Fatih'in kararıyla açıldı (21.6). Bilinenler: ilan sayfasında stok bilgisi yok (yayındaki ilan var sayılır; satılmış ilan listede kalıyor mu bilinmiyor); kargo/elden kartta yazmıyor; adında iki kitap adı geçen ilan takım sayılmıyor. Arayüzde 'kişiden ilan · şehir' etiketiyle ayrı gösterilecek. 22.21: yokTumMetin — boş sonuç sayfasında 'sonuç bulunamadı' yazısı ilk 15.000 harfte bulunamadı (Şeyh Bedreddin Destanı, 22.15/22.18/22.20 ÇALIŞMADI); ürün hiç yoksa sayfanın tamamına bakılır."
     },
     {
       "id": "n11",
@@ -365,7 +366,7 @@ const GOMULU_KURALLAR = {
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "22.20";
+const MOTOR_SURUMU = "22.21";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -823,10 +824,21 @@ function aramaKutusunaYaz(sorgu) {
 // ---------------------------------------------------------------
 // Sonuç okunamazsa: sayfada ne göründüğünü kısaca alır (teşhis için).
 // ---------------------------------------------------------------
+// 22.21: sayfanın TAMAMINDA "sonuç yok" yazısı aranır (yok: arama sayfasındaki kalıp listesinin aynısı; ipucu: daha geniş sözcükler, yalnız teşhis için).
+// Neden: Letgo boş sonuç sayfası "sonuç bulunamadı" diyor (Fatih Safari'de gördü) ama motor ilk 15.000 harfte bulamadı.
 function sayfaOzeti() {
   try {
-    var t = ((document.body && document.body.innerText) || '').replace(/\s+/g, ' ').trim();
-    return { title: document.title || '', url: location.href, metin: t.slice(0, 600) };
+    var ham = (document.body && document.body.innerText) || '';
+    var t = ham.replace(/\s+/g, ' ').trim();
+    var k = t.toLocaleLowerCase('tr');
+    function parcalar(re, en) {
+      var o = [], m; re.lastIndex = 0;
+      while ((m = re.exec(k)) && o.length < en) { o.push({ i: m.index, s: t.slice(Math.max(0, m.index - 40), m.index + m[0].length + 40) }); if (!m[0].length) re.lastIndex++; }
+      return o;
+    }
+    var yok = parcalar(/(?<![\d.,])0\s*sonuç|(?<![\d.,])0\s*ilan bulundu|(?<![\d.,])0\s*kitap bulundu|listelenecek ürün bulunamadı|sonuç bulunamadı|ürün bulunamadı|eşleşen ürün bulunamadı|ilan bulunamadı|kitap bulunamadı|aradığını bulamadık|aradığınızı bulamadık|sonuç yok/g, 2);
+    var ipucu = parcalar(/bulunamad|bulamad|ilan yok|eşleşen|hiç sonuç|sonuç çıkmadı/g, 3);
+    return { title: document.title || '', url: location.href, metin: t.slice(0, 600), uzunluk: t.length, hamUzunluk: ham.length, yok: yok, ipucu: ipucu };
   } catch (e) { return { hata: String(e) }; }
 }
 
@@ -1763,6 +1775,13 @@ async function siteyiSina(k, sorgu, r) {
   if (!r.ilgililer.length && sonWv) {
     try { r.ozet = await sonWv.calistir("(" + sayfaOzeti.toString() + ")()"); } catch (e) { }
   }
+  // 22.21 · kurallar.json "yokTumMetin": true olan sitede (yalnız Letgo) sayfa hiç ürün vermediyse ve "sonuç yok" yazısı
+  // ilk 15.000 harfte değil de sayfanın devamında geçiyorsa SONUÇ YOK sayılır. Yalnız sitenin KENDİ yazısı; "0 ürün" tek başına yok sayılmaz.
+  if (k.yokTumMetin && r.ozet && (r.ozet.yok || []).length && !r.sonucYok && !r.engel && !r.urunSayisi && !r.ilgililer.length && !r.takimlar.length &&
+      !r.fiyatsizVar.length && !r.fiyatsizGizlenen.length && !r.fiyatsizBelirsiz.length) {
+    r.sonucYok = true;
+    r.yokTumMetin = r.ozet.yok[0];
+  }
   // Az ürün ayrılabildiyse (3'ten az) kart yapısını teşhis için dök
   // Sürüm 21: "aday" sitelerde (yeni eklenen, yapısı bilinmeyen) kart yapısı ve HTML parçası her zaman dökülür.
   // Sürüm 21.4: kuralında "teshis": true olan sitede de (Trendyol, Akakçe) döküm her zaman yazılır; ayrıca kartların ham HTML'i alınır.
@@ -2012,13 +2031,21 @@ function renk(r) {
 
 // 22.6: kompakt raporda "GÖRÜNMÜYOR" yerine nedeni yazılır (uzun rapor ve sayaçlar RENK_ADI ile aynı kalır).
 // 22.20: ÇALIŞMADI sitelerde neden kısa yazılır (Letgo Şeyh Bedreddin'de iki raporda nedensiz ÇALIŞMADI çıktı). Yalnız rapor metni.
+function tumMetinNotu(r) {
+  const o = r.ozet || {};
+  const yz = (o.yok || []).map(x => x.i + ". harf: \"" + String(x.s).slice(0, 90) + "\"").join(" | ");
+  const ip = (o.ipucu || []).map(x => x.i + ". harf: \"" + String(x.s).slice(0, 90) + "\"").join(" | ");
+  return "tüm metin " + (o.uzunluk == null ? "?" : o.uzunluk) + " harf · 'yok' yazısı: " + (yz || "yok") + (ip ? " · ipucu: " + ip : "");
+}
 function calismadiNeden(r) {
+  if (r.yokTumMetin) return " · sayfanın devamında okundu (22.21): " + tumMetinNotu(r);
   if (renk(r) !== "kirmizi") return "";
   const p = [];
   if (r.engel) p.push("ENGEL: " + String(r.engel).replace(/\s+/g, " ").slice(0, 60));
   if (r.ozet) { const t = String(r.ozet.title || "").replace(/\s+/g, " ").slice(0, 40), m = String(r.ozet.metin || r.ozet.hata || "").replace(/\s+/g, " ").slice(0, 110); if (t || m) p.push("sayfada: \"" + t + "\" " + m); }
   if (r.hata) p.push("hata: " + String(r.hata).replace(/\s+/g, " ").slice(0, 60));
   p.push("yol: " + (r.yol || "-") + ", ürün " + (r.urunSayisi || 0) + ", sayfa sonuç sayısı " + (r.sonucSayisi == null ? "?" : r.sonucSayisi));
+  if (r.ozet && r.ozet.uzunluk != null) p.push(tumMetinNotu(r));
   return " · neden: " + p.join(" · ");
 }
 function ilansizAd(r) {
