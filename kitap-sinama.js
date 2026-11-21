@@ -1,8 +1,9 @@
 // Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.26
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
 // icon-color: orange; icon-glyph: magic;
-// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.32
+// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.33
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
+// Sürüm 22.33 · Ana 42 · SONUNA KADAR OKUMA ve KAPSAM SATIRI. (1) Sayfa kuralı olan sitelerde (D&R, SahafPazar, Kitapseç, Dost Kitabevi; kurallar.json 'sayfaBag') aranan kitap ilk sayfada görünse de sonraki sayfalar okunur; sonraki sayfanın adresi sayfadaki gerçek bağlantıdan alınır. Durma: son sayfa, yeni ilan yok, ilk ENGEL (ısrar yok), en çok 12 ek sayfa, sitenin başından 40 sn süre bütçesi (site 90 sn sınırına çarpıp 'yavaş' sayılmasın); sayfalar arası yavaş başlayan aralık 2 → 1,5 → 1 → 0,8 sn; okunan sayfanın sekmesi hemen kapatılır. Sahafta ('sayfaTikla') tıklamayla aynı sınırlarla. Nadir ve Kitantik DEĞİŞMEDİ. (2) Raporda her site için KAPSAM satırı: okunan ilan / sitenin yazdığı · sayfa / son sayfa · durma nedeni · TAM ya da EKSİK OLABİLİR. Sayfa kuralı olmayan sitede yalnız rapor için teşhis: sonuç yazıları, sayfalama adayları ve sitenin kendi 2. sayfa bağlantısı varsa bir kez açılıp kaç yeni ilan verdiği (sonuçlara karışmaz; site başına en çok 1 ek istek). (3) D&R kart kuralı: öneri şeridi (ütü, tava vb.) okunmaz; ilk kartın fiyatı süzgeçteki '0 TL - 200 TL' yazısından alınmaz (kayıt: okunan 32→17 = sitenin yazdığı 17; ilgili ilanlar 22.32 ile aynı). (4) Dost Kitabevi eklendi (kart kuralı; kayıtlı sayfada 16/16, 'Stokta yok' 4 ilan gizlenir). Derece, puan, sıralama, eleme kuralları aynı.
 // Sürüm 22.32 · Ana 39 · (1) D&R «Kefaret»: en ucuz ilan (N. İpek Gökdel, DEX, 75,14 TL) 'fiyatı şüpheli' diye gizleniyordu: fiyattan önceki metnin 'x' ile bitmesi taksit ('3 x 533 TL') sayılıyordu, yayınevi 'DEX' de x ile bitiyor. Artık 'x' yalnız rakamdan sonra ('3 x', '3x') taksit sayılır; 'DEX', 'Karl Marx', 'Malcolm X', 'Redux' fiyatı atlatmaz (bütün siteler). Kayıtlı D&R sayfasında Gökdel ilanı ilgililere girdi (10→11); yazarsız aramada en ucuz o. (2) Kitapyurdu ve BKM: 'en ucuz' ilanın stoğu doğrulanmıyor, stok sırasında daha ucuz ilan 'var' çıkıyordu. Neden: stok sırası her sitede o anki sıraya göre yapılır; siteler bitince siteler arası fiyat denetimi ([FİYAT ŞÜPHELİ] +5) ve yazarsız [C] (+2) listeyi yeniden sıralar; stoğu doğrulanan ucuz ilan aşağı iner, sınanmamış ilan başa geçer. Artık yeniden sıralama sonrası en üstteki ilan sınanmamışsa ya da doğrulanan ilanın üstüne sınanmamış ilan çıktıysa stok sırası kaldığı yerden sürdürülür (sınanmış ilan yeniden açılmaz, en çok 3 sayfa, site başına en çok 30 sn, en çok 4 site birlikte). Akakçe'de satıcı satırları yeni en üstteki ilan için yeniden okunur; Letgo'da yeni en üstteki ilan 'ilan yayında' sayılır. Raporda 'sıralama sonrası' ve süreye '(+N sn sıralama sonrası)' yazılır. Sıralama değişmediyse sayfa açılmaz. Bağımsız denetim (Opus yüksek): YAYINLANABİLİR; gösterdiği 5 küçük madde kapatıldı. Derece, puan, sıralama ve eleme kuralları aynı.
 // Sürüm 22.31 · Ana 38 · Kitapseç'te sayfadaki 20 kartın 4'ü atlanıyordu (Dorlion, Kırmızı Kedi, Koridor, İskele): ürün adresinde yayınevi adı geçtiği için ('...-dorlion-yayinevi_urn...', '...-iskele-yayincilik_urn...') genel okuyucu bu bağlantıyı yayınevi sayfası sanıyordu. Artık adresin son parçası aranan kitabın adını taşıyorsa ve 'yazar/yayınevi/marka' sözcüğü klasör adında ya da sorgu kısmında değilse bağlantı ürün sayılır; /yazar/…, /yayinevi/…, ?publisher=…, kategori ve Amazon yazar bağlantısı yine atlanır; eşleşme tam sözcükle yapılır (bağımsız denetim: 'Ana' araması 'kanat-yayinevi' adresini ürün saymasın). Kayıtlı sayfada 16/20 → 20/20; D&R aynı. Derece, puan, sıralama, eleme aynı. (Sürüm 22.27–22.30: ana sayfa yolu kararı; ayrıntı surumler/ ve arsiv/.)
 // Sürüm 22.26 · Ana 18 · iPad'in Türkçe çevrimdışı hata yazısı ('İnternet bağlantısı çevrimdışı gözüküyor.', kod numarasız) artık tanınır; 22.24 yalnız 'görünüyor' biçimini arıyordu. Asıl kanıt yoklama olduğu için 22.24 sonucu etkilenmemişti. (Sürüm 22.25 · Ana 18 · iPad 22.24 testinde Wi-Fi kapalıyken arama 1 dakikadan uzun sürdü, ekranda bir şey çıkmadı. Artık bağlantı sitelerden ÖNCE yoklanır; iki adres de iki kez (3 sn arayla) açılmazsa siteler hiç açılmaz, hepsi ÇALIŞMADI [BAĞLANTI] döner ve raporda 'ÇEVRİMDIŞI (22.25)' satırı çıkar (birkaç saniye). Aynı satırda tek bir site adresiyle teşhis: iPad'de sayfa açılışı internetsizken reddediyor mu, askıda mı kalıyor. iPad kabuğunda yoklama, adreslerden biri 'var' deyince öteki beklenmeden döner. Yalnız 'yok' (iki adres de hata) bu yola girer; internet varken davranış 22.24 ile aynı. (Sürüm 22.24 · Ana 18 · İnternet kesintisi site sorunundan ayrılır ve site düzeni değişikliği işaretlenir (yalnız rapor bilgisi). (1) Çalışmayan ya da süre sınırında kesilen sitede motor bağlantıyı yoklar (iki bağımsız adres: Google generate_204 ve Apple hotspot-detect); ikisi de açılmıyorsa ya da sayfa hatası 'cihaz çevrimdışı' diyorsa site [BAĞLANTI] alır ve raporun başına 'BAĞLANTI SORUNU' satırı yazılır; arama başında da bir yoklama yapılır. (2) Sayfa 'cihaz çevrimdışı' hatasıyla hiç açılmadıysa 15 sn bekleme atlanır (internetsiz arama ~100 sn yerine ~10 sn). (3) Sayfa açıldı, site sonuç olduğunu yazıyor ya da sayfada fiyat var ama hiç ilan ayrılamadıysa [YAPI?] işareti: site düzeni değişmiş olabilir (tek arama kanıt değildir). Renk/etiket, sayaç, derece, puan, sıralama, eleme aynı. (Sürüm 22.23 · Ana 17 · Letgo'nun asıl nedeni bulundu (iPad 22.22 teşhisi): yazarlı aramada motor önce 'ad + yazar' sayfasını tutuyordu; Letgo bu sayfada '6 ilan bulundu' deyip kart göstermedi, daha geniş 'yalnız ad' sayfası ise '0 ilan bulundu' dedi ama dikkate alınmadı. Artık tutulan sayfada hiç ürün yoksa ve 'yalnız ad' sayfası kendisi 'sonuç yok' diyorsa SONUÇ YOK yazılır (bütün siteler; okunan ürün varsa etiket değişmez; 0 ürün tek başına 'yok' sayılmaz). Derece, puan, sıralama, eleme aynı. (Sürüm 22.22 · Ana 17 · Letgo teşhisi ve olası düzeltme: Letgo'da ürün yoksa ve 'yok' yazısı da yoksa sayfa sonuna kaydırılır, 3 sn sonra yeniden okunur (boş sonuç iletisi ancak görünür olunca çiziliyor olabilir); yazı çıkarsa SONUÇ YOK. Liste raporunda Letgo ÇALIŞMADI ise 'TEŞHİS (22.22)' satırları: tarayıcı genişliği ve kimliği (UA), sayfa kodunda (HTML) 'yok' izleri, sayfanın görünen metninin tamamı. Neden: Fatih'in Safari ekranı (masaüstü görünüm) 'aramanızda 0 ilan bulundu' ve 'İlan bulunamadı' gösteriyor; motorun sayfası 'Uygulamada Aç' ile başlıyor (telefon görünümü olabilir) ve 2603 harflik metinde bu yazılar yok. Derece, puan, sıralama, eleme aynı. (Sürüm 22.21 · Ana 17 · Letgo'da ilan olmayan kitap ÇALIŞMADI yerine SONUÇ YOK çıkar: sayfa hiç ürün vermediyse ve sitenin kendi "sonuç bulunamadı" yazısı ilk 15.000 harfte değil de sayfanın devamında geçiyorsa (kurallar.json "yokTumMetin", yalnız Letgo). Ürün yoksa ve yazı da yoksa ÇALIŞMADI kalır (0 ürün tek başına "yok" sayılmaz). Liste raporunda ÇALIŞMADI satırına sayfanın tamamındaki 'yok' yazısı ve ipuçları da yazılır (teşhis). Derece, puan, sıralama ve eleme aynı. (Sürüm 22.20 · Ana 16 · Rapordaki 'ilan yok' satırında ÇALIŞMADI olan sitenin nedeni artık kısa yazılır (ENGEL, sayfada görünen ilk metin, hata, yol, ürün sayısı). Letgo Şeyh Bedreddin Destanı'nda iki iPad raporunda nedensiz ÇALIŞMADI çıkmıştı; bulutta Letgo bot korumasına (Access Denied) takıldığı için neden ancak iPad'de görülebilir. Yalnız rapor metni; derece, puan, sıralama ve eleme aynı. (Sürüm 22.19 · Ana 16 · (1) 'EK YAZAR ADAYLARI' satırında ana listede karşılığı olan adayın yazımı kullanılır ("Ian Mcewan" yerine "Ian McEwan"). (2) 'Yazar adayı başına en ucuz ilan' bölümü ilk 10 adayla sınırlıydı; 10'un dışında kalan ama EK listede en az 2 siteyle desteklenen aday da artık en ucuz ilan satırı alır (22.18 iPad raporunda Ian McEwan 12. sıradaydı ve 80 TL'lik ilanı görünmedi). Yalnız rapor metni değişti; derece, puan, sıralama ve eleme aynı. (Sürüm 22.18 · Ana 16 · Yazarsız aramada Hepsiburada/Kitapseç/Trendyol/n11/Akakçe başlığındaki "Başlık - Yazar" deseni (örnek: "Yapı Kredi Yayınları Kefaret - Ian McEwan", ayraçsız Kitapseç: "Kefaret Ian McEwan Yapı Kredi Yayınları") rapora "EK YAZAR ADAYLARI (yalnız bilgi)" satırı olarak yazılır. Bu oylar AYRI alanda tutulur; derece, puan, sıralama, eleme ve "YAZAR SEÇİMİ GEREK" kararı değişmedi. Sayı, dizi adı, yayınevi ve baskı sözcüğü taşıyan parçalar aday sayılmaz. (Sürüm 22.17 · Ana 15 · Yazarsız aramada 'yazar adayı başına en ucuz ilan' bölümü artık 1 oylu adayları da kapsar (Ian McEwan gibi); yazar sanılan seri adı 'Solomon Creed' adayın yanında '(seri adı olabilir)' etiketi alır (aday silinmez, gerçek yazar tahmin edilmez). Sıralama ve elemeler değişmedi. (Sürüm 22.16 · Ana 15 · '+N aday daha' notunun yanına kalan yazar adaylarının adları ve oyları yazılır (22.15 iPad raporunda McEwan görünen 10 adayın içinde değildi; gizli 4 adayın içinde olup olmadığı bilinemiyordu). Sıralama ve elemeler değişmedi. (Sürüm 22.15 · Ana 15 · Yazarsız aramada yazar adayı satırı 6 yerine en çok 10 aday gösterir; fazlası "+N aday daha" notuyla bildirilir (adaya göre en ucuz ilan satırlarında da aynı). Sıralama ve elemeler değişmedi. (Sürüm 22.14 · Ana 14 · Yazarsız aramada aynı adla birden çok yazar varsa her yazar adayının en ucuz ilanı ayrı satırda (en çok 6 aday); gizlenen [ad eksik] ilanların başlıkları denetim satırı olarak; Hepsiburada kartı raporda 200 karaktere kadar; 'haber sayfası' kitap dışı. Sıralama ve elemeler değişmedi (yazarlı akış 22.11 ile aynı). (Sürüm 22.13 · Ana 14 · iPad 22.12 raporundan: Nadir/Kitantik'te 'Film Kartı/Sinema Kartı' kitap dışı elenir; Hepsiburada'da 'üzeri/kupon/indirim/kazanç/puan' sayıları fiyat sayılmaz (450 TL üzeri eşiği fiyat sanılıyordu); kart metnindeki yarım HTML etiketi de temizlenir; aynı yazarın farklı yazımları (H. R. Lenormand, Ian Mc Ewan) tek adayda birleşir; BKM ve Amazon kartından da yazar adayı oylanır. Yazarlı akış 22.11 ile aynı (48 akış, fark 0). (Sürüm 22.12 · Ana 14 · Yazarsız aramada yazar adayları: Nadir/Kitantik/yazar alanından yazar okunur, ilan satırına [yazar: …] yazılır, başlığı aynen uyan ilanlardan oylanıp raporda "YAZAR ADAYLARI" (+ "YAZAR SEÇİMİ GEREK") satırı çıkar; yazar ASLA tahminle uygulanmaz. Aranan addan ÖNCE gelen ve hiçbir yazar adayı/yayınevi ile açıklanmayan sözcüğü olan ilan [C] olur (+2, elenmez). Site başına bir örnek kart yazılır. (Sürüm 22.11 · Ana 14 · Yazar girilmediğinde ilan satırlarına kart metni de yazılır (otomatik yazar bulma için hangi sitede yazar nasıl görünüyor incelemesi); başka davranış değişmedi. (Sürüm 22.10 · Ana 14 · Hepsiburada kartında en küçük sayı en büyüğün %15'inden azsa (indirim/kampanya tutarı fiyat sanılıyordu) ilan elenmez, [kart içi fiyat şüpheli] işareti + 5 puan; kart metnindeki <img> etiketi temizlenir. (Sürüm 22.9 · Ana 14 · Bağımsız denetim düzeltmesi: [başka yazar] işareti yalnız yüksek güvenle (≥2 kişi-adı sözcüğü, yayınevi/rozet/Kolektif atılır, girilen yazarın hiçbir sözcüğü bitişik yazımda ya da yazım farkıyla bile yoksa); baş harf, Mc/De, Edip/Edib sorunları giderildi; bitişik yazarlı BKM kartı A olur; [CD/ses] yalnız başlık sonunda/+ ile/sesli kitap. (Sürüm 22.8 · Ana 14 · BKM ve Pandora kartında yazar metni yedeği ([başka yazar] iPad'de de çalışsın), "kanıtı zayıf" listesinde [ad eksik] ilanlar gösterilmez. (22.7: BKM yazar alanı okunur, girilen yazarla uyuşmuyorsa [başka yazar: …] (3 puan, elenmez), ilk 5'te yazar kanıtı yoksa UYARI, "kanıtı zayıf" için en ucuz 3 ilan + kart metni. (22.6: BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.))))))))))))))))))))
@@ -15,7 +16,15 @@ const GOMULU_KURALLAR = {
     "ayniAnda": 4,
     "siteSureSiniri": 90,
     "yavasEsik": 45,
-    "stokDeneme": 3
+    "stokDeneme": 3,
+    "sayfaUst": 12,
+    "sayfaSure": 40,
+    "sayfaAralik": [
+      2000,
+      1500,
+      1000,
+      800
+    ]
   },
   "kitapDisi": [
     "kupur",
@@ -105,7 +114,17 @@ const GOMULU_KURALLAR = {
       "url": [
         "https://www.dr.com.tr/search?q={q}"
       ],
-      "ana": "https://www.dr.com.tr/"
+      "ana": "https://www.dr.com.tr/",
+      "kart": {
+        "kap": ".js-prd-item",
+        "ad": ".prd-infos h3 a",
+        "link": ".prd-infos h3 a",
+        "fiyat": ".prd-actions",
+        "yazar": ".prd-infos a.who"
+      },
+      "sayfaBag": "/search/?\\?[^#]*\\bPage=(\\d+)",
+      "sayfaEk": "&Page={n}",
+      "not42": "22.33 (Ana 42): kart kuralı kayıtlı gerçek sayfadan (Kefaret 17/17, roman 40/40 kart); sayfanın altındaki öneri şeridi (sgf-dr-card: Tefal, ütü vb.) artık okunmaz; ilk kartın fiyatı süzgeçteki '0 TL - 200 TL' yazısından alınıyordu (Günahların Kefaretine… 200 TL), artık kartın kendi fiyat alanından. Sayfa: ?Page=N [KANITLI Ölçüm 6], sayfa bağlantısı sayfadan okunur."
     },
     {
       "id": "amazon",
@@ -228,7 +247,8 @@ const GOMULU_KURALLAR = {
         "https://www.kitapsec.com/mobil/arama/?a={q5}",
         "https://www.kitapsec.com/Arama/index.php?a={q5}"
       ],
-      "ana": "https://www.kitapsec.com/"
+      "ana": "https://www.kitapsec.com/",
+      "sayfaBag": "/arama/[^#]*[?&]arama=(\\d+)-6-0a0-0-0-0-0-0"
     },
     {
       "id": "pazarama",
@@ -299,7 +319,7 @@ const GOMULU_KURALLAR = {
         "https://www.sahafpazar.com/arama?q={q}"
       ],
       "ana": "https://www.sahafpazar.com/",
-      "not": "Kart kuralı gerçek sayfada doğrulandı (Kürk Mantolu Madonna, 21.4). Açıldı (21.5). Sonuçlar birden çok sayfa: 3 sayfaya kadar okunur.",
+      "not": "Kart kuralı gerçek sayfada doğrulandı (Kürk Mantolu Madonna, 21.4). Açıldı (21.5). Sonuçlar birden çok sayfa: 22.33'ten itibaren sayfa bağlantısıyla sonuna kadar okunur (istek ve süre sınırıyla).",
       "kart": {
         "kap": "article.sp-pcard",
         "ad": ".sp-pcard__title",
@@ -307,8 +327,9 @@ const GOMULU_KURALLAR = {
         "kondisyon": ".sp-pcard__cond",
         "satici": ".sp-pcard__vendor"
       },
-      "sayfaGez": 3,
-      "teshis": false
+      "teshis": false,
+      "sayfaBag": "/arama\\?[^#]*\\bpage=(\\d+)",
+      "sayfaEk": "&page={n}"
     },
     {
       "id": "sahafta",
@@ -327,7 +348,29 @@ const GOMULU_KURALLAR = {
         "fiyat": ".price",
         "kondisyon": ".e-badge-cond"
       },
-      "stokVar": "[1-9]\\d* sahafta var|son \\d+ adet"
+      "stokVar": "[1-9]\\d* sahafta var|son \\d+ adet",
+      "sayfaTikla": true
+    },
+    {
+      "id": "dostkitabevi",
+      "ad": "Dost Kitabevi",
+      "tur": "yeni",
+      "acik": true,
+      "durum": "duzeltiliyor",
+      "url": [
+        "https://dostkitabevi.com/search?q={q}"
+      ],
+      "ana": "https://dostkitabevi.com/",
+      "kart": {
+        "kap": "article.product-item",
+        "ad": "h2.product-title a",
+        "link": "h2.product-title a",
+        "fiyat": ".prices",
+        "yazar": ".product-box-authors"
+      },
+      "sayfaBag": "/search\\?[^#]*\\bpagenumber=(\\d+)",
+      "sayfaEk": "&pagenumber={n}",
+      "not": "22.33 (Ana 42): eklendi (Fatih 21.11 05:37: 'o da artık bu uygulamada çalışacak bir kaynak site olacak'). Kart kuralı kayıtlı gerçek sayfadan (Hayvan Çiftliği: 16 kart, 16 okunur; 4'ü 'Stokta yok'). Ölçüm 6'daki çift sayım ölçüm betiğinin kendi okuyucusundaydı (aynı kartta görsel ve başlık bağlantısı). Yavaş site: sayfa başına ≈9 sn, ≈2,7 MB [KANITLI iPad Ölçüm 6]. Açık: aynı sonuçta 'Can Dükkan' bez çanta ilanları kitap gibi görünebilir (başlıkta 'çanta' yok, yalnız açıklamada)."
     }
   ],
   "cikarilanlar": [
@@ -376,7 +419,7 @@ const GOMULU_KURALLAR = {
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "22.32";
+const MOTOR_SURUMU = "22.33";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -991,6 +1034,43 @@ function htmlDokum(sorgu) {
 // ---------------------------------------------------------------
 // Sürüm 19 · sayfa numarasına dokunur (sayfa bağlantıları düz adres değilse). Yalnız sayfalama bloğunun içinde arar.
 // ---------------------------------------------------------------
+// 22.33 · Sayfadaki sayfalama bağlantıları: kalip (kurallar.json "sayfaBag") bağlantının TAM adresine uygulanır, (\d+) sayfa numarasıdır.
+// Döner: { enBuyuk: görülen en büyük sayfa no, baglar: { no: tam adres } }. Yalnız sitenin kendi bağlantıları; adres tahmini yok.
+function sayfaBaglari(kalip) {
+  try {
+    var re = new RegExp(kalip), out = { enBuyuk: 0, baglar: {} };
+    var as = document.querySelectorAll('a[href]');
+    for (var i = 0; i < as.length; i++) {
+      var h = as[i].href || '', m = h.match(re);
+      if (!m) continue;
+      var n = parseInt(m[1], 10);
+      if (!(n > 0) || n > 5000) continue;
+      if (!out.baglar[n]) out.baglar[n] = h;
+      if (n > out.enBuyuk) out.enBuyuk = n;
+    }
+    return out;
+  } catch (e) { return { enBuyuk: 0, baglar: {}, hata: String(e) }; }
+}
+
+// 22.33 · Kapsam teşhisi (yalnız rapor): sayfanın "sonuç" sayı izleri ve AYNI arama yolundaki 2. sayfa bağlantısı (sitenin kendi bağlantısı; tahmin yok).
+function kapsamIzleri() {
+  try {
+    var txt = (document.body && document.body.innerText) || '';
+    var re = /[^\n]{0,25}\d[\d.,]*\+?\s*(?:'?den fazla\s*)?(?:adet\s*)?(?:sonuç|ürün|kitap|ilan)[^\n]{0,25}/gi, m, izler = [];
+    while ((m = re.exec(txt)) && izler.length < 3) izler.push(m[0].replace(/\s+/g, ' ').trim().slice(0, 70));
+    var yol = location.pathname, ikinci = '';
+    var as = document.querySelectorAll('a[href]');
+    for (var i = 0; i < as.length; i++) {
+      var h = as[i].href || '';
+      if (h.indexOf(location.host) < 0) continue;
+      var y = h.replace(/^https?:\/\/[^\/]+/, '').split(/[?#]/)[0];
+      if (y !== yol) continue;
+      if (/[?&](page|p|sayfa|pg|pagenumber|pi|pn|currentPage|sf)=2(&|$)/i.test(h)) { ikinci = h; break; }
+    }
+    return { izler: izler, ikinci: ikinci };
+  } catch (e) { return { izler: [], ikinci: '', hata: String(e) }; }
+}
+
 function sayfayaGec(no) {
   try {
     var bloklar = document.querySelectorAll('[class*="pagina"],[class*="Pagina"],[class*="pager"],[class*="Pager"],[class*="sayfala"],[class*="paging"]');
@@ -1691,7 +1771,8 @@ function yeniSonuc(k) {
     ilgililer: [], takimlar: [], ilgisizSayisi: 0, ilgisizOzet: "", ilgisizOrnek: [], ilgisizListe: [], kitapDisiSayisi: 0, ekitapSayisi: 0, ekitapElenen: 0, kanitsizSayisi: 0, kanitsizOrnek: [], suphelSayisi: 0, suphelOrnek: [],
     fiyatsizGizlenen: [], fiyatsizVar: [], fiyatsizBelirsiz: [],
     stokKontrol: [], ozet: null, yapi: null, dom: "", ham: "", hata: "", akakce: null, sure: 0, gezi: [], sayfaHam: "", detayRapor: [], adresDeneme: [], siralaTikla: [], siralamaMenusu: "", sayfalama: "",
-    yavas: false, iptal: false, sinir: 0, aramaTuru: "", aramaDenenen: [] };
+    yavas: false, iptal: false, sinir: 0, aramaTuru: "", aramaDenenen: [],
+    basZaman: 0, kapsamNeden: "", kapsamSayfa: 1, kapsamSonSayfa: 0, kapsamIstek: 0 }; // 22.33: kapsam satırı
 }
 
 // Okunan sayfa verisini sonuç kaydına işler (sayfa gezisinde her yeni sayfadan sonra yeniden çağrılır).
@@ -1754,6 +1835,7 @@ function sonucuYaz(r, son, k, sorgu) {
 // ---------------------------------------------------------------
 async function siteyiSina(k, sorgu, r) {
   let son = {}, sonWv = null;
+  r.basZaman = Date.now(); // 22.33: sayfa gezme süre bütçesi bundan sayılır
   try {
     // 1. yol: arama adresi
     // Sürüm 22.2: yazar verilmişse önce "ad + yazar" aranır (sonuçlar daralır); bu aramada kitap görünmezse yalnız "ad" aranır (Pandora gibi yazarlı aramayı reddeden siteler için).
@@ -1801,18 +1883,77 @@ async function siteyiSina(k, sorgu, r) {
   } catch (e) { r.hata = String(e); }
   if (r.iptal) return;
 
+  // 22.33 (Ana 42) · SONUNA KADAR OKUMA. kurallar.json'da "sayfaBag" (sayfa bağlantısının düzenli ifadesi, (\d+) = sayfa no) olan sitede
+  // (Nadir ve Kitantik hariç; onların kuralı değişmedi) bu kitap ilk sayfada görünse de sonraki sayfalar okunur. Sonraki sayfanın adresi
+  // SAYFADAKİ GERÇEK BAĞLANTIDAN alınır (tahmin edilmez); bağlantı yoksa ve site okunandan çok sonuç yazıyorsa "sayfaEk" şablonuyla kurulur.
+  // Durma: son sayfa / yeni ilan yok / ilk ENGEL (ısrar yok) / istek sınırı (sayfaUst, varsayılan 12 ek sayfa) / süre bütçesi
+  // (sayfaSure, sitenin başından itibaren 40 sn: site 90 sn sınırına çarpıp ilk sayfada bulunanlar "yavaş" sayılmasın).
+  // Sayfalar arasında yavaş başlayan aralık (sayfaAralik: 2 → 1,5 → 1 → 0,8 sn). Her sitede kapsam satırı: okunan / sitenin yazdığı / durma nedeni.
+  try {
+    if (k.sayfaBag && !k.sayfaGez && sonWv && (son.items || []).length && !son.benzerSonuc && !r.iptal) {
+      const ust = k.sayfaUst || AYAR.sayfaUst || 12, butce = (AYAR.sayfaSure || 40) * 1000, aralik = AYAR.sayfaAralik || [2000, 1500, 1000, 800];
+      let bag = null;
+      try { bag = await sonWv.calistir("(" + sayfaBaglari.toString() + ")(" + JSON.stringify(k.sayfaBag) + ")"); } catch (e) { bag = null; }
+      r.kapsamSonSayfa = (bag && bag.enBuyuk) || 1;
+      let neden = "", istek = 0;
+      for (let no = 2; ; no++) {
+        if (r.iptal) return;
+        const okunan = (son.items || []).length;
+        const href = bag && bag.baglar && bag.baglar[no];
+        let adres = href || "";
+        if (!adres && k.sayfaEk && r.adres && son.sonucSayisi > okunan) adres = r.adres + k.sayfaEk.replace("{n}", no);
+        if (son.sonucSayisi > 0 && okunan >= son.sonucSayisi) { neden = "sitenin yazdığı kadar okundu"; break; }
+        if (!adres) { neden = no === 2 ? "tek sayfa (sayfa bağlantısı yok)" : "son sayfa (" + (no - 1) + ")"; break; }
+        if (istek >= ust) { neden = "istek sınırı (" + ust + " ek sayfa)"; break; }
+        if (Date.now() - r.basZaman > butce) { neden = "süre bütçesi (" + Math.round(butce / 1000) + " sn)"; break; }
+        await bekle(aralik[Math.min(istek, aralik.length - 1)]);
+        if (r.iptal) return;
+        istek++;
+        const wvS = yeniSekme(r);
+        const yhS = await sayfaYukle(wvS, adres, 20000);
+        const bS = await sonucBekle(wvS, sorgu, 10000, k.tur, r, k.kart);
+        if (r.iptal) return;
+        const sS = bS.son || {};
+        if (sS.blocked) { neden = "ENGEL (sayfa " + no + "): " + String(sS.blocked).slice(0, 60); r.gezi.push("sayfa " + no + ": " + neden); try { wvS.kapat(); } catch (e) { } break; }
+        const itS = sS.items || [];
+        const varS = new Set((son.items || []).map(u => u.href + "|" + (u.prices || [])[0]));
+        const ekS = itS.filter(u => !varS.has(u.href + "|" + (u.prices || [])[0]));
+        if (!ekS.length) { neden = "sayfa " + no + " yeni ilan vermedi" + (yhS ? " · hata: " + String(yhS).slice(0, 60) : ""); r.gezi.push("sayfa " + no + ": " + itS.length + " ürün, yeni yok"); try { wvS.kapat(); } catch (e) { } break; }
+        son.items = (son.items || []).concat(ekS);
+        r.kapsamSayfa = no;
+        r.gezi.push("sayfa " + no + " (bağlantı" + (href ? "" : ": şablon") + "): " + itS.length + " ürün okundu, " + ekS.length + " yeni");
+        try { bag = await wvS.calistir("(" + sayfaBaglari.toString() + ")(" + JSON.stringify(k.sayfaBag) + ")"); } catch (e) { bag = null; }
+        if (bag && bag.enBuyuk > r.kapsamSonSayfa) r.kapsamSonSayfa = bag.enBuyuk;
+        try { wvS.kapat(); } catch (e) { } // bellek: okunan sayfanın sekmesi hemen kapatılır (iPad'de onlarca sekme açık kalmasın)
+        sonucuYaz(r, son, k, sorgu);
+      }
+      r.kapsamNeden = neden;
+      r.kapsamIstek = istek;
+    }
+  } catch (e) { r.gezi.push("gezi hatası: " + e); r.kapsamNeden = "gezi hatası"; }
+  if (r.iptal) return;
+
   // Sayfa sayfa gezme: sonuç sayısı okunandan çoksa. Sürüm 20: sayfaGez kuralı olan sitede (Nadir) bu kitap bulunsa da 4. sayfaya kadar okunur;
   // diğer sitelerde yalnız bu kitap henüz görünmüyorsa gezilir (en çok 4. sayfa).
-  try {
+  // 22.33: "sayfaTikla" kuralı olan sitede (Sahafta) tıklamayla sonuna kadar (sayfaUst, süre bütçesi, yavaş başlayan aralık).
+  if (!k.sayfaBag) try {
     // Sürüm 21.7: sayfaGez kuralı olan sitede sayfa toplam sonuç sayısını yazmıyorsa (Kitantik) da sonraki sayfalar denenir;
     // sayfa düğmesi bulunamazsa gezi zararsızca durur ve nedeni rapora yazılır.
-    const sayiBilinmez = !!k.sayfaGez && son.sonucSayisi === -1;
+    const sayiBilinmez = !!(k.sayfaGez || k.sayfaTikla) && son.sonucSayisi === -1;
     const gerek = sonWv && typeof son.sonucSayisi === "number" && (son.items || []).length && !son.benzerSonuc &&
-      ((son.sonucSayisi > (son.items || []).length && (k.sayfaGez || !ilgiliSayisi(son, sorgu))) || sayiBilinmez);
+      ((son.sonucSayisi > (son.items || []).length && (k.sayfaGez || k.sayfaTikla || !ilgiliSayisi(son, sorgu))) || sayiBilinmez);
+    if (!gerek) r.kapsamNeden = (son.sonucSayisi > 0 && (son.items || []).length >= son.sonucSayisi) ? "sitenin yazdığı kadar okundu" : (k.sayfaGez || k.sayfaTikla) ? "sonraki sayfa gerekmedi" : "yalnız ilk sayfa (sayfa kuralı yok)";
     if (gerek) {
-      const enSon = k.sayfaGez || 4;
+      const ustT = k.sayfaUst || AYAR.sayfaUst || 12, aralikT = AYAR.sayfaAralik || [2000, 1500, 1000, 800];
+      const enSon = k.sayfaGez || (k.sayfaTikla ? 1 + ustT : 4);
+      r.kapsamNeden = k.sayfaGez ? "kural: en çok " + enSon + " sayfa" : k.sayfaTikla ? "istek sınırı (" + ustT + " ek sayfa)" : "en çok 4 sayfa, kitap görününce durur";
       for (let no = 2; no <= enSon; no++) {
         if (r.iptal) return;
+        if (k.sayfaTikla) {
+          if (Date.now() - r.basZaman > (AYAR.sayfaSure || 40) * 1000) { r.kapsamNeden = "süre bütçesi (" + (AYAR.sayfaSure || 40) + " sn)"; break; }
+          await bekle(aralikT[Math.min(no - 2, aralikT.length - 1)]);
+          if (r.iptal) return;
+        }
         // Sürüm 22.0 · "sayfaUrl" kuralı (Kitantik: "&page={n}"): sonraki sayfa düğmeye tıklanmadan, aynı arama adresine sayfa eki konarak ayrı sekmede açılır.
         // Neden: Kitantik'te sayfa düğmesi yok ama adres çalışıyor (21.8 iPad: page=2 ilk sayfadan tamamen farklı 20 ilan).
         if (k.sayfaUrl && r.adres) {
@@ -1823,16 +1964,17 @@ async function siteyiSina(k, sorgu, r) {
           const itS = (bS.son && bS.son.items) || [];
           const varS = new Set((son.items || []).map(u => u.href + "|" + (u.prices || [])[0]));
           const ekS = itS.filter(u => !varS.has(u.href + "|" + (u.prices || [])[0]));
-          if (!ekS.length) { r.gezi.push("sayfa " + no + " (adresle): yeni ilan yok" + (yhS ? " · hata: " + String(yhS).slice(0, 60) : "") + (bS.son && bS.son.blocked ? " · ENGEL: " + bS.son.blocked : "")); break; }
+          if (!ekS.length) { r.kapsamNeden = "sayfa " + no + " yeni ilan vermedi"; r.gezi.push("sayfa " + no + " (adresle): yeni ilan yok" + (yhS ? " · hata: " + String(yhS).slice(0, 60) : "") + (bS.son && bS.son.blocked ? " · ENGEL: " + bS.son.blocked : "")); break; }
           son.items = (son.items || []).concat(ekS);
           r.gezi.push("sayfa " + no + " (adresle): " + itS.length + " ürün okundu, " + ekS.length + " yeni");
+          r.kapsamSayfa = no;
           sonucuYaz(r, son, k, sorgu);
           continue;
         }
         const imzaOnce = (son.items || []).length ? (son.items || []).map(u => u.href + "|" + (u.prices || [])[0]).join("§") : "";
         let g = "";
         try { g = String(await sonWv.calistir("(" + sayfayaGec.toString() + ")(" + no + ")")); } catch (e) { g = "hata: " + e; }
-        if (g.indexOf("tıklandı") !== 0) { r.gezi.push("sayfa " + no + ": " + g); break; }
+        if (g.indexOf("tıklandı") !== 0) { r.kapsamNeden = no === 2 ? "tek sayfa (sayfa düğmesi yok)" : "son sayfa (" + (no - 1) + ")"; r.gezi.push("sayfa " + no + ": " + g); break; }
         let yeniSon = null, degisti = false;
         const bit = Date.now() + 12000;
         while (Date.now() < bit && !r.iptal) {
@@ -1846,19 +1988,43 @@ async function siteyiSina(k, sorgu, r) {
           }
         }
         if (r.iptal) return;
-        if (!degisti) { r.gezi.push("sayfa " + no + ": " + g + " ama sayfa değişmedi"); break; }
+        if (!degisti) { r.kapsamNeden = "sayfa " + no + " değişmedi"; r.gezi.push("sayfa " + no + ": " + g + " ama sayfa değişmedi"); break; }
         const var_ = new Set((son.items || []).map(u => u.href + "|" + (u.prices || [])[0]));
         const eklenecek = yeniSon.items.filter(u => !var_.has(u.href + "|" + (u.prices || [])[0]));
         son.items = (son.items || []).concat(eklenecek);
         r.gezi.push("sayfa " + no + ": " + g + " · " + yeniSon.items.length + " ürün okundu, " + eklenecek.length + " yeni");
         sonucuYaz(r, son, k, sorgu);
-        if (!k.sayfaGez && ilgiliSayisi(son, sorgu)) break;
+        r.kapsamSayfa = no;
+        if (!k.sayfaGez && !k.sayfaTikla && ilgiliSayisi(son, sorgu)) { r.kapsamNeden = "kitap göründü, durdu (sayfa kuralı yok)"; break; }
       }
       try { r.sayfaHam = String(await sonWv.calistir("(" + sayfaHam.toString() + ")()") || ""); } catch (e) { }
     }
   } catch (e) { r.gezi.push("gezi hatası: " + e); }
   if (r.iptal) return;
   sonucuYaz(r, son, k, sorgu);
+  // 22.33 · KAPSAM TEŞHİSİ (yalnız rapor; sonuçlara KARIŞMAZ): sayfa kuralı olmayan sitede (Nadir, Kitantik, Sahafta ve kuralı olanlar hariç)
+  // ilk sayfadaki sonuç sayı izleri ve sayfalama adayları yazılır; aynı arama yolunda sitenin kendi "2. sayfa" bağlantısı varsa o sayfa
+  // BİR KEZ açılır (site başına en çok 1 ek istek) ve kaç ürün, kaç yeni ilan verdiği yazılır. Amaç: sayfa kuralını tahminle değil kanıtla yazmak.
+  if (!k.sayfaBag && !k.sayfaGez && !k.sayfaTikla && sonWv && !r.iptal && (son.items || []).length) {
+    try {
+      const iz = await sonWv.calistir("(" + kapsamIzleri.toString() + ")()") || {};
+      r.kapsamIz = (iz.izler || []).join(" | ");
+      try { r.kapsamAday = String(await sonWv.calistir("(" + sayfalamaAdaylari.toString() + ")()") || "").slice(0, 600); } catch (e) { }
+      if (iz.ikinci && !(son.sonucSayisi > 0 && (son.items || []).length >= son.sonucSayisi) && Date.now() - r.basZaman < (AYAR.sayfaSure || 40) * 1000) {
+        await bekle((AYAR.sayfaAralik || [2000])[0]);
+        const wvD = yeniSekme(r);
+        const yhD = await sayfaYukle(wvD, iz.ikinci, 20000);
+        const bD = await sonucBekle(wvD, sorgu, 10000, k.tur, r, k.kart);
+        const itD = (bD.son && bD.son.items) || [];
+        const varD = new Set((son.items || []).map(u => u.href + "|" + (u.prices || [])[0]));
+        const yeniD = itD.filter(u => !varD.has(u.href + "|" + (u.prices || [])[0])).length;
+        r.kapsamDeneme = "2. sayfa bağlantısı " + String(iz.ikinci).replace(/^https?:\/\/[^\/]+/, "").slice(0, 110) + " → " + itD.length + " ürün, " + yeniD + " yeni" +
+          (bD.son && bD.son.blocked ? " · ENGEL: " + String(bD.son.blocked).slice(0, 40) : "") + (yhD ? " · hata: " + String(yhD).slice(0, 50) : "");
+        try { wvD.kapat(); } catch (e) { }
+      } else if (!iz.ikinci) r.kapsamDeneme = "aynı arama yolunda 2. sayfa bağlantısı yok";
+    } catch (e) { r.kapsamDeneme = "teşhis hatası: " + String(e).slice(0, 60); }
+  }
+  if (r.iptal) return;
 
   // Sürüm 20 · fiyatı kartta olmayan site (Pandora): adı eşleşen kartın ürün sayfasından yalnız STOK okunur. Fiyat bu sayfadan ASLA alınmaz
   // (sayfadaki "benzer ürünler"in fiyatı karışıyor). Stok yok → gizlenir; stok var → "fiyat okunamadı"; belirsiz → ayrıca yazılır.
@@ -2419,6 +2585,17 @@ function kisaSatir(r) {
 // ---------------------------------------------------------------
 // Rapor: panoya kopyalanacak düz metin. Sürüm 21: önce çalışanlar (tek satır), sonra yalnız sorunlu/kısmen/aday sitelerin ayrıntısı.
 // ---------------------------------------------------------------
+// 22.33 · Kapsam satırı: sitede kaç ilan okundu, site kaç sonuç yazıyor, kaç sayfa okundu, neden durdu. "Tam okundu" yalnız
+// okunan ≥ sitenin yazdığı ise ya da son sayfaya kadar okunduysa yazılır; site sayı yazmıyorsa "site sayı yazmıyor" denir (tahmin yok).
+function kapsamSatiri(r) {
+  const okunan = r.urunSayisi || 0, yazan = r.sonucSayisi;
+  const sonS = r.kapsamSonSayfa || 0, oS = r.kapsamSayfa || 1;
+  const tam = (yazan > 0 && okunan >= yazan) || (sonS > 0 && oS >= sonS) || /^tek sayfa|^son sayfa|sitenin yazdığı kadar/.test(r.kapsamNeden || "");
+  return r.k.ad + ": " + okunan + " / " + (yazan > 0 ? yazan : (yazan === 0 ? "0" : "site sayı yazmıyor")) +
+    " · sayfa " + oS + (sonS > 1 ? " / " + sonS : "") + " · " + (r.kapsamNeden || (r.yavas ? "süre sınırında kesildi" : "-")) +
+    (r.yavas ? " · SÜRE SINIRINDA KESİLDİ" : "") + (tam && !r.yavas ? " · TAM" : (okunan ? " · EKSİK OLABİLİR" : ""));
+}
+
 function raporMetni(sorgu, sonuclar, sure, cihaz) {
   const sayac = sayacYap(sonuclar);
   const satirlar = [];
@@ -2428,6 +2605,8 @@ function raporMetni(sorgu, sonuclar, sure, cihaz) {
   const esikAsan = sonuclar.filter(r => !r.yavas && r.sure > YAVAS_ESIK).length;
   satirlar.push("Özet: " + sayac.yesil + " çalıştı · " + sayac.sari + " kısmen · " + sayac.kirmizi + " çalışmadı · " + sayac.yok + " sonuç yok · " + sayac.gorunmuyor + " görünmüyor · " + sayac.yavas + " süre sınırında kesildi · " + esikAsan + " yavaş (" + YAVAS_ESIK + " sn üstü, bitti)");
   satirlar.push("Süreler: " + sonuclar.map(r => r.k.ad + " " + r.sure + ekSure(r) + (r.yavas ? " (KESİLDİ)" : "")).join(" · "));
+  satirlar.push("KAPSAM (22.33) — okunan ilan / sitenin yazdığı · okunan sayfa / görülen son sayfa · durma nedeni");
+  sonuclar.forEach(r => { satirlar.push("  " + kapsamSatiri(r)); if (r.kapsamIz || r.kapsamDeneme || r.kapsamAday) satirlar.push("     teşhis: " + [r.kapsamIz ? "sayfa yazıları: " + r.kapsamIz : "", r.kapsamDeneme || "", r.kapsamAday ? "adaylar: " + r.kapsamAday : ""].filter(Boolean).join(" · ")); });
   baglantiSatirlari(sonuclar, "").forEach(x => satirlar.push(x)); // 22.24
   if (sonuclar.baglantiBasta) satirlar.push("Bağlantı yoklaması (arama başında): " + sonuclar.baglantiBasta.durum + (sonuclar.baglantiBasta.ms != null ? " · " + sonuclar.baglantiBasta.ms + " ms" : "") + (sonuclar.baglantiBasta.ayrinti ? " · " + sonuclar.baglantiBasta.ayrinti : ""));
   const iyiMi = r => renk(r) === "yesil" && r.k.durum !== "aday" && !r.k.teshis;
@@ -2882,6 +3061,7 @@ async function calis() {
   giris.addTextField("Yazar (isteğe bağlı, boş bırakılabilir)", "");
   giris.addAction("Başlat");
   giris.addAction("Liste modu (panodaki listeyi çalıştır)");
+  giris.addAction("Nadir ve Kitantik hariç başlat"); // 22.33: o iki siteye istek göndermeden sınama (Nadir engeli ve onay kuralı)
   giris.addCancelAction("Vazgeç");
   const secim = await giris.presentAlert();
   if (secim === -1) return;
@@ -2890,11 +3070,13 @@ async function calis() {
   const yazar = giris.textFieldValue(1).trim();
 
   const bas = Date.now();
-  const sonuclar = await motor.siteleriSina(sorgu, { yazar });
+  const haric = secim === 2 ? ["nadir", "kitantik"] : [];
+  const sonuclar = await motor.siteleriSina(sorgu, haric.length ? { yazar, siteler: kural.siteler.filter(k => haric.indexOf(k.id) < 0) } : { yazar });
   const sure = Math.round((Date.now() - bas) / 1000);
 
   let cihaz = "";
   try { cihaz = Device.model() + " " + Device.systemName() + " " + Device.systemVersion(); } catch (e) { }
+  if (haric.length) cihaz += " · HARİÇ: Nadir, Kitantik";
   cihaz += " · kurallar: " + kaynak + " (sürüm " + (kural.surum || "?") + ")";
   if (typeof YUKLEYICI_KAYNAK !== "undefined") cihaz += " · betik: " + YUKLEYICI_KAYNAK;
   const metin = motor.raporMetni(sorgu, sonuclar, sure, cihaz);
