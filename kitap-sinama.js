@@ -1,7 +1,8 @@
-// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.35
+// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.36
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
 // icon-color: orange; icon-glyph: magic;
-// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.35
+// Kitap Fiyat — Site sınaması / Sistem kontrolü (Scriptable) · sürüm 22.36
+// Sürüm 22.36 · Ana 47 · (1) 'Başka kitap olabilir' kuralı başlığın başındaki yayınevi/marka adını başka başlık sanıyordu (iPad 22.35: Trendyol'da 40–50, Hepsiburada'da 8 gerçek basım alta indi). Önek artık ad listesinden değil yapıdan tanınır: Trendyol kartının ayrı marka kutusu, '… Kitap/Yayınları/Kitabevi' ekiyle biten önek, başlıkta yayınevi olarak yinelenen ad, yazarın adı ('Sabahattin Ali'nin …'). Hepsiburada, Trendyol ve n11'de bağlaçsız 1–2 sözcüklük önek başka başlık kanıtı sayılmaz ama [C] kalır. 've/ile' bağlaçlı başka adlar (Kir ve Kefaret, Yemin Adak ve Keffaret) eskisi gibi taşınır/elenir. 'hırka' kitap dışı. (2) Amazon 'Seçenekleri gör' düğmesi ürün adı sanılmaz (Kefaret McEwan teklif kartı). (3) Raporda site başına 'en ucuz 5' satırı ve 'ÖNEK yayınevi/marka sayıldı N' sayısı. Android'de denenmedi.
 // Sürüm 22.35 · Ana 45 · (1) Sahafta: her eser kartının sayfası açılır, satan her sahaf ayrı ilan (ad, kondisyon, kargo, fiyat); 'sonuç yok' kod devreye girdikten ≥3 sn sonra; sayfa hiç hazır olmazsa ikinci arama yok. (2) Başka yazar/başka ad: güçlü kanıt (ayrı yazar alanı + başlık farkı) elenir, tek kanıt 'BAŞKA KİTAP OLABİLİR' bölümüne (en ucuz sayılmaz); adresteki yazar ve ISBN yazar kanıtıdır. (3) Sayfa: Trendyol &pi, n11 &pg, Pandora &page, BKM &ps; iki ardışık ilgisiz sayfada durulur; adres denemeleri kaldırıldı; aynı anda 6 site. (4) Okuyucu: Amazon 'öne çıkan teklif yok' kartı, n11 mağaza adlı ürün adresi, Trendyol/Pazarama sayı kalıbı, Pazarama kaydırma, Halk BİLİNMİYOR. Android'de denenmedi.
 // Sürüm 22.34 · Ana 43 · (1) SAHAFTA yanlış 'SONUÇ YOK': site sayfayı önce boş hâliyle ('0 sonuç · Sonuç bulunamadı') gönderip ilanları sonra kendi koduyla yüklüyor; motor ilk 4,5 sn'de boş hâli görüp duruyordu (iPad 21.11 Kefaret). Artık 'yok' yalnız sayfanın kodu devreye girince (React işareti) ve 'Aranıyor' kalkınca kabul edilir; sayfa hiç hazır olmazsa 'SAYFA HAZIR OLMADI · BİLİNMİYOR' yazılır ve ana sayfa yolu denenmez. Sitenin yazdığı sayı (.e-ara-meta) ve kart yazarı (.author) okunur. (2) SAYFA KURALLARI (iPad teşhisindeki gerçek bağlantılarla): Kitapyurdu, Hepsiburada, Akakçe, Amazon (en çok 2 ek sayfa); sayı kalıbı Letgo, Hepsiburada. (3) ÖLÇÜM (yalnız rapor): Trendyol, Pazarama, n11, Pandora, BKM için aday sayfa adresi bir kez denenir (21.8 adresDene; taban artık 1. sayfanın gerçek adresi). (4) HIZ: ağır siteler kuyruğa önce girer (onceSiteler); sonraki sayfalar ikişer açılır (gerçek bağlantı ya da kanıtlı sayfa eki, sitenin gösterdiği son sayfayı aşmadan; Amazon tek). (5) RAPOR: 'N ek sayfa okundu' yalnız yeni ilan getiren sayfaları sayar; site 0 sonuç yazarken öneri kartı okunan sayılmaz. Nadir ve Kitantik DEĞİŞMEDİ. Derece, puan, eleme kuralları aynı.
 // BU DOSYA OTOMATİK BİRLEŞTİRİLDİ: kaynak/kurallar.json + kaynak/motor.js + kaynak/scriptable-kabuk.js
@@ -11,7 +12,7 @@
 // Sürüm 22.26 · Ana 18 · iPad'in Türkçe çevrimdışı hata yazısı ('İnternet bağlantısı çevrimdışı gözüküyor.', kod numarasız) artık tanınır; 22.24 yalnız 'görünüyor' biçimini arıyordu. Asıl kanıt yoklama olduğu için 22.24 sonucu etkilenmemişti. (Sürüm 22.25 · Ana 18 · iPad 22.24 testinde Wi-Fi kapalıyken arama 1 dakikadan uzun sürdü, ekranda bir şey çıkmadı. Artık bağlantı sitelerden ÖNCE yoklanır; iki adres de iki kez (3 sn arayla) açılmazsa siteler hiç açılmaz, hepsi ÇALIŞMADI [BAĞLANTI] döner ve raporda 'ÇEVRİMDIŞI (22.25)' satırı çıkar (birkaç saniye). Aynı satırda tek bir site adresiyle teşhis: iPad'de sayfa açılışı internetsizken reddediyor mu, askıda mı kalıyor. iPad kabuğunda yoklama, adreslerden biri 'var' deyince öteki beklenmeden döner. Yalnız 'yok' (iki adres de hata) bu yola girer; internet varken davranış 22.24 ile aynı. (Sürüm 22.24 · Ana 18 · İnternet kesintisi site sorunundan ayrılır ve site düzeni değişikliği işaretlenir (yalnız rapor bilgisi). (1) Çalışmayan ya da süre sınırında kesilen sitede motor bağlantıyı yoklar (iki bağımsız adres: Google generate_204 ve Apple hotspot-detect); ikisi de açılmıyorsa ya da sayfa hatası 'cihaz çevrimdışı' diyorsa site [BAĞLANTI] alır ve raporun başına 'BAĞLANTI SORUNU' satırı yazılır; arama başında da bir yoklama yapılır. (2) Sayfa 'cihaz çevrimdışı' hatasıyla hiç açılmadıysa 15 sn bekleme atlanır (internetsiz arama ~100 sn yerine ~10 sn). (3) Sayfa açıldı, site sonuç olduğunu yazıyor ya da sayfada fiyat var ama hiç ilan ayrılamadıysa [YAPI?] işareti: site düzeni değişmiş olabilir (tek arama kanıt değildir). Renk/etiket, sayaç, derece, puan, sıralama, eleme aynı. (Sürüm 22.23 · Ana 17 · Letgo'nun asıl nedeni bulundu (iPad 22.22 teşhisi): yazarlı aramada motor önce 'ad + yazar' sayfasını tutuyordu; Letgo bu sayfada '6 ilan bulundu' deyip kart göstermedi, daha geniş 'yalnız ad' sayfası ise '0 ilan bulundu' dedi ama dikkate alınmadı. Artık tutulan sayfada hiç ürün yoksa ve 'yalnız ad' sayfası kendisi 'sonuç yok' diyorsa SONUÇ YOK yazılır (bütün siteler; okunan ürün varsa etiket değişmez; 0 ürün tek başına 'yok' sayılmaz). Derece, puan, sıralama, eleme aynı. (Sürüm 22.22 · Ana 17 · Letgo teşhisi ve olası düzeltme: Letgo'da ürün yoksa ve 'yok' yazısı da yoksa sayfa sonuna kaydırılır, 3 sn sonra yeniden okunur (boş sonuç iletisi ancak görünür olunca çiziliyor olabilir); yazı çıkarsa SONUÇ YOK. Liste raporunda Letgo ÇALIŞMADI ise 'TEŞHİS (22.22)' satırları: tarayıcı genişliği ve kimliği (UA), sayfa kodunda (HTML) 'yok' izleri, sayfanın görünen metninin tamamı. Neden: Fatih'in Safari ekranı (masaüstü görünüm) 'aramanızda 0 ilan bulundu' ve 'İlan bulunamadı' gösteriyor; motorun sayfası 'Uygulamada Aç' ile başlıyor (telefon görünümü olabilir) ve 2603 harflik metinde bu yazılar yok. Derece, puan, sıralama, eleme aynı. (Sürüm 22.21 · Ana 17 · Letgo'da ilan olmayan kitap ÇALIŞMADI yerine SONUÇ YOK çıkar: sayfa hiç ürün vermediyse ve sitenin kendi "sonuç bulunamadı" yazısı ilk 15.000 harfte değil de sayfanın devamında geçiyorsa (kurallar.json "yokTumMetin", yalnız Letgo). Ürün yoksa ve yazı da yoksa ÇALIŞMADI kalır (0 ürün tek başına "yok" sayılmaz). Liste raporunda ÇALIŞMADI satırına sayfanın tamamındaki 'yok' yazısı ve ipuçları da yazılır (teşhis). Derece, puan, sıralama ve eleme aynı. (Sürüm 22.20 · Ana 16 · Rapordaki 'ilan yok' satırında ÇALIŞMADI olan sitenin nedeni artık kısa yazılır (ENGEL, sayfada görünen ilk metin, hata, yol, ürün sayısı). Letgo Şeyh Bedreddin Destanı'nda iki iPad raporunda nedensiz ÇALIŞMADI çıkmıştı; bulutta Letgo bot korumasına (Access Denied) takıldığı için neden ancak iPad'de görülebilir. Yalnız rapor metni; derece, puan, sıralama ve eleme aynı. (Sürüm 22.19 · Ana 16 · (1) 'EK YAZAR ADAYLARI' satırında ana listede karşılığı olan adayın yazımı kullanılır ("Ian Mcewan" yerine "Ian McEwan"). (2) 'Yazar adayı başına en ucuz ilan' bölümü ilk 10 adayla sınırlıydı; 10'un dışında kalan ama EK listede en az 2 siteyle desteklenen aday da artık en ucuz ilan satırı alır (22.18 iPad raporunda Ian McEwan 12. sıradaydı ve 80 TL'lik ilanı görünmedi). Yalnız rapor metni değişti; derece, puan, sıralama ve eleme aynı. (Sürüm 22.18 · Ana 16 · Yazarsız aramada Hepsiburada/Kitapseç/Trendyol/n11/Akakçe başlığındaki "Başlık - Yazar" deseni (örnek: "Yapı Kredi Yayınları Kefaret - Ian McEwan", ayraçsız Kitapseç: "Kefaret Ian McEwan Yapı Kredi Yayınları") rapora "EK YAZAR ADAYLARI (yalnız bilgi)" satırı olarak yazılır. Bu oylar AYRI alanda tutulur; derece, puan, sıralama, eleme ve "YAZAR SEÇİMİ GEREK" kararı değişmedi. Sayı, dizi adı, yayınevi ve baskı sözcüğü taşıyan parçalar aday sayılmaz. (Sürüm 22.17 · Ana 15 · Yazarsız aramada 'yazar adayı başına en ucuz ilan' bölümü artık 1 oylu adayları da kapsar (Ian McEwan gibi); yazar sanılan seri adı 'Solomon Creed' adayın yanında '(seri adı olabilir)' etiketi alır (aday silinmez, gerçek yazar tahmin edilmez). Sıralama ve elemeler değişmedi. (Sürüm 22.16 · Ana 15 · '+N aday daha' notunun yanına kalan yazar adaylarının adları ve oyları yazılır (22.15 iPad raporunda McEwan görünen 10 adayın içinde değildi; gizli 4 adayın içinde olup olmadığı bilinemiyordu). Sıralama ve elemeler değişmedi. (Sürüm 22.15 · Ana 15 · Yazarsız aramada yazar adayı satırı 6 yerine en çok 10 aday gösterir; fazlası "+N aday daha" notuyla bildirilir (adaya göre en ucuz ilan satırlarında da aynı). Sıralama ve elemeler değişmedi. (Sürüm 22.14 · Ana 14 · Yazarsız aramada aynı adla birden çok yazar varsa her yazar adayının en ucuz ilanı ayrı satırda (en çok 6 aday); gizlenen [ad eksik] ilanların başlıkları denetim satırı olarak; Hepsiburada kartı raporda 200 karaktere kadar; 'haber sayfası' kitap dışı. Sıralama ve elemeler değişmedi (yazarlı akış 22.11 ile aynı). (Sürüm 22.13 · Ana 14 · iPad 22.12 raporundan: Nadir/Kitantik'te 'Film Kartı/Sinema Kartı' kitap dışı elenir; Hepsiburada'da 'üzeri/kupon/indirim/kazanç/puan' sayıları fiyat sayılmaz (450 TL üzeri eşiği fiyat sanılıyordu); kart metnindeki yarım HTML etiketi de temizlenir; aynı yazarın farklı yazımları (H. R. Lenormand, Ian Mc Ewan) tek adayda birleşir; BKM ve Amazon kartından da yazar adayı oylanır. Yazarlı akış 22.11 ile aynı (48 akış, fark 0). (Sürüm 22.12 · Ana 14 · Yazarsız aramada yazar adayları: Nadir/Kitantik/yazar alanından yazar okunur, ilan satırına [yazar: …] yazılır, başlığı aynen uyan ilanlardan oylanıp raporda "YAZAR ADAYLARI" (+ "YAZAR SEÇİMİ GEREK") satırı çıkar; yazar ASLA tahminle uygulanmaz. Aranan addan ÖNCE gelen ve hiçbir yazar adayı/yayınevi ile açıklanmayan sözcüğü olan ilan [C] olur (+2, elenmez). Site başına bir örnek kart yazılır. (Sürüm 22.11 · Ana 14 · Yazar girilmediğinde ilan satırlarına kart metni de yazılır (otomatik yazar bulma için hangi sitede yazar nasıl görünüyor incelemesi); başka davranış değişmedi. (Sürüm 22.10 · Ana 14 · Hepsiburada kartında en küçük sayı en büyüğün %15'inden azsa (indirim/kampanya tutarı fiyat sanılıyordu) ilan elenmez, [kart içi fiyat şüpheli] işareti + 5 puan; kart metnindeki <img> etiketi temizlenir. (Sürüm 22.9 · Ana 14 · Bağımsız denetim düzeltmesi: [başka yazar] işareti yalnız yüksek güvenle (≥2 kişi-adı sözcüğü, yayınevi/rozet/Kolektif atılır, girilen yazarın hiçbir sözcüğü bitişik yazımda ya da yazım farkıyla bile yoksa); baş harf, Mc/De, Edip/Edib sorunları giderildi; bitişik yazarlı BKM kartı A olur; [CD/ses] yalnız başlık sonunda/+ ile/sesli kitap. (Sürüm 22.8 · Ana 14 · BKM ve Pandora kartında yazar metni yedeği ([başka yazar] iPad'de de çalışsın), "kanıtı zayıf" listesinde [ad eksik] ilanlar gösterilmez. (22.7: BKM yazar alanı okunur, girilen yazarla uyuşmuyorsa [başka yazar: …] (3 puan, elenmez), ilk 5'te yazar kanıtı yoksa UYARI, "kanıtı zayıf" için en ucuz 3 ilan + kart metni. (22.6: BKM kart kuralı (güncel fiyat), [CD/ses] işareti (2 puan), ham fiyat bağlamı 60 karakter, kompakt raporda "KİTAP YOK" nedeni. (22.5: 22.4'ün yanlış elemeleri düzeltildi (sadece kapak durum notu, üzerinde, sayı N yayın numarası, satıcı notu), inceleme/kılavuz/analiz süzgeci, fiyat denetimi yalnız yazarlı aramada ve A dereceli referansla, yazar kanıtında yazım toleransı, çevirmen/yayınevi/tarih/cilt biçimleri, [başka dil] işareti, ham fiyat tanısı. (22.4: uyum derecesi; 22.3: liste modu; 22.2: yazar ayrı alan.))))))))))))))))))))
 
 const GOMULU_KURALLAR = {
-  "surum": "22.35",
+  "surum": "22.36",
   "tarih": "2026-11-21",
   "aciklama": "Kitap Fiyat site kuralları. tur: yeni|sahaf|ikinciel|karsilastirma · acik: asıl uygulamada aranır mı · durum: calisan|duzeltiliyor|aday · url içinde {q} normal, {q5} eski Türkçe kodlama (ISO-8859-9), {qa} Türkçe harfsiz · sayfaGez: sonuç birden çok sayfaysa en çok bu sayfaya kadar okunur · sure: site süre sınırı (sn) · detay: özel ürün sayfası okuyucusu · aday siteler sınamada her zaman denenir ve teşhis dökümü yazar; acik:false olanlar asıl uygulamada aranmaz · kart: siteye özel kart kuralı (CSS seçicileri: kap, ad, fiyat, link, kondisyon, satici); kap bulunamazsa genel okuyucu · teshis: true ise kart yapısı, HTML parçası ve ham kart her sınamada yazılır (teshisSecici: ham kart seçicisi) · stokSayfasi: false ise ilan sayfası açılmaz, yayındaki ilan var sayılır (kişiden satış siteleri) · kart.sehir: satıcının şehri · kondisyonKartta: false ise arama kartında kondisyon yazmadığı bilinir, rapor uyarısı yazılmaz · stokVar: (21.7) ürün sayfasında bu düzenli ifade geçerse ürün stokta sayılır (siteye özel; ör. Sahafta takip düğmesi \"Gelince Haber Ver\" her sayfada yazar)",
   "ayarlar": {
@@ -88,7 +89,8 @@ const GOMULU_KURALLAR = {
     "muzikal",
     "film karti",
     "haber sayfasi",
-    "sinema karti"
+    "sinema karti",
+    "hirka"
   ],
   "siteler": [
     {
@@ -205,7 +207,9 @@ const GOMULU_KURALLAR = {
       "sayfaBag": "/ara\\?(?=(?:[^#]*&)?q=)(?:[^#]*&)?sayfa=(\\d+)",
       "sayfaEk": "&sayfa={n}",
       "sonucKalip": "ile ilgili\\s*(\\d[\\d.]*)\\s*ürün bulduk",
-      "not": " 22.34 (Ana 43): sayfaBag &sayfa=N (sayfa=0 bağlantısı da var; motor 0'ı atlar), sonucKalip 'ile ilgili N ürün bulduk' (Kefaret 18 = okunan 18). Kanıt: iPad 22.33 kapsam teşhisi 21.11.2026 06:34/06:36 (2. sayfa bağlantısı gerçek sayfada görüldü ve yeni ilan verdi)."
+      "not": " 22.34 (Ana 43): sayfaBag &sayfa=N (sayfa=0 bağlantısı da var; motor 0'ı atlar), sonucKalip 'ile ilgili N ürün bulduk' (Kefaret 18 = okunan 18). Kanıt: iPad 22.33 kapsam teşhisi 21.11.2026 06:34/06:36 (2. sayfa bağlantısı gerçek sayfada görüldü ve yeni ilan verdi).",
+      "markaOnde": true,
+      "notMarka": "22.36 (Ana 47): başlık 'marka/yayınevi + kitap adı' biçiminde gelir [KANITLI: iPad 22.34/22.35 raporlarındaki ilan adları, örn. 'Yediveren Hayvan Çiftliği', 'Genel Markalar Hayvan Çiftliği', 'Sipariskitap Kürk Mantolu Madonna']. Bağlaçsız 1–2 sözcüklük önek 'başka başlık' kanıtı sayılmaz (motor onekSinifla, zayıf sınıf)."
     },
     {
       "id": "halk",
@@ -252,12 +256,15 @@ const GOMULU_KURALLAR = {
       "kart": {
         "kap": "a.product-card",
         "ad": ".info-wrapper .title",
-        "fiyat": ".product-card-price .single-price, .product-card-price .price-section, .product-card-price .discounted-price"
+        "fiyat": ".product-card-price .single-price, .product-card-price .price-section, .product-card-price .discounted-price",
+        "marka": ".product-brand"
       },
       "sayfaEk": "&pi={n}",
       "sayfaEkSurekli": true,
       "sonucKalip": "(\\d[\\d.]*)\\+\\s*Ürün|(?:^|\\n)\\s*(\\d[\\d.]*)\\s*Ürün\\s*(?:\\n|$)",
-      "not45": "22.35 (Ana 45, K5/K12): iPad 22.34 adres denemesi &pi=2 → Hayvan Çiftliği 36 ürün, 36'sı ilk sayfadan farklı; Kefaret 0 ürün (son sayfa). Sayfa sonsuz kaydırmalı, bağlantı yok → sayfaEkSurekli. \"1032+ Ürün\" / \"3+ Ürün\" alt sınırdır (sonucEnAz)."
+      "not45": "22.35 (Ana 45, K5/K12): iPad 22.34 adres denemesi &pi=2 → Hayvan Çiftliği 36 ürün, 36'sı ilk sayfadan farklı; Kefaret 0 ürün (son sayfa). Sayfa sonsuz kaydırmalı, bağlantı yok → sayfaEkSurekli. \"1032+ Ürün\" / \"3+ Ürün\" alt sınırdır (sonucEnAz).",
+      "markaOnde": true,
+      "notMarka": "22.36 (Ana 47): başlık 'marka/yayınevi + kitap adı' biçiminde gelir [KANITLI: iPad 22.34/22.35 raporlarındaki ilan adları, örn. 'Yediveren Hayvan Çiftliği', 'Genel Markalar Hayvan Çiftliği', 'Sipariskitap Kürk Mantolu Madonna']. Bağlaçsız 1–2 sözcüklük önek 'başka başlık' kanıtı sayılmaz (motor onekSinifla, zayıf sınıf)."
     },
     {
       "id": "pandora",
@@ -339,7 +346,9 @@ const GOMULU_KURALLAR = {
       "not": "21.7 aday (Fatih sordu, Ana 8): n11 ana sitesinde mağazaların yeni kitap ilanları. 21.8: Fatih onayıyla AÇILDI (n11 Sahaflar Çarşısı da açık kalır; aynı ilan iki yerden gelirse tekrar ayıklanacak). Kart yapısı henüz kuralda yok; teşhis bir tur daha açık kalır, ham kart rapordan alınıp kart kuralı yazılacak. Bulut buradan engelli (Cloudflare), yalnız iPad. 22.34 (Ana 43): adresDene yalnız ölçüm (sayfada 2. sayfa bağlantısı yok; iPad 22.33 teşhisi); sonuç kural değildir.",
       "sayfaEk": "&pg={n}",
       "sayfaEkSurekli": true,
-      "not45": "22.35 (Ana 45, K7): iPad 22.34 &pg=2 → Hayvan Çiftliği 20 ürün, 20'si farklı; Kefaret 1 ilgisiz ürün (son sayfadan sonra; artık okunan sayılmaz). Mağaza adı adreste geçen ürün (\"/urun/kitapstore-…\") artık okunur."
+      "not45": "22.35 (Ana 45, K7): iPad 22.34 &pg=2 → Hayvan Çiftliği 20 ürün, 20'si farklı; Kefaret 1 ilgisiz ürün (son sayfadan sonra; artık okunan sayılmaz). Mağaza adı adreste geçen ürün (\"/urun/kitapstore-…\") artık okunur.",
+      "markaOnde": true,
+      "notMarka": "22.36 (Ana 47): başlık 'marka/yayınevi + kitap adı' biçiminde gelir [KANITLI: iPad 22.34/22.35 raporlarındaki ilan adları, örn. 'Yediveren Hayvan Çiftliği', 'Genel Markalar Hayvan Çiftliği', 'Sipariskitap Kürk Mantolu Madonna']. Bağlaçsız 1–2 sözcüklük önek 'başka başlık' kanıtı sayılmaz (motor onekSinifla, zayıf sınıf)."
     },
     {
       "id": "n11sahaf",
@@ -472,7 +481,7 @@ const GOMULU_KURALLAR = {
 // Not: Aşağıdaki gövde sürüm 20'den taşındı; girinti bilerek değiştirilmedi (satırlar sürüm 20 ile karşılaştırılabilsin).
 // =====================================================================
 function MotorKur(T, KURAL) {
-const MOTOR_SURUMU = "22.35";
+const MOTOR_SURUMU = "22.36";
 const AYAR = KURAL.ayarlar || {};
 const SITE_SURE_SINIRI = AYAR.siteSureSiniri || 90; // saniye; her site için en çok süre (kural kendi "sure" değerini taşıyabilir)
 const YAVAS_ESIK = AYAR.yavasEsik || 45; // saniye; süre bitmese de bunu aşan site "yavaş" diye işaretlenir
@@ -728,7 +737,7 @@ function aramaSayfasiniOku(sorgu, tur, kartKural, ek) {
         var kKucuk = kYazi.toLocaleLowerCase('tr');
         var kStokYok = false;
         for (var ky2 = 0; ky2 < yokListesi.length; ky2++) { if (kKucuk.indexOf(yokListesi[ky2]) >= 0) { kStokYok = true; break; } }
-        var kdEl = kartSec(kp, kartKural.kondisyon), stEl = kartSec(kp, kartKural.satici), seEl = kartSec(kp, kartKural.sehir), yzEl = kartSec(kp, kartKural.yazar);
+        var kdEl = kartSec(kp, kartKural.kondisyon), stEl = kartSec(kp, kartKural.satici), seEl = kartSec(kp, kartKural.sehir), yzEl = kartSec(kp, kartKural.yazar), mkEl = kartSec(kp, kartKural.marka);
         var kKond = kdEl ? temiz(kdEl.textContent.replace(/[★☆✩✪⭐]/g, '')).toLocaleLowerCase('tr') : '';
         var kSat = stEl ? temiz(stEl.textContent) : '';
         var kHref = kl2 ? kl2.href : location.href;
@@ -737,7 +746,9 @@ function aramaSayfasiniOku(sorgu, tur, kartKural, ek) {
         seen[kAnahtar] = 1;
         out.items.push({ title: kad.slice(0, 140), prices: kfiy, href: kHref, extra: kYazi.slice(0, 200), stokYok: kStokYok,
           ekitap: /e-kitap|e-book|ebook|kindle|sesli kitap|audible/.test(kKucuk), kanit: true, turetildi: false, linksiz: !kl2,
-          supheli: false, ctx: '', kondisyon: kKond.slice(0, 30), satici: kSat.slice(0, 60), sehir: seEl ? temiz(seEl.textContent).slice(0, 60) : '', yazarAlani: yzEl ? temiz(yzEl.textContent).slice(0, 80) : '' });
+          supheli: false, ctx: '', kondisyon: kKond.slice(0, 30), satici: kSat.slice(0, 60), sehir: seEl ? temiz(seEl.textContent).slice(0, 60) : '', yazarAlani: yzEl ? temiz(yzEl.textContent).slice(0, 80) : '',
+          // 22.36 (Ana 47): kartın AYRI marka/yayınevi kutusu (Trendyol .product-brand); başlığın başındaki marka "başka başlık" sayılmasın diye
+          marka: mkEl ? temiz(mkEl.textContent).slice(0, 60) : '' });
       }
     }
     var els = body.querySelectorAll('span,div,p,strong,b,ins,em,small,td,li,a');
@@ -772,6 +783,9 @@ function aramaSayfasiniOku(sorgu, tur, kartKural, ek) {
           // 22.35 (Ana 45, K4): Amazon "Öne çıkan teklif yok · 300,00 TL (14 yeni ürün)" kartında fiyatın yanındaki tek bağlantı teklif listesidir
           // (/gp/offer-listing/…); ürün bağlantısı sanılınca adı "(14 yeni ürün)" okunuyor, McEwan'ın kitabı ilgili sayılmıyordu (iPad 22.34 Kefaret).
           if (/\/gp\/offer-listing\//i.test(ah)) continue;
+          // 22.36 (Ana 47, K4 ikinci adım): aynı kartta "Seçenekleri gör" düğmesi de bir bağlantıdır; ürün adı sanılınca McEwan ilanının adı
+          // "Seçenekleri gör" okunuyordu (iPad 22.35 Kefaret: okunan ilk ürün "Seçenekleri gör 300,00 TL"). Düğme yazısı ad olamaz: atlanır, kart bir üst kutuya büyür.
+          if (/^(seçenekleri gör|tüm seçenekleri gör|satın alma seçenekleri|see options|see all buying options)\b/i.test(at)) continue;
           // Sürüm 21.6: "oy ver", yorum ve puan bağlantıları ürün bağlantısı değildir (Halk Kitabevi: /p/Votes?...&item_id=...)
           if (/\/votes?\b|vote_value|\/oy[-_]?ver|yorum[-_]?yaz|write[-_]?review|\/rating\b/i.test(ah)) continue;
           if (/kategori|category|field-author|\/e\//i.test(ah)) continue;
@@ -1460,6 +1474,51 @@ function adresSozleri(href) {
   try { y = decodeURIComponent(y); } catch (e) { }
   return y.replace(/[\/_\-.+=]+/g, " ");
 }
+// 22.36 (Ana 47) · ÖNEK SINIFI — iPad 22.35: "başka kitap olabilir" kuralı başlığın başındaki yayınevi/marka adını (Yediveren, Beta Kitap, Genel Markalar,
+// Yade Kitap, Parodi…) başka başlık sanıyordu; Trendyol'da 40–50 gerçek basım alta indi. Kapalı ad listesi yerine öneki YAPISINDAN ve KONUMUNDAN tanır:
+//  güçlü (öneki uyum hesabından düşer, derece etkilenmez): (a) kartın ayrı marka kutusu (Trendyol .product-brand); (b) önek bir yayınevi ekiyle biter
+//   ("… Kitap/Yayınları/Kitabevi", bitişik "Sipariskitap"); (c) önekteki ad başlıkta ya da kartta yayınevi ekiyle yineleniyor ("Parodi … Parodi Yayınlar");
+//   (d) önek girilen yazarın adı (iyelik ekiyle de: "Sabahattin Ali'nin Kürk Mantolu Madonna").
+//  zayıf (yalnız kuralda "markaOnde": true olan pazar yerlerinde; başlığı "marka + ad" diye yazdıkları iPad raporlarında görüldü): bağlaçsız, ayraçsız 1–2 sözcük
+//   ("Yediveren Hayvan Çiftliği"). Başka başlık kanıtı SAYILMAZ (taşınmaz) ama derece C kalır: "Büyük Kefaret" gibi gerçek başka adla ayırt edilemez.
+//  Önek "ve/ile" gibi bir bağlaçla aranan ada bağlıysa ("Kir ve Kefaret", "Yemin, Adak ve Keffaret") hiçbir sınıf verilmez: başka başlıktır.
+const ONEK_EKI = new Set(["yayinlari", "yayinlar", "yayinevi", "yayincilik", "yayinciligi", "yayini", "basimevi", "kitabevi", "kitap", "kitaplari", "kitapligi", "kitaplik", "kitabevleri", "yayin", "books", "publishing", "press", "publications"]);
+const ONEK_EKI_BITISIK = /^[a-z]{3,}(kitap|kitaplari|kitapligi|kitabevi|yayinlari|yayinevi|yayincilik)$/;
+const ONEK_BAGLAC = new Set(["ve", "ile", "veya", "yahut", "ya", "and", "or", "of", "da", "de", "ki"]);
+const ONEK_IYELIK = ["nin", "in", "nun", "un"];
+const onekEkMi = t => ONEK_EKI.has(t) || ONEK_EKI_BITISIK.test(t);
+function onekSinifla(x, sorgu, k) {
+  const bos = { tur: "", neden: "", onek: "", kalan: "" };
+  const q = kelimeler(sorgu);
+  if (!q.length) return bos;
+  const ilkMi = t => t === q[0] || t === q[0] + (q[1] || "-") || (q[0].length >= 6 && t.length >= 6 && birFark(t, q[0]));
+  const ham = String(x.baslik || "").split(/\s+/).filter(Boolean);
+  let ri = -1, P = [];
+  for (let i = 0; i < ham.length && ri < 0; i++) { const tk = kelimeler(ham[i]); for (let j = 0; j < tk.length; j++) { if (ilkMi(tk[j])) { ri = i; P = P.concat(tk.slice(0, j)); break; } } if (ri < 0) P = P.concat(tk); }
+  if (ri < 0) return bos; // aranan adın ilk sözcüğü başlıkta yok: önek yok
+  const onekYazi = ham.slice(0, ri).join(" ");
+  const kalan = ham.slice(ri).join(" ");
+  if (!P.length) return bos;
+  if (ONEK_BAGLAC.has(P[P.length - 1])) return bos;
+  const sonuc = (tur, neden) => ({ tur, neden, onek: onekYazi.slice(0, 50), kalan });
+  // (d) yazar adı (iyelik ekiyle)
+  const yw = kelimeler(AKTIF_YAZAR).filter(w => w.length >= 3);
+  if (yw.length && P.every(t => yw.includes(t) || yw.some(w => t.startsWith(w) && ONEK_IYELIK.includes(t.slice(w.length))))) return sonuc("guclu", "yazar adı");
+  // (a) kartın ayrı marka kutusu
+  let R = P;
+  const mk = kelimeler(x.marka || "");
+  if (mk.length && mk.every((t, i) => P[i] === t)) { R = P.slice(mk.length); if (!R.length || R.every(onekEkMi)) return sonuc("guclu", "marka kutusu"); }
+  // (b) yayınevi ekiyle biten kısa önek ("Beta Kitap", "Otantik Kitap", "Sipariskitap"); sıra sayısı + "Kitap" ("Birinci Kitap") sayılmaz
+  if (R.length <= 5 && onekEkMi(R[R.length - 1]) && !(R.length >= 2 && (ORDINAL.has(R[R.length - 2]) || /^\d+$/.test(R[R.length - 2])))) return sonuc("guclu", "yayınevi eki");
+  // (c) önekteki ad başlıkta ya da kartta yayınevi ekiyle yineleniyor
+  const tum = kelimeler(String(x.baslik || "") + " " + String(x.kart || ""));
+  const ekli = new Set(); tum.forEach((t, i) => { if (i + 1 < tum.length && onekEkMi(tum[i + 1]) && !onekEkMi(t)) ekli.add(t); });
+  const adlar = R.filter(t => !onekEkMi(t) && t.length > 2);
+  if (adlar.length && adlar.length <= 3 && adlar.every(t => ekli.has(t))) return sonuc("guclu", "yayınevi adı yineleniyor");
+  // zayıf: pazar yerinde bağlaçsız, ayraçsız 1–2 sözcük
+  if (k && k.markaOnde && R.length <= 2 && !/[:;,\/|–—-]\s*$/.test(onekYazi) && !R.some(t => /\d/.test(t))) return sonuc("zayif", "pazar yerinde marka konumu");
+  return bos;
+}
 // 22.35 (YÖN KARARI 2): bir ilanın "başka kitap" kanıtları. yazar: başka yazar adı (ayrı alandan ya da kart yazısından); baslik: başlığın farkı.
 // Başlık farkı yalnız iki durumda: aranan addan ÖNCE yayınevi/rozet/baskı sözü olmayan sözcük var ("Hamitçe Oyunlar: Kir ve Kefaret",
 // "Yemin, Adak ve Keffaret", "Simon Toyne - Kefaret…") ya da aranan adın bir sözcüğü başlıkta yok. Alt başlık, seri adı, çevirmen
@@ -1475,7 +1534,7 @@ function baskaKitapKaniti(x, k, sorgu) {
     if (g) out.yazar = g;
   }
   const once = (x.fazlaOnce || []).filter(w => w.length > 2 && !YAYINEVI_ADLARI.has(w) && !YAYIN_SOZCUKLERI.has(w) && !ADAY_YAYIN.has(w) && !ADAY_ATILAN.has(w) && !BASKI_NOTU.has(w) && !YAYINEVI_SON.has(w));
-  if (once.length) out.baslik = "addan önce \"" + once.slice(0, 4).join(" ") + "\"";
+  if (once.length && !(x.onek && x.onek.tur === "zayif")) out.baslik = "addan önce \"" + once.slice(0, 4).join(" ") + "\"";
   else if (x.adEksik) out.baslik = "aranan adın sözcüğü eksik";
   return out;
 }
@@ -1795,12 +1854,13 @@ function sonucuIsle(son, k, sorgu) {
         adresYazar: !!AKTIF_YAZAR && yazarKartta(adresSozleri(u.href)),
         // Sürüm 21 · ilan alanları (arayüz bunlara göre sıralayıp süzecek). Okunamayan alan boş kalır.
         // tur: yeni | sahaf | ikinciel | karsilastirma · stok: "var" | "yok" | "bilinmiyor" | "" (denetlenmedi)
-        tur: k.tur || "", yazarAlani: String(u.yazarAlani || ""), kondisyon: String(u.kondisyon || ""), satici: String(u.satici || ""), sehir: String(u.sehir || ""), kargo: String(u.kargo || ""),
+        tur: k.tur || "", yazarAlani: String(u.yazarAlani || ""), marka: String(u.marka || ""), kondisyon: String(u.kondisyon || ""), satici: String(u.satici || ""), sehir: String(u.sehir || ""), kargo: String(u.kargo || ""),
         stok: u.stokYok ? "yok" : (u.stokVar ? "var" : ""), stokNeden: u.stokYok ? "arama kartında" : (u.stokVar ? String(u.stokVar) : "") };
     })
     .filter(x => x.fiyat > 0)
     .map(x => { if (x.adresYazar && !x.yazarKartta) { x.yazarKartta = true; x.yazarKanit = "ürün adresi"; } return x; })
-    .map(x => Object.assign(x, uyumBul(x.baslik, sorgu, x.yazarKartta)))
+    // 22.36 (Ana 47): başlığın başındaki yayınevi/marka öneki (yapıdan ve konumdan tanınır, ad listesinden değil) uyum hesabından düşülür.
+    .map(x => { x.onek = onekSinifla(x, sorgu, k); return Object.assign(x, uyumBul(x.onek.tur === "guclu" ? x.onek.kalan : x.baslik, sorgu, x.yazarKartta)); })
     // 22.7: kartın AYRI yazar alanı okunduysa ve girilen yazarla uyuşmuyorsa ilan elenmez; 3 puan düşer, raporda [başka yazar: …] yazar
     // (BKM'de "Şeyh Bedreddin Destanı" Nâzım Hikmet yerine Zeki Büyüktanır'ın kitabıydı). Yazar girilmediyse çalışmaz.
     // 22.10: Hepsiburada kartında indirim/kampanya tutarı fiyat sanılıyor (Kefaret 26,30 TL, ama aynı kartta 435 TL; Buzul Çağının Virüsü 12,90 TL). Aynı kartta okunan en küçük sayı en büyüğünün %15'inden azsa
@@ -2878,9 +2938,19 @@ function baskaOlabilirNotu(r) {
   let s = "";
   const b = r.baskaOlabilir || [];
   if (b.length) s += " · BAŞKA KİTAP OLABİLİR " + b.length + " (en ucuz sayılmadı): " + b.slice(0, 4).map(x => tl(x.fiyat) + " \"" + x.baslik.slice(0, 40) + "\" [" + x.baskaNeden + "]").join(" | ");
+  // 22.36 (Ana 47, Kural 11): yayınevi/marka sayılan önekler sayılır (kayıtlı sayfası olmayan sitelerde iPad turundan sonra ilk denetlenecek sayı)
+  const tumIl = (r.ilgililer || []).concat(r.takimlar || [], b);
+  const og = tumIl.filter(x => x.onek && x.onek.tur === "guclu"), oz = tumIl.filter(x => x.onek && x.onek.tur === "zayif");
+  const ornek = l => [...new Set(l.map(x => x.onek.onek))].slice(0, 3).map(o => "\"" + o + "\"").join(", ");
+  if (og.length || oz.length) s += " · ÖNEK yayınevi/marka sayıldı " + og.length + (og.length ? " (" + ornek(og) + ")" : "") + (oz.length ? ", zayıf " + oz.length + " (" + ornek(oz) + "; [C] kalır)" : "");
   const e = r.elenenBaska || [];
   if (e.length) s += " · BAŞKA KİTAP DİYE ELENEN " + e.length + ": " + e.slice(0, 3).map(x => tl(x.fiyat) + " \"" + x.baslik.slice(0, 40) + "\" [" + x.neden + "]").join(" | ");
   return s;
+}
+// 22.36 (Ana 47): doğruluk kutusu için site başına fiyata göre en ucuz 5 ilgili ilan (stokta yok diye gizlenenler hariç; derece parantezde)
+function ucuz5Satir(r) {
+  const l = gorunenler(r).slice().sort((a, b) => a.fiyat - b.fiyat).slice(0, 5);
+  return l.length ? "   en ucuz 5: " + l.map(x => tl(x.fiyat) + " " + x.baslik.slice(0, 28) + (x.derece && x.derece !== "-" ? " [" + x.derece + "]" : "") + (x.supheliFiyat ? " [FİYAT ŞÜPHELİ]" : "") + (x.kartIciSuphe ? " [kart içi şüphe]" : "") + (x.stok === "yok" ? " [stok yok]" : "")).join(" | ") : "";
 }
 function ilanEk(x) {
   const p = [];
@@ -2966,7 +3036,7 @@ function raporMetni(sorgu, sonuclar, sure, cihaz) {
   const iyi = sonuclar.filter(iyiMi), sorunlu = sonuclar.filter(r => !iyiMi(r));
   satirlar.push("");
   satirlar.push("ÇALIŞANLAR (" + iyi.length + ") — kanıt: ilgili ilan sayısı, stokta olduğu doğrulanan en ucuz ilan, stok kontrol sırası");
-  iyi.forEach(r => satirlar.push(kisaSatir(r)));
+  iyi.forEach(r => { satirlar.push(kisaSatir(r)); const u5 = ucuz5Satir(r); if (u5) satirlar.push(u5); });
   satirlar.push("");
   satirlar.push("SORUNLU, KISMEN ÇALIŞAN VE ADAY SİTELER (" + sorunlu.length + ") — ayrıntı");
   for (const r of sorunlu) {
@@ -2997,6 +3067,7 @@ function raporMetni(sorgu, sonuclar, sure, cihaz) {
     if (r.baglanti) s += " · yoklama: " + r.baglanti.durum + (r.baglanti.ms != null ? " " + r.baglanti.ms + " ms" : "") + (r.baglanti.ayrinti ? " (" + r.baglanti.ayrinti + ")" : "");
     if (r.kutu) s += " · kutu: " + r.kutu;
     satirlar.push(s);
+    { const u5 = ucuz5Satir(r); if (u5) satirlar.push(u5); }
     if (ilk && ilk.kart) satirlar.push("   en ucuzun kartı: " + ilk.kart.slice(0, r.k.tur === "sahaf" ? 250 : 150));
     const gosterilen = ilk || r.takimlar[0];
     if (gosterilen) satirlar.push("   okunan fiyatlar: " + (gosterilen.tum || "-") + " · ilk fiyattan önceki karakterler: " + (gosterilen.ctx || "-") + (gosterilen.linksiz ? " · bağlantısız kart" : ""));
